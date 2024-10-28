@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import daisyui from 'daisyui';
 
 const config: Config = {
   content: [
@@ -8,12 +9,22 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        poppins: ['"Poppins"', 'sans-serif'], // Add fallback font
+      },
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        primary: '#1A5319',
+        second: '#508D4E',
+        additional1: '#80AF81',
+        additional2: '#D6EFD8',
       },
     },
   },
-  plugins: [],
+  variants: {
+    extend: {
+      visibility: ['group-hover'],
+    },
+  },
+  plugins: [daisyui],
 };
 export default config;
