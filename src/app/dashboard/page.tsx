@@ -75,7 +75,7 @@ export default function Dashboard() {
               {products.length > 0 ? (
                 products.map((product) => (
                   <a
-                    href="/detail.html" // Ganti dengan path yang sesuai
+                    href={`/detail/${product.id}`} // Ganti dengan path yang sesuai
                     className="flex flex-col w-full lg:w-full bg-white rounded-lg shadow-md transition-transform duration-300 transform hover:bg-gray-100 hover:scale-105"
                     key={product.id} // Pastikan ada key untuk setiap elemen
                   >
