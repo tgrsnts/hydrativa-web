@@ -5,7 +5,7 @@ export default function Navbar() {
     <header className="font-poppins shadow fixed top-0 w-full z-10 h-20 bg-white">
       <div className="bg-white flex items-center h-full flex-wrap gap-5 overflow-hidden px-4 py-4 md:px-36 md:mx-auto md:flex-wrap md:items-center">
         <a href="/">
-          <img className="h-8" src="image/logo-hydrativa-kecil.png" alt="" />
+          <img className="h-8" src="/image/logo-hydrativa-kecil.png" alt="" />
         </a>
         <div className="flex ml-auto h-full lg:ml-0 flex-row w-max lg:w-96">
           <form className="w-full mx-auto">
