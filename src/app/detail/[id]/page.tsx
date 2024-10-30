@@ -1,17 +1,18 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
+import { use, useState, useEffect } from 'react';
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import { Produk } from "@/lib/interfaces/Produk";
 
-const Detail = ({ params }: { params: { id: string } }) => {
-    const [product, setProduct] = useState<Produk | null>(null); // Use a single product object
+const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
+    const { id } = use(params); // Unwrap params with React.use()
+    const [product, setProduct] = useState<Produk | null>(null);
 
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const response = await fetch(`http://127.0.0.1:8000/api/produk/${params.id}`);
+                const response = await fetch(`http://127.0.0.1:8000/api/produk/${id}`);
                 const result = await response.json();
                 console.log("API Response:", result); // Log to check response structure
                 setProduct(result.data); // Set product to the object in response
@@ -22,7 +23,7 @@ const Detail = ({ params }: { params: { id: string } }) => {
         };
 
         fetchProduct();
-    }, [params.id]);
+    }, [id]);
     return (
         <>
             <Navbar />
@@ -104,16 +105,14 @@ const Detail = ({ params }: { params: { id: string } }) => {
                             </div>
                         </div>
                         <div className="lg:hidden drop-shadow-2xl fixed bottom-0 lg:static w-full bg-white lg:bg-transparent p-2 flex flex-row lg:flex-col gap-2 items-center justify-center">
-                            <button
-                                href=""
-                                onclick={() => document.getElementById('my_modal').showModal()}
+                            <button                                
+                                onClick={() => document.getElementById('my_modal').showModal()}
                                 className="bg-primary font-poppins font-semibold rounded-lg px-4 py-2 border-2 border-primary text-white text-center w-full hover:bg-white hover:text-primary"
                             >
                                 + Keranjang
                             </button>
-                            <button
-                                href=""
-                                onclick={() => document.getElementById('my_modal').showModal()}
+                            <button                                
+                                onClick={() => document.getElementById('my_modal').showModal()}
                                 className="font-poppins font-semibold rounded-lg px-4 py-2 border-2 text-center w-full bg-white text-primary border-primary hover:bg-primary hover:text-white hover:border-white"
                             >
                                 Beli
