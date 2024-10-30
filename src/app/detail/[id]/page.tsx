@@ -55,8 +55,7 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                                             </div>
                                         </div>
                                         <p>
-                                            HydraTiva adalah alat penyiraman otomatis untuk tanaman stevia
-                                            yang terintegrasi dengan aplikasi.
+                                            {product.deskripsi}
                                         </p>
                                     </div>
                                 </div>
