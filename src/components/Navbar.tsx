@@ -1,4 +1,6 @@
 import React from "react";
+import { IoIosSearch } from "react-icons/io";
+
 
 export default function Navbar() {
   return (
@@ -14,12 +16,12 @@ export default function Navbar() {
               </label> */}
             <div className="relative h-full">
               <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                <i className="fa-solid fa-magnifying-glass" />
+              <IoIosSearch />
               </div>
               <input
                 type="search"
                 id="default-search"
-                className="block w-full h-full px-2 py-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:border-[#047D00]"
+                className="block w-full h-full px-2 py-2 ps-8 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:border-[#047D00]"
                 placeholder="Cari di HydraTiva"
               />
               {/* <button type="submit"
