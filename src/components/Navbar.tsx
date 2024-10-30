@@ -44,7 +44,7 @@ export default function Navbar() {
             href="/akun"
             className="flex items-center gap-2 hover:bg-gray-200 py-1 px-2 rounded-md"
           >
-            <img className="w-10 rounded-full" src="image/avatar-biru.jpg" alt="" />
+            <img className="w-10 rounded-full" src="/image/avatar-biru.jpg" alt="" />
             <p className="font-semibold text-nowrap">Mochamad Tegar Santoso</p>
           </a>
         </div>
