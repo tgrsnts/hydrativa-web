@@ -36,7 +36,7 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                                 <div className="flex flex-col lg:flex-row bg-white rounded-lg p-4">
                                     <div className="flex w-full lg:w-1/3 rounded-lg justify-center">
                                         <div className="h-45">
-                                            <img src="image/Group 185.png" className="h-45 rounded-lg" />
+                                            <img src={`/storage/${product.gambar}`} className="h-45 rounded-lg" alt={product.nama} />
                                         </div>
                                     </div>
                                     <div className="flex flex-col w-full lg:w-2/3 px-0 lg:px-4 mt-4 lg:mt-0 gap-2 rounded-lg transition duration-300 font-poppins">
@@ -105,13 +105,13 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                             </div>
                         </div>
                         <div className="lg:hidden drop-shadow-2xl fixed bottom-0 lg:static w-full bg-white lg:bg-transparent p-2 flex flex-row lg:flex-col gap-2 items-center justify-center">
-                            <button                                
+                            <button
                                 onClick={() => document.getElementById('my_modal').showModal()}
                                 className="bg-primary font-poppins font-semibold rounded-lg px-4 py-2 border-2 border-primary text-white text-center w-full hover:bg-white hover:text-primary"
                             >
                                 + Keranjang
                             </button>
-                            <button                                
+                            <button
                                 onClick={() => document.getElementById('my_modal').showModal()}
                                 className="font-poppins font-semibold rounded-lg px-4 py-2 border-2 text-center w-full bg-white text-primary border-primary hover:bg-primary hover:text-white hover:border-white"
                             >
@@ -125,10 +125,7 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                         >
                             <div className="font-poppins modal-box bg-white text-black px-4 pt-2 pb-8">
                                 <div className="flex flex-wrap">
-                                    <img
-                                        src="image/Group 185.png"
-                                        className="flex flex-col w-1/2 rounded-lg"
-                                    />
+                                <img src={`/storage/${product.gambar}`} className="h-45 rounded-lg" alt={product.nama} />
                                     <div className="flex flex-col w-1/2 pl-4">
                                         <div className="flex justify-end">
                                             <form method="dialog">
@@ -240,7 +237,7 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                                             <div className="flex items-start gap-3">
                                                 <img
                                                     className="w-10 rounded-full"
-                                                    src="image/avatar-biru.jpg"
+                                                    src="/image/avatar-biru.jpg"
                                                     alt=""
                                                 />
                                                 <div>
@@ -265,7 +262,7 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                                             <div className="flex items-start gap-3">
                                                 <img
                                                     className="w-10 rounded-full"
-                                                    src="image/avatar-biru.jpg"
+                                                    src="/image/avatar-biru.jpg"
                                                     alt=""
                                                 />
                                                 <div>
@@ -290,7 +287,7 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                                             <div className="flex items-start gap-3">
                                                 <img
                                                     className="w-10 rounded-full"
-                                                    src="image/avatar-biru.jpg"
+                                                    src="/image/avatar-biru.jpg"
                                                     alt=""
                                                 />
                                                 <div>
@@ -315,7 +312,7 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                                             <div className="flex items-start gap-3">
                                                 <img
                                                     className="w-10 rounded-full"
-                                                    src="image/avatar-biru.jpg"
+                                                    src="/image/avatar-biru.jpg"
                                                     alt=""
                                                 />
                                                 <div>
@@ -340,7 +337,7 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                                             <div className="flex items-start gap-3">
                                                 <img
                                                     className="w-10 rounded-full"
-                                                    src="image/avatar-biru.jpg"
+                                                    src="/image/avatar-biru.jpg"
                                                     alt=""
                                                 />
                                                 <div>
@@ -367,9 +364,9 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                         </div>
                     </section>
                 </main>
-                ) : (
+            ) : (
                 <p>Product not found</p>
-                )}
+            )}
             <Footer />
         </>
     )
