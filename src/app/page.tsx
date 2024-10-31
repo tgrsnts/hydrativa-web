@@ -345,7 +345,7 @@ export default function Home() {
                     key={product.id} // Pastikan ada key untuk setiap elemen
                   >
                     <img
-                      src={`/image/${product.gambar}`} // Path gambar sesuai dengan data produk
+                      src={`/storage/produk/${product.gambar}`} // Path gambar sesuai dengan data produk
                       alt={product.nama} // Menggunakan nama produk sebagai alt
                       className="w-full object-cover mb-2 rounded-t-lg"
                     />
@@ -372,7 +372,7 @@ export default function Home() {
                   className="flex flex-col w-full lg:w-full bg-white rounded-lg shadow-md transition-transform duration-300 transform hover:bg-gray-100 hover:scale-105"
                 >
                   <img
-                    src="image/Group 185.png"
+                    src="/storage/produk/Group 185.png"
                     alt="Ayam Goreng"
                     className="w-full object-cover mb-2 rounded-t-lg"
                   />
@@ -395,7 +395,7 @@ export default function Home() {
                     className="flex flex-col w-full lg:w-full bg-white rounded-lg shadow-md transition-transform duration-300 transform hover:bg-gray-100 hover:scale-105"
                   >
                     <img
-                      src="image/Group 186.png"
+                      src="/storage/produk/Group 186.png"
                       alt="Es Jeruk"
                       className="w-full object-cover mb-2 rounded-t-lg"
                     />
@@ -420,7 +420,7 @@ export default function Home() {
                     className="flex flex-col w-full lg:w-full bg-white rounded-lg shadow-md transition-transform duration-300 transform hover:bg-gray-100 hover:scale-105"
                   >
                     <img
-                      src="image/teh stevia.jpeg"
+                      src="/storage/produk/teh stevia.jpeg"
                       alt="Nasi"
                       className="w-full object-cover mb-2 rounded-t-lg"
                     />
@@ -445,7 +445,7 @@ export default function Home() {
                     className="flex flex-col w-full lg:w-full bg-white rounded-lg shadow-md transition-transform duration-300 transform hover:bg-gray-100 hover:scale-105"
                   >
                     <img
-                      src="image/liquid stevia.jpeg"
+                      src="/storage/produk/liquid stevia.jpeg"
                       alt="Es teh"
                       className="w-full object-cover mb-2 rounded-t-lg"
                     />
