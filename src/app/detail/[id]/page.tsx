@@ -38,7 +38,7 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                                 <div className="flex flex-col lg:flex-row bg-white rounded-lg p-4">
                                     <div className="flex w-full lg:w-1/3 rounded-lg justify-center">
                                         <div className="h-45">
-                                            <img src={`/storage/${product.gambar}`} className="h-45 rounded-lg" alt={product.nama} />
+                                            <img src={`/storage/produk/${product.gambar}`} className="h-45 rounded-lg" alt={product.nama} />
                                         </div>
                                     </div>
                                     <div className="flex flex-col w-full lg:w-2/3 px-0 lg:px-4 mt-4 lg:mt-0 gap-2 rounded-lg transition duration-300 font-poppins">
