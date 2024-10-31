@@ -37,7 +37,7 @@ export default function Navbar() {
                   <i class="text-gray-600 fa-solid fa-bell fa-lg"></i>
               </button> */}
             <a
-              href="keranjang.html"
+              href="/keranjang"
               className="flex justify-center items-center focus:outline-none text-white hover:bg-gray-200 font-medium rounded-md text-sm w-12 aspect-square"
             >
               <FaShoppingCart className="text-gray-600"/>
