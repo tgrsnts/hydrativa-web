@@ -4,6 +4,8 @@ import { use, useState, useEffect } from 'react';
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import { Produk } from "@/lib/interfaces/Produk";
+import { FaPlus, FaMinus } from "react-icons/fa";
+
 
 const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
     const { id } = use(params); // Unwrap params with React.use()
@@ -67,14 +69,14 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                                         <div className="text-2xl font-bold">Atur jumlah</div>
                                         <div className="mt-2 flex items-center justify-between">
                                             <div className="flex items-center justify-center">
-                                                <button className="text-primary px-3 py-2 border-2 border-primary rounded-l-lg hover:text-white hover:bg-primary w-full">
-                                                    <i className="fa-solid fa-minus" />
+                                                <button className="text-primary px-3 py-2 border-2 border-primary rounded-l-lg hover:text-white hover:bg-primary w-full">                                                
+                                                -
                                                 </button>
                                                 <div className="px-4 py-2 border-y-2 border-primary">
                                                     <p className="text-center">1</p>
                                                 </div>
                                                 <button className="text-primary px-3 py-2 border-2 border-primary rounded-r-lg hover:text-white hover:bg-primary w-full">
-                                                    <i className="fa-solid fa-plus" />
+                                                +
                                                 </button>
                                             </div>
                                             <p>Stok total : {product.stok}</p>
