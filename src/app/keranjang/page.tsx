@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import axios from "axios";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import { Produk } from "@/lib/interfaces/Produk";
@@ -10,7 +11,13 @@ export default function Keranjang() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-          const response = await fetch(`http://127.0.0.1:8000/api/keranjang`);
+          const response = await axios.get(`http://127.0.0.1:8000/api/keranjang`, {
+            headers: {
+              'content-type': 'application/json',
+              'Authorization': `Bearer KkrNsVc17CZfNvQpiEriGbgdZLfOrEr1cXD68GNwf5d7ddc2`,
+              // 'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            },
+          });
           const result = await response.json();
           console.log("API Response:", result); // Log to check response structure
           setData(result.data); // Set data to the object in response
