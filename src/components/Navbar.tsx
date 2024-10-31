@@ -1,5 +1,6 @@
 import React from "react";
 import { IoIosSearch } from "react-icons/io";
+import { FaShoppingCart } from "react-icons/fa";
 
 
 export default function Navbar() {
@@ -39,6 +40,7 @@ export default function Navbar() {
               href="keranjang.html"
               className="flex justify-center items-center focus:outline-none text-white hover:bg-gray-200 font-medium rounded-md text-sm w-12 aspect-square"
             >
+              <FaShoppingCart className="text-gray-600"/>
               <i className="text-gray-600 fa-solid fa-cart-shopping fa-lg" />
             </a>
           </div>
