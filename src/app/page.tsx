@@ -1,38 +1,61 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, FormEvent } from "react";
 import { FcGoogle } from "react-icons/fc";
-import { FaEye } from "react-icons/fa";
-import { FaEyeSlash } from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Footer from "@/components/Footer";
 import { Produk } from "@/lib/interfaces/Produk";
+import { useAuth } from "@/lib/hooks/auth";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const [usernameLogin, setUsernameLogin] = useState<string>('');
+  const [passwordLogin, setPasswordLogin] = useState<string>('');
+  const [errors, setErrors] = useState<string[]>([]);
+  const [status, setStatus] = useState<string | null>(null);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [products, setProducts] = useState<Produk[]>([]);
+
+  const router = useRouter();
+  const { login } = useAuth({
+    middleware: 'guest',
+    // redirectIfAuthenticated: '/dashboard',
+  });
+
+  const submitHandler = async (event: FormEvent) => {
+    event.preventDefault();
+    login({
+      username: usernameLogin,
+      password: passwordLogin,
+      setErrors,
+      setStatus,
+    });
+  };
+
   const togglePasswordVisibility = () => {
     setIsPasswordVisible((prev) => !prev);
   };
 
   const closeModal = (modalId: string) => {
     const modal = document.getElementById(modalId) as HTMLDialogElement | null;
-    if (modal?.close) {
-      modal.close();
-    }
+    modal?.close();
   };
-
-
-  const [products, setProducts] = useState<Produk[]>([]); // Deklarasikan state products
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const response = await fetch('http://127.0.0.1:8000/api/produk'); // Ganti dengan URL API kamu
-      const result = await response.json();
-      setProducts(result.data); // Ambil data dari response dan set ke state
+      try {
+        const response = await fetch(process.env.NEXT_PUBLIC_API_URL + '/produk');
+        if (!response.ok) throw new Error('Failed to fetch products');
+        
+        const result = await response.json();
+        setProducts(result.data);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
     };
 
     fetchProducts();
   }, []);
-
 
   return (
     <>
@@ -86,13 +109,14 @@ export default function Home() {
             <h2 className="text-2xl lg:text-5xl font-bold text-center text-white w-full">Login</h2>
           </div>
           <div className="px-8 pt-4 pb-12">
-            <form id="loginForm" onSubmit={(e) => e.preventDefault()} className="flex flex-col gap-2">
+            <form id="loginForm" onSubmit={submitHandler} className="flex flex-col gap-2">
               <div className="flex flex-col">
                 <label htmlFor="username">Username</label>
                 <input
                   type="text"
                   id="username"
                   placeholder="Masukkan username"
+                  onChange={(event) => setUsernameLogin(event.target.value)}
                   className="w-full p-2 rounded-md bg-gray-100 focus:outline-none focus:ring focus:ring-primary focus:border-primary"
                   required
                 />
@@ -120,7 +144,8 @@ export default function Home() {
                     id="password"
                     placeholder="Masukkan password"
                     className="w-full p-2 rounded-md bg-gray-100 focus:outline-none focus:ring focus:ring-primary focus:border-primary"
-                    required
+                    required 
+                    onChange={(event) => setPasswordLogin(event.target.value)}
                   />
                 </div>
                 <a
@@ -367,29 +392,29 @@ export default function Home() {
               ) : (
                 // <p>Loading products...</p> // Menangani kondisi ketika tidak ada produk
                 <>
-                <a
-                  href="detail.html"
-                  className="flex flex-col w-full lg:w-full bg-white rounded-lg shadow-md transition-transform duration-300 transform hover:bg-gray-100 hover:scale-105"
-                >
-                  <img
-                    src="/storage/produk/Group 185.png"
-                    alt="Ayam Goreng"
-                    className="w-full object-cover mb-2 rounded-t-lg"
-                  />
-                  <h3 className="text-sm lg:text-lg font-poppins font-semibold">HydraTiva</h3>
-                  <div className="flex items-center justify-center gap-1">
-                    <i className="fa-solid fa-star text-yellow-400" />
-                    <div className="font-poppins text-gray-600">4.5</div>
-                  </div>
-                  <div className="font-poppins text-gray-700 mb-2">Rp 1.500.000</div>
-                  <div className="mt-auto">
-                    {/* <button
+                  <a
+                    href="detail.html"
+                    className="flex flex-col w-full lg:w-full bg-white rounded-lg shadow-md transition-transform duration-300 transform hover:bg-gray-100 hover:scale-105"
+                  >
+                    <img
+                      src="/storage/produk/Group 185.png"
+                      alt="Ayam Goreng"
+                      className="w-full object-cover mb-2 rounded-t-lg"
+                    />
+                    <h3 className="text-sm lg:text-lg font-poppins font-semibold">HydraTiva</h3>
+                    <div className="flex items-center justify-center gap-1">
+                      <i className="fa-solid fa-star text-yellow-400" />
+                      <div className="font-poppins text-gray-600">4.5</div>
+                    </div>
+                    <div className="font-poppins text-gray-700 mb-2">Rp 1.500.000</div>
+                    <div className="mt-auto">
+                      {/* <button
                                       class="bg-primary rounded-md px-4 py-1 font-poppins text-white mb-4 hover:ring-2 hover:ring-primary hover:bg-white hover:text-primary">Beli</button> */}
-                    <button className="bg-white ring-2 ring-primary text-primary rounded-md px-4 py-1 font-poppins mb-4 hover:ring-2 hover:ring-primary hover:bg-primary hover:text-white">
-                      Beli
-                    </button>
-                  </div>
-                </a>
+                      <button className="bg-white ring-2 ring-primary text-primary rounded-md px-4 py-1 font-poppins mb-4 hover:ring-2 hover:ring-primary hover:bg-primary hover:text-white">
+                        Beli
+                      </button>
+                    </div>
+                  </a>
                   <a
                     href="detail.html"
                     className="flex flex-col w-full lg:w-full bg-white rounded-lg shadow-md transition-transform duration-300 transform hover:bg-gray-100 hover:scale-105"
@@ -465,7 +490,7 @@ export default function Home() {
                       </button>
                     </div>
                   </a>
-                  </>
+                </>
               )}
             </div>
           </div>

@@ -1,8 +1,81 @@
-import NavbarUser from '@/components/NavbarUser'
-import Sidebar from '@/components/Sidebar'
-import React from 'react'
+'use client';
+
+import NavbarUser from '@/components/NavbarUser';
+import Sidebar from '@/components/Sidebar';
+import { useAuth } from '@/lib/hooks/auth';
+import axios from 'axios';
+import { useState, useEffect } from 'react';
+import Swal from 'sweetalert2';
+import { User } from '@/lib/interfaces/User';
 
 export default function Akun() {
+    const [isClient, setIsClient] = useState(false);
+    const [userData, setUserData] = useState<User | null>(null);
+
+    const { user, logout } = useAuth(
+        { middleware: 'user'}
+    );
+
+    const onClickLogout = () => {
+        Swal.fire({
+            title: "Anda yakin?",
+            text: "Anda akan logout!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#6A9944",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Confirm",
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                logout();
+            } else {
+                Swal.fire("Cancelled", "Logout cancelled", "error");
+            }
+        });
+    };
+
+    // const getUserInfo = async () => {
+    //     var res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/me`, {
+    //         headers: {
+    //             'content-type': 'text/json',
+    //             'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    //         }
+    //     })
+    //         .then(function (response) {
+    //             setUserData(response.data.data);
+    //         }).catch(function (error) {
+    //             if (error.response && error.response.status === 401) {
+    //                 Swal.fire({
+    //                     icon: 'error',
+    //                     title: error.response.data.message,
+    //                     showConfirmButton: false,
+    //                     timer: 1500
+    //                 })
+    //                 logout()
+    //             } else {
+    //                 Swal.fire({
+    //                     icon: 'error',
+    //                     title: 'error terjadi',
+    //                     text: 'mohon coba lagi nanti.',
+    //                     showConfirmButton: false,
+    //                     timer: 1500
+    //                 });
+    //             }
+    //         })
+    // }
+
+    useEffect(() => {
+        setIsClient(true)
+        if (!user) return
+        // getUserInfo()
+        console.log(userData)
+    }, [user])
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setUserData((prevUserData) => prevUserData ? { ...prevUserData, [name]: value } : null);
+    };
 
     return (
         <>
@@ -45,21 +118,38 @@ export default function Akun() {
                                                     <input
                                                         className="w-full p-2 border-2 rounded-lg"
                                                         type="text"
-                                                        defaultValue="tgrsnts"
+                                                        value={user?.username || ''}
+                                                        onChange={handleInputChange}
                                                     />
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td className="pr-4">
                                                     <label htmlFor="" className="block text-left">
-                                                        Nama
+                                                        Nama Depan
                                                     </label>
                                                 </td>
                                                 <td className="pl-4 py-1">
                                                     <input
                                                         className="w-full p-2 border-2 rounded-lg"
                                                         type="text"
-                                                        defaultValue="Mochamad Tegar Santoso"
+                                                        value={user?.firstname || ''}
+                                                        onChange={handleInputChange}
+                                                    />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td className="pr-4">
+                                                    <label htmlFor="" className="block text-left">
+                                                        Nama Belakang
+                                                    </label>
+                                                </td>
+                                                <td className="pl-4 py-1">
+                                                    <input
+                                                        className="w-full p-2 border-2 rounded-lg"
+                                                        type="text"
+                                                        value={user?.lastname || ''}
+                                                        onChange={handleInputChange}
                                                     />
                                                 </td>
                                             </tr>
@@ -73,7 +163,8 @@ export default function Akun() {
                                                     <input
                                                         className="w-full p-2 border-2 rounded-lg"
                                                         type="email"
-                                                        defaultValue="tegarsantoso72@gmail.com"
+                                                        value={user?.email || ''}
+                                                        onChange={handleInputChange}
                                                     />
                                                 </td>
                                             </tr>
@@ -87,7 +178,8 @@ export default function Akun() {
                                                     <input
                                                         className="w-full p-2 border-2 rounded-lg"
                                                         type="text"
-                                                        defaultValue={"089670522489"}
+                                                        value={user?.telepon || ''}
+                                                        onChange={handleInputChange}
                                                     />
                                                 </td>
                                             </tr>
@@ -103,7 +195,8 @@ export default function Akun() {
                                                             className="accent-primary"
                                                             name="jenis_kelamin"
                                                             type="radio"
-                                                            defaultValue="Laki-laki"                                                    
+                                                            checked={user?.jenis_kelamin === "Laki-laki"}
+                                                            onChange={handleInputChange}
                                                         />
                                                         <label htmlFor="">Laki-laki</label>
                                                     </div>
@@ -112,7 +205,8 @@ export default function Akun() {
                                                             className="accent-primary"
                                                             name="jenis_kelamin"
                                                             type="radio"
-                                                            defaultValue="Perempuan"
+                                                            checked={user?.jenis_kelamin === "Perempuan"}
+                                                            onChange={handleInputChange}
                                                         />
                                                         <label htmlFor="">Perempuan</label>
                                                     </div>
