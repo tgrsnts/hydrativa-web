@@ -27,7 +27,6 @@ export default function Home() {
     password: ''
   });
 
-  const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
   const [products, setProducts] = useState<Produk[]>([]); // Deklarasikan state products
 
@@ -43,16 +42,15 @@ export default function Home() {
     e.preventDefault();
     try {
       const res = await axios.post('http://127.0.0.1:8000/api/login', dataForm);
-      setResponse(res.data);
       setError(null);
-      console.log(response);
-      Cookies.set('token', response, {
+      console.log(res.data);
+      Cookies.set('token', res.data, {
         expires: 7,
         path: '/'
       })
       window.location.href = '/dashboard'
     } catch (err) {
-      setError(err);
+      setError(err.response?.data?.message);
       console.error("Error posting form data:", err.response?.data?.message);
     }
   };
@@ -161,12 +159,12 @@ export default function Home() {
                     placeholder="Masukkan password"
                     className="w-full p-2 rounded-md bg-gray-100 focus:outline-none focus:ring focus:ring-primary focus:border-primary"
                     required
-                  />
+                    />
                 </div>
                 <a
                   href=""
                   className="mt-1 text-sm text-primary hover:text-additional2 hover:underline hover:underline-offset-4"
-                >
+                  >
                   Lupa password?
                 </a>
               </div>
