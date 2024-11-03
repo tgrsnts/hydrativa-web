@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect, FormEvent } from "react";
+import { useState, useEffect,  } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Footer from "@/components/Footer";
 import { Produk } from "@/lib/interfaces/Produk";
-import { useAuth } from "@/lib/hooks/auth";
-import { useRouter } from "next/navigation";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 export default function Home() {
   const [usernameLogin, setUsernameLogin] = useState<string>('');
@@ -39,6 +39,39 @@ export default function Home() {
   const closeModal = (modalId: string) => {
     const modal = document.getElementById(modalId) as HTMLDialogElement | null;
     modal?.close();
+  };
+
+  const [dataForm, setDataForm] = useState({
+    username: '',
+    password: ''
+  });
+
+  const [error, setError] = useState(null);
+  const [products, setProducts] = useState<Produk[]>([]); // Deklarasikan state products
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setDataForm({
+      ...dataForm,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post('http://127.0.0.1:8000/api/login', dataForm);
+      setError(null);
+      console.log(res.data);
+      Cookies.set('token', res.data, {
+        expires: 7,
+        path: '/'
+      })
+      window.location.href = '/dashboard'
+    } catch (err) {
+      setError(err.response?.data?.message);
+      console.error("Error posting form data:", err.response?.data?.message);
+    }
   };
 
   useEffect(() => {
@@ -109,12 +142,15 @@ export default function Home() {
             <h2 className="text-2xl lg:text-5xl font-bold text-center text-white w-full">Login</h2>
           </div>
           <div className="px-8 pt-4 pb-12">
-            <form id="loginForm" onSubmit={submitHandler} className="flex flex-col gap-2">
+            <form id="loginForm" onSubmit={handleSubmit} className="flex flex-col gap-2">
               <div className="flex flex-col">
                 <label htmlFor="username">Username</label>
                 <input
                   type="text"
                   id="username"
+                  name="username"
+                  value={dataForm.username}
+                  onChange={handleChange}
                   placeholder="Masukkan username"
                   onChange={(event) => setUsernameLogin(event.target.value)}
                   className="w-full p-2 rounded-md bg-gray-100 focus:outline-none focus:ring focus:ring-primary focus:border-primary"
@@ -142,16 +178,18 @@ export default function Home() {
                   <input
                     type={isPasswordVisible ? 'text' : 'password'}
                     id="password"
+                    name="password"
+                    value={dataForm.password}
+                    onChange={handleChange}
                     placeholder="Masukkan password"
                     className="w-full p-2 rounded-md bg-gray-100 focus:outline-none focus:ring focus:ring-primary focus:border-primary"
-                    required 
-                    onChange={(event) => setPasswordLogin(event.target.value)}
-                  />
+                    required
+                    />
                 </div>
                 <a
                   href=""
                   className="mt-1 text-sm text-primary hover:text-additional2 hover:underline hover:underline-offset-4"
-                >
+                  >
                   Lupa password?
                 </a>
               </div>
