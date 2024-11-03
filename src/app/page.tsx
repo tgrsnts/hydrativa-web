@@ -1,11 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect,  } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import Footer from "@/components/Footer";
 import { Produk } from "@/lib/interfaces/Produk";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 export default function Home() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -20,8 +22,40 @@ export default function Home() {
     }
   };
 
+  const [dataForm, setDataForm] = useState({
+    username: '',
+    password: ''
+  });
 
+  const [response, setResponse] = useState(null);
+  const [error, setError] = useState(null);
   const [products, setProducts] = useState<Produk[]>([]); // Deklarasikan state products
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setDataForm({
+      ...dataForm,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post('http://127.0.0.1:8000/api/login', dataForm);
+      setResponse(res.data);
+      setError(null);
+      console.log(response);
+      Cookies.set('token', response, {
+        expires: 7,
+        path: '/'
+      })
+      window.location.href = '/dashboard'
+    } catch (err) {
+      setError(err);
+      console.error("Error posting form data:", err.response?.data?.message);
+    }
+  };
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -86,12 +120,15 @@ export default function Home() {
             <h2 className="text-2xl lg:text-5xl font-bold text-center text-white w-full">Login</h2>
           </div>
           <div className="px-8 pt-4 pb-12">
-            <form id="loginForm" onSubmit={(e) => e.preventDefault()} className="flex flex-col gap-2">
+            <form id="loginForm" onSubmit={handleSubmit} className="flex flex-col gap-2">
               <div className="flex flex-col">
                 <label htmlFor="username">Username</label>
                 <input
                   type="text"
                   id="username"
+                  name="username"
+                  value={dataForm.username}
+                  onChange={handleChange}
                   placeholder="Masukkan username"
                   className="w-full p-2 rounded-md bg-gray-100 focus:outline-none focus:ring focus:ring-primary focus:border-primary"
                   required
@@ -118,6 +155,9 @@ export default function Home() {
                   <input
                     type={isPasswordVisible ? 'text' : 'password'}
                     id="password"
+                    name="password"
+                    value={dataForm.password}
+                    onChange={handleChange}
                     placeholder="Masukkan password"
                     className="w-full p-2 rounded-md bg-gray-100 focus:outline-none focus:ring focus:ring-primary focus:border-primary"
                     required
