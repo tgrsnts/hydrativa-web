@@ -17,15 +17,6 @@ export default function Home() {
   const [products, setProducts] = useState<Produk[]>([]);
 
 
-  const submitHandler = async (event: FormEvent) => {
-    event.preventDefault();
-    login({
-      username: usernameLogin,
-      password: passwordLogin,
-      setErrors,
-      setStatus,
-    });
-  };
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible((prev) => !prev);
@@ -52,7 +43,7 @@ export default function Home() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://127.0.0.1:8000/api/login', dataForm);
+      const res = await axios.post(process.env.NEXT_PUBLIC_API_URL+ '/login', dataForm);
       setError(null);
       console.log(res.data);
       Cookies.set('token', res.data, {
@@ -153,8 +144,7 @@ export default function Home() {
                   name="username"
                   value={dataForm.username}
                   onChange={handleChange}
-                  placeholder="Masukkan username"
-                  onChange={(event) => setUsernameLogin(event.target.value)}
+                  placeholder="Masukkan username"                  
                   className="w-full p-2 rounded-md bg-gray-100 focus:outline-none focus:ring focus:ring-primary focus:border-primary"
                   required
                 />
