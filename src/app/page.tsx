@@ -9,28 +9,25 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 export default function Home() {
-  const [usernameLogin, setUsernameLogin] = useState<string>('');
-  const [passwordLogin, setPasswordLogin] = useState<string>('');
-  const [errors, setErrors] = useState<string[]>([]);
-  const [status, setStatus] = useState<string | null>(null);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [products, setProducts] = useState<Produk[]>([]);
-
-
-
   const togglePasswordVisibility = () => {
     setIsPasswordVisible((prev) => !prev);
   };
 
   const closeModal = (modalId: string) => {
     const modal = document.getElementById(modalId) as HTMLDialogElement | null;
-    modal?.close();
+    if (modal?.close) {
+      modal.close();
+    }
   };
 
   const [dataForm, setDataForm] = useState({
     username: '',
     password: ''
   });
+
+  const [error, setError] = useState(null);
+  const [products, setProducts] = useState<Produk[]>([]); // Deklarasikan state products
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -43,7 +40,7 @@ export default function Home() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(process.env.NEXT_PUBLIC_API_URL+ '/login', dataForm);
+      const res = await axios.post('http://127.0.0.1:8000/api/login', dataForm);
       setError(null);
       console.log(res.data);
       Cookies.set('token', res.data, {
@@ -59,15 +56,9 @@ export default function Home() {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      try {
-        const response = await fetch(process.env.NEXT_PUBLIC_API_URL + '/produk');
-        if (!response.ok) throw new Error('Failed to fetch products');
-
-        const result = await response.json();
-        setProducts(result.data);
-      } catch (error) {
-        console.error('Error fetching products:', error);
-      }
+      const response = await fetch('http://127.0.0.1:8000/api/produk'); // Ganti dengan URL API kamu
+      const result = await response.json();
+      setProducts(result.data); // Ambil data dari response dan set ke state
     };
 
     fetchProducts();
