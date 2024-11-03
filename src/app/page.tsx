@@ -40,7 +40,7 @@ export default function Home() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://127.0.0.1:8000/api/login', dataForm);
+      const res = await axios.post(process.env.NEXT_PUBLIC_API_URL +'/login', dataForm);
       setError(null);
       console.log(res.data);
       Cookies.set('token', res.data, {
@@ -56,7 +56,7 @@ export default function Home() {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const response = await fetch('http://127.0.0.1:8000/api/produk'); // Ganti dengan URL API kamu
+      const response = await fetch(process.env.NEXT_PUBLIC_API_URL +'/produk'); // Ganti dengan URL API kamu
       const result = await response.json();
       setProducts(result.data); // Ambil data dari response dan set ke state
     };

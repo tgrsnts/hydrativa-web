@@ -2,19 +2,15 @@
 
 import NavbarUser from '@/components/NavbarUser';
 import Sidebar from '@/components/Sidebar';
-import { useAuth } from '@/lib/hooks/auth';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-import Swal from 'sweetalert2';
+
 import { User } from '@/lib/interfaces/User';
+import Cookies from "js-cookie";
 
 export default function Akun() {
     const [isClient, setIsClient] = useState(false);
     const [userData, setUserData] = useState<User | null>(null);
-
-    const { user, logout } = useAuth(
-        { middleware: 'user'}
-    );
 
     const onClickLogout = () => {
         Swal.fire({
@@ -35,42 +31,41 @@ export default function Akun() {
         });
     };
 
-    // const getUserInfo = async () => {
-    //     var res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/me`, {
-    //         headers: {
-    //             'content-type': 'text/json',
-    //             'Authorization': `Bearer ${localStorage.getItem('token')}`,
-    //         }
-    //     })
-    //         .then(function (response) {
-    //             setUserData(response.data.data);
-    //         }).catch(function (error) {
-    //             if (error.response && error.response.status === 401) {
-    //                 Swal.fire({
-    //                     icon: 'error',
-    //                     title: error.response.data.message,
-    //                     showConfirmButton: false,
-    //                     timer: 1500
-    //                 })
-    //                 logout()
-    //             } else {
-    //                 Swal.fire({
-    //                     icon: 'error',
-    //                     title: 'error terjadi',
-    //                     text: 'mohon coba lagi nanti.',
-    //                     showConfirmButton: false,
-    //                     timer: 1500
-    //                 });
-    //             }
-    //         })
-    // }
+    const getUserInfo = async () => {
+        var res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/me`, {
+            headers: {
+                'content-type': 'text/json',
+                'Authorization': `Bearer ${Cookies.get('token')}`,
+            }
+        })
+            .then(function (response) {
+                setUserData(response.data.data);
+            }).catch(function (error) {
+                if (error.response && error.response.status === 401) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: error.response.data.message,
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    logout()
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'error terjadi',
+                        text: 'mohon coba lagi nanti.',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            })
+    }
 
     useEffect(() => {
         setIsClient(true)
-        if (!user) return
-        // getUserInfo()
+        getUserInfo()
         console.log(userData)
-    }, [user])
+    }, [userData])
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -118,7 +113,7 @@ export default function Akun() {
                                                     <input
                                                         className="w-full p-2 border-2 rounded-lg"
                                                         type="text"
-                                                        value={user?.username || ''}
+                                                        value={userData?.username || ''}
                                                         onChange={handleInputChange}
                                                     />
                                                 </td>
@@ -133,7 +128,7 @@ export default function Akun() {
                                                     <input
                                                         className="w-full p-2 border-2 rounded-lg"
                                                         type="text"
-                                                        value={user?.firstname || ''}
+                                                        value={userData?.firstname || ''}
                                                         onChange={handleInputChange}
                                                     />
                                                 </td>
@@ -148,7 +143,7 @@ export default function Akun() {
                                                     <input
                                                         className="w-full p-2 border-2 rounded-lg"
                                                         type="text"
-                                                        value={user?.lastname || ''}
+                                                        value={userData?.lastname || ''}
                                                         onChange={handleInputChange}
                                                     />
                                                 </td>
@@ -163,7 +158,7 @@ export default function Akun() {
                                                     <input
                                                         className="w-full p-2 border-2 rounded-lg"
                                                         type="email"
-                                                        value={user?.email || ''}
+                                                        value={userData?.email || ''}
                                                         onChange={handleInputChange}
                                                     />
                                                 </td>
@@ -178,7 +173,7 @@ export default function Akun() {
                                                     <input
                                                         className="w-full p-2 border-2 rounded-lg"
                                                         type="text"
-                                                        value={user?.telepon || ''}
+                                                        value={userData?.telepon || ''}
                                                         onChange={handleInputChange}
                                                     />
                                                 </td>
@@ -195,7 +190,7 @@ export default function Akun() {
                                                             className="accent-primary"
                                                             name="jenis_kelamin"
                                                             type="radio"
-                                                            checked={user?.jenis_kelamin === "Laki-laki"}
+                                                            checked={userData?.jenis_kelamin === "Laki-laki"}
                                                             onChange={handleInputChange}
                                                         />
                                                         <label htmlFor="">Laki-laki</label>
@@ -205,7 +200,7 @@ export default function Akun() {
                                                             className="accent-primary"
                                                             name="jenis_kelamin"
                                                             type="radio"
-                                                            checked={user?.jenis_kelamin === "Perempuan"}
+                                                            checked={userData?.jenis_kelamin === "Perempuan"}
                                                             onChange={handleInputChange}
                                                         />
                                                         <label htmlFor="">Perempuan</label>
