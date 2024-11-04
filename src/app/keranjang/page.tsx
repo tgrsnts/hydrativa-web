@@ -6,26 +6,25 @@ import Navbar from "@/components/Navbar";
 import type { Keranjang } from "@/lib/interfaces/Keranjang";
 
 export default function Keranjang() {
-  const [data, setData] = useState<Keranjang[]>([]); // Deklarasikan state products
+  const [data, setData] = useState<Keranjang[] | null>([]); // Deklarasikan state products
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-          const response = await axios.get(`http://127.0.0.1:8000/api/keranjang`, {
-            headers: {
-              'content-type': 'application/json',
-              'Authorization': `Bearer KkrNsVc17CZfNvQpiEriGbgdZLfOrEr1cXD68GNwf5d7ddc2`,
-              // 'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            },
-          });
-          const result = await response.json();
-          console.log("API Response:", result); // Log to check response structure
-          setData(result.data); // Set data to the object in response
+        const response = await axios.get(`http://127.0.0.1:8000/api/keranjang`, {
+          headers: {
+            'content-type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+        console.log("API Response:", response.data); // Log to check response structure
+        setData(response.data.data); // Assuming data is nested within response.data
       } catch (error) {
-          console.error("Failed to fetch data:", error);
-          setData(null); // Set to null on error
+        console.error("Failed to fetch data:", error);
+        setData(null); // Set to null on error
       }
-  };
+    };
+
 
     fetchData();
   }, []);
@@ -51,7 +50,7 @@ export default function Keranjang() {
                   </div>
                 </div>
               </div>
-              {data.length > 0 ? (
+              {data && data.length > 0 ? (
                 data.map((item, index) => (
                   <div key={index} className="flex flex-col gap-4 bg-white p-6 rounded-lg font-poppins">
                     <div className="flex gap-4">
@@ -65,18 +64,17 @@ export default function Keranjang() {
                         alt=""
                       />
                       <div className="flex flex-col w-full">
-                        <div>{ item.id_produk }</div>
+                        <div>{item.id_produk}</div>
                         <div className="flex justify-between">
-                          <div>x{ item.quantity }</div>
-                          <div>Rp. { item.subtotal }</div>
+                          <div>x{item.quantity}</div>
+                          <div>Rp. {item.subtotal}</div>
                         </div>
                       </div>
                     </div>
                   </div>
                 ))
               ) : (
-                // <p>Loading products...</p> // Menangani kondisi ketika tidak ada produk
-                <>
+                <>                  
                   <div className="flex flex-col gap-4 bg-white p-6 rounded-lg font-poppins">
                     <div className="flex gap-4">
                       <input
@@ -119,6 +117,7 @@ export default function Keranjang() {
                   </div>
                 </>
               )}
+
 
             </div>
             <div className="w-full lg:w-1/3 p-2">
