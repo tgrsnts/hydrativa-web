@@ -48,15 +48,17 @@ export default function Akun() {
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value, type, checked } = e.target;
+    
         setUserData((prevUserData) =>
             prevUserData
                 ? {
                     ...prevUserData,
-                    [name]: type === 'radio' ? (checked ? value : prevUserData[name]) : value,
+                    [name as keyof User]: type === 'radio' ? (checked ? value : prevUserData[name as keyof User]) : value,
                 }
                 : null
         );
     };
+    
 
 
     return (
