@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 import { Produk } from "@/lib/interfaces/Produk";
 import axios from "axios";
 import Cookies from "js-cookie";
+import Link from "next/link";
 
 export default function Home() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -69,9 +70,9 @@ export default function Home() {
       {/* <!-- Navbar --> */}
       <header className="shadow fixed top-0 w-full z-10 h-20 bg-primary">
         <div className="bg-primary relative flex justify-between lg:justify-start flex-col lg:flex-row lg:h-20 overflow-hidden px-4 py-4 md:px-36 md:mx-auto md:flex-wrap md:items-center">
-          <a href="/" className="flex items-center whitespace-nowrap text-2xl">
+          <Link href="/" className="flex items-center whitespace-nowrap text-2xl">
             <img className="h-8" src="image/logo-hydrativa-putih.png" alt="Logo" />
-          </a>
+          </Link>
           {/* Hamburger Menu for Mobile */}
           <input type="checkbox" className="peer hidden" id="navbar-open" />
           <label className="absolute top-7 right-8 cursor-pointer md:hidden" htmlFor="navbar-open">
@@ -82,15 +83,15 @@ export default function Home() {
           <nav aria-label="Header Navigation" className="peer-checked:max-h-60 max-h-0 w-full lg:w-auto flex-col flex lg:flex-row lg:max-h-full overflow-hidden transition-all duration-300 lg:items-center lg:ml-auto">
             <ul className="flex flex-col lg:flex-row lg:space-y-0 space-y-4 items-center lg:ml-auto font-poppins font-semibold">
               <li className="text-white border-b-2 border-primary md:mr-12 hover:border-white">
-                <a href="#hero">Home</a>
+                <Link href="#hero">Home</Link>
               </li>
               <li className="text-white border-b-2 border-primary md:mr-12 hover:border-white">
-                <a href="#our-products">Produk</a>
+                <Link href="#our-products">Produk</Link>
               </li>
               <li className="text-white border-b-2 border-primary md:mr-12 hover:border-white">
-                <a href="#cart">
+                <Link href="#cart">
                   <FaShoppingCart className="text-white" />
-                </a>
+                </Link>
               </li>
               <button
                 className="text-white border-2 md:mr-12 px-4 py-2 rounded-md border-white cursor-pointer hover:bg-primary hover:border-primary"
@@ -169,12 +170,12 @@ export default function Home() {
                     required
                   />
                 </div>
-                <a
+                <Link
                   href=""
                   className="mt-1 text-sm text-primary hover:text-additional2 hover:underline hover:underline-offset-4"
                 >
                   Lupa password?
-                </a>
+                </Link>
               </div>
               <div className="flex flex-col mt-2">
                 <button
@@ -385,7 +386,7 @@ export default function Home() {
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               {products.length > 0 ? (
                 products.map((product) => (
-                  <a
+                  <Link
                     href={`/detail/${product.id}`} // Ganti dengan path yang sesuai
                     className="flex flex-col w-full lg:w-full bg-white rounded-lg shadow-md transition-transform duration-300 transform hover:bg-gray-100 hover:scale-105"
                     key={product.id} // Pastikan ada key untuk setiap elemen
@@ -404,13 +405,13 @@ export default function Home() {
                         <FaStar className="text-yellow-400"></FaStar>
                         <div className="font-poppins text-gray-600">4.5</div>
                       </div>
-                    </div>
-                  </a>
+                    </div>                  
+                  </Link>
                 ))
               ) : (
                 // <p>Loading products...</p> // Menangani kondisi ketika tidak ada produk
                 <>
-                  <a
+                  <Link
                     href={`/detail/1`} // Adjusted path as needed
                     className="flex flex-col w-full lg:w-full bg-white rounded-lg shadow-md transition-transform duration-300 transform hover:bg-gray-100 hover:scale-105"
                     key="product1"
@@ -429,9 +430,9 @@ export default function Home() {
                       </div>
                       
                     </div>
-                  </a>
+                  </Link>
 
-                  <a
+                  <Link
                     href={`/detail/2`}
                     className="flex flex-col w-full lg:w-full bg-white rounded-lg shadow-md transition-transform duration-300 transform hover:bg-gray-100 hover:scale-105"
                     key="product2"
@@ -449,9 +450,9 @@ export default function Home() {
                         <div className="font-poppins text-gray-600">4.5</div>
                       </div>                      
                     </div>
-                  </a>
+                  </Link>
 
-                  <a
+                  <Link
                     href={`/detail/3`}
                     className="flex flex-col w-full lg:w-full bg-white rounded-lg shadow-md transition-transform duration-300 transform hover:bg-gray-100 hover:scale-105"
                     key="product3"
@@ -469,9 +470,9 @@ export default function Home() {
                         <div className="font-poppins text-gray-600">4.5</div>
                       </div>                      
                     </div>
-                  </a>
+                  </Link>
 
-                  <a
+                  <Link
                     href={`/detail/4`}
                     className="flex flex-col w-full lg:w-full bg-white rounded-lg shadow-md transition-transform duration-300 transform hover:bg-gray-100 hover:scale-105"
                     key="product4"
@@ -489,17 +490,17 @@ export default function Home() {
                         <div className="font-poppins text-gray-600">4.5</div>
                       </div>                      
                     </div>
-                  </a>
+                  </Link>
                 </>
               )}
             </div>
             <div className="flex justify-end mt-4">
-              <a
+              <Link
                 href="/dashboard"
                 className="font-poppins text-primary border-2 px-4 py-2 rounded-md bg-white cursor-pointer hover:text-white hover:bg-primary hover:border-white"
               >
                 Lihat Selengkapnya
-              </a>
+              </Link>
             </div>
           </div>
         </section>
