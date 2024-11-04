@@ -4,7 +4,6 @@ import { use, useState, useEffect } from 'react';
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import { Produk } from "@/lib/interfaces/Produk";
-import { FaPlus, FaMinus } from "react-icons/fa";
 
 
 const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
