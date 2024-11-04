@@ -1,9 +1,5 @@
 'use client'
-import { useAuth } from '@/lib/hooks/auth'
 import { usePathname } from 'next/navigation'
-import { useState } from 'react'
-import Swal from 'sweetalert2'
-import { User } from '@/lib/interfaces/User';
 
 
 export default function Sidebar() {
