@@ -11,6 +11,10 @@ import Link from "next/link";
 
 export default function Home() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [dataForm, setDataForm] = useState({ username: "", password: "" });
+  const [error, setError] = useState<string | null>(null);
+  const [products, setProducts] = useState<Produk[]>([]);
+
   const togglePasswordVisibility = () => {
     setIsPasswordVisible((prev) => !prev);
   };
@@ -22,15 +26,7 @@ export default function Home() {
     }
   };
 
-  const [dataForm, setDataForm] = useState({
-    username: '',
-    password: ''
-  });
-
-  const [error, setError] = useState(null);
-  const [products, setProducts] = useState<Produk[]>([]); // Deklarasikan state products
-
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setDataForm({
       ...dataForm,
@@ -38,28 +34,31 @@ export default function Home() {
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await axios.post(process.env.NEXT_PUBLIC_API_URL +'/login', dataForm);
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/login`, dataForm);
       setError(null);
-      console.log(res.data);
-      Cookies.set('token', res.data, {
+      Cookies.set("token", res.data, {
         expires: 7,
-        path: '/'
-      })
-      window.location.href = '/dashboard'
+        path: "/",
+      });
+      window.location.href = "/dashboard";
     } catch (err) {
-      setError(err.response?.data?.message);
+      setError(err.response?.data?.message ?? "An error occurred during login.");
       console.error("Error posting form data:", err.response?.data?.message);
     }
   };
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const response = await fetch(process.env.NEXT_PUBLIC_API_URL +'/produk'); // Ganti dengan URL API kamu
-      const result = await response.json();
-      setProducts(result.data); // Ambil data dari response dan set ke state
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/produk`);
+        const result = await response.json();
+        setProducts(result.data);
+      } catch (fetchError) {
+        console.error("Failed to fetch products:", fetchError);
+      }
     };
 
     fetchProducts();
@@ -136,7 +135,7 @@ export default function Home() {
                   name="username"
                   value={dataForm.username}
                   onChange={handleChange}
-                  placeholder="Masukkan username"                  
+                  placeholder="Masukkan username"
                   className="w-full p-2 rounded-md bg-gray-100 focus:outline-none focus:ring focus:ring-primary focus:border-primary"
                   required
                 />
@@ -337,6 +336,8 @@ export default function Home() {
             </div>
           </div>
         </section>
+        {/* Display the error message if one exists */}
+        {error && <p style={{ color: "red" }}>{error}</p>}
 
 
         {/* Know About Us */}
@@ -405,7 +406,7 @@ export default function Home() {
                         <FaStar className="text-yellow-400"></FaStar>
                         <div className="font-poppins text-gray-600">4.5</div>
                       </div>
-                    </div>                  
+                    </div>
                   </Link>
                 ))
               ) : (
@@ -428,7 +429,7 @@ export default function Home() {
                         <FaStar className="text-yellow-400"></FaStar>
                         <div className="font-poppins text-gray-600">4.5</div>
                       </div>
-                      
+
                     </div>
                   </Link>
 
@@ -448,7 +449,7 @@ export default function Home() {
                       <div className="flex items-center justify-start gap-1">
                         <FaStar className="text-yellow-400"></FaStar>
                         <div className="font-poppins text-gray-600">4.5</div>
-                      </div>                      
+                      </div>
                     </div>
                   </Link>
 
@@ -468,7 +469,7 @@ export default function Home() {
                       <div className="flex items-center justify-start gap-1">
                         <FaStar className="text-yellow-400"></FaStar>
                         <div className="font-poppins text-gray-600">4.5</div>
-                      </div>                      
+                      </div>
                     </div>
                   </Link>
 
@@ -488,7 +489,7 @@ export default function Home() {
                       <div className="flex items-center justify-start gap-1">
                         <FaStar className="text-yellow-400"></FaStar>
                         <div className="font-poppins text-gray-600">4.5</div>
-                      </div>                      
+                      </div>
                     </div>
                   </Link>
                 </>
