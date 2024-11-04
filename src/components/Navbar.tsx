@@ -1,15 +1,16 @@
 import React from "react";
 import { IoIosSearch } from "react-icons/io";
 import { FaShoppingCart } from "react-icons/fa";
+import Link from "next/link";
 
 
 export default function Navbar() {
   return (
     <header className="font-poppins shadow fixed top-0 w-full z-10 h-20 bg-white">
       <div className="bg-white flex items-center h-full flex-wrap gap-5 overflow-hidden px-4 py-4 md:px-36 md:mx-auto md:flex-wrap md:items-center">
-        <a href="/">
+        <Link href="/">
           <img className="h-8" src="/image/logo-hydrativa-kecil.png" alt="" />
-        </a>
+        </Link>
         <div className="flex ml-auto h-full lg:ml-0 flex-row w-max lg:w-96">
           <form className="w-full mx-auto">
             {/* <label for="default-search"
@@ -36,21 +37,21 @@ export default function Navbar() {
                   class="focus:outline-none text-white hover:bg-gray-200 font-medium rounded-md text-sm w-12 aspect-square">
                   <i class="text-gray-600 fa-solid fa-bell fa-lg"></i>
               </button> */}
-            <a
+            <Link
               href="/keranjang"
               className="flex justify-center items-center focus:outline-none text-white hover:bg-gray-200 font-medium rounded-md text-sm w-12 aspect-square"
             >
               <FaShoppingCart className="text-gray-600"/>
               <i className="text-gray-600 fa-solid fa-cart-shopping fa-lg" />
-            </a>
+            </Link>
           </div>
-          <a
+          <Link
             href="/akun"
             className="flex items-center gap-2 hover:bg-gray-200 py-1 px-2 rounded-md"
           >
             <img className="w-10 rounded-full" src="/image/avatar-biru.jpg" alt="" />
             <p className="font-semibold text-nowrap">Mochamad Tegar Santoso</p>
-          </a>
+          </Link>
         </div>
       </div>
     </header>
