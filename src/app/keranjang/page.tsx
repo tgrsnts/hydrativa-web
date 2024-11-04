@@ -3,10 +3,10 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
-import { Produk } from "@/lib/interfaces/Produk";
+import type { Keranjang } from "@/lib/interfaces/Keranjang";
 
 export default function Keranjang() {
-  const [data, setData] = useState<Produk[]>([]); // Deklarasikan state products
+  const [data, setData] = useState<Keranjang[]>([]); // Deklarasikan state products
 
   useEffect(() => {
     const fetchData = async () => {
@@ -65,7 +65,7 @@ export default function Keranjang() {
                         alt=""
                       />
                       <div className="flex flex-col w-full">
-                        <div>Jagung</div>
+                        <div>{ item.name }</div>
                         <div className="flex justify-between">
                           <div>x1</div>
                           <div>Rp. 4.000</div>
