@@ -4,33 +4,12 @@ import NavbarUser from '@/components/NavbarUser';
 import Sidebar from '@/components/Sidebar';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-
 import { User } from '@/lib/interfaces/User';
 import Cookies from "js-cookie";
+import Swal from 'sweetalert2';
 
 export default function Akun() {
-    const [isClient, setIsClient] = useState(false);
     const [userData, setUserData] = useState<User | null>(null);
-
-    const onClickLogout = () => {
-        Swal.fire({
-            title: "Anda yakin?",
-            text: "Anda akan logout!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#6A9944",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Confirm",
-            cancelButtonText: "Cancel"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                logout();
-            } else {
-                Swal.fire("Cancelled", "Logout cancelled", "error");
-            }
-        });
-    };
-
     const getUserInfo = async () => {
         var res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/me`, {
             headers: {
@@ -48,7 +27,6 @@ export default function Akun() {
                         showConfirmButton: false,
                         timer: 1500
                     })
-                    logout()
                 } else {
                     Swal.fire({
                         icon: 'error',
@@ -62,7 +40,6 @@ export default function Akun() {
     }
 
     useEffect(() => {
-        setIsClient(true)
         getUserInfo()
         console.log(userData)
     }, [userData])
