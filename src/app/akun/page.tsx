@@ -11,43 +11,51 @@ import Swal from 'sweetalert2';
 export default function Akun() {
     const [userData, setUserData] = useState<User | null>(null);
     const getUserInfo = async () => {
-        var res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/me`, {
-            headers: {
-                'content-type': 'text/json',
-                'Authorization': `Bearer ${Cookies.get('token')}`,
-            }
-        })
-            .then(function (response) {
-                setUserData(response.data.data);
-            }).catch(function (error) {
-                if (error.response && error.response.status === 401) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: error.response.data.message,
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'error terjadi',
-                        text: 'mohon coba lagi nanti.',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
+        try {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/me`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${Cookies.get('token')}`,
                 }
-            })
-    }
+            });
+            setUserData(response.data.data);
+        } catch (error) {
+            if (error.response && error.response.status === 401) {
+                Swal.fire({
+                    icon: 'error',
+                    title: error.response.data.message,
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Terjadi kesalahan',
+                    text: 'Mohon coba lagi nanti.',
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
+            }
+        }
+    };
+
 
     useEffect(() => {
-        getUserInfo()
-        console.log(userData)
-    }, [userData])
+        getUserInfo()        
+    })
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setUserData((prevUserData) => prevUserData ? { ...prevUserData, [name]: value } : null);
+        const { name, value, type, checked } = e.target;
+        setUserData((prevUserData) =>
+            prevUserData
+                ? {
+                    ...prevUserData,
+                    [name]: type === 'radio' ? (checked ? value : prevUserData[name]) : value,
+                }
+                : null
+        );
     };
+
 
     return (
         <>
@@ -167,16 +175,18 @@ export default function Akun() {
                                                             className="accent-primary"
                                                             name="jenis_kelamin"
                                                             type="radio"
+                                                            value="Laki-laki"
                                                             checked={userData?.jenis_kelamin === "Laki-laki"}
                                                             onChange={handleInputChange}
                                                         />
                                                         <label htmlFor="">Laki-laki</label>
                                                     </div>
-                                                    <div className="flex items-center  gap-1">
+                                                    <div className="flex items-center gap-1">
                                                         <input
                                                             className="accent-primary"
                                                             name="jenis_kelamin"
                                                             type="radio"
+                                                            value="Perempuan"
                                                             checked={userData?.jenis_kelamin === "Perempuan"}
                                                             onChange={handleInputChange}
                                                         />
