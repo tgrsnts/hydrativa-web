@@ -106,13 +106,23 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                         </div>
                         <div className="lg:hidden drop-shadow-2xl fixed bottom-0 lg:static w-full bg-white lg:bg-transparent p-2 flex flex-row lg:flex-col gap-2 items-center justify-center">
                             <button
-                                onClick={() => document.getElementById('my_modal').showModal()}
+                                onClick={() => {
+                                    const modal = document.getElementById('my_modal') as HTMLDialogElement | null;
+                                    if (modal) {
+                                        modal.showModal();
+                                    }
+                                }}
                                 className="bg-primary font-poppins font-semibold rounded-lg px-4 py-2 border-2 border-primary text-white text-center w-full hover:bg-white hover:text-primary"
                             >
                                 + Keranjang
                             </button>
                             <button
-                                onClick={() => document.getElementById('my_modal').showModal()}
+                                onClick={() => {
+                                    const modal = document.getElementById('my_modal') as HTMLDialogElement | null;
+                                    if (modal) {
+                                        modal.showModal();
+                                    }
+                                }}
                                 className="font-poppins font-semibold rounded-lg px-4 py-2 border-2 text-center w-full bg-white text-primary border-primary hover:bg-primary hover:text-white hover:border-white"
                             >
                                 Beli
