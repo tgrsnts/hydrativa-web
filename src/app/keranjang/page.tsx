@@ -52,8 +52,8 @@ export default function Keranjang() {
                 </div>
               </div>
               {data.length > 0 ? (
-                data.map((item) => (
-                  <div className="flex flex-col gap-4 bg-white p-6 rounded-lg font-poppins">
+                data.map((item, index) => (
+                  <div key={index} className="flex flex-col gap-4 bg-white p-6 rounded-lg font-poppins">
                     <div className="flex gap-4">
                       <input
                         type="checkbox"
@@ -65,10 +65,10 @@ export default function Keranjang() {
                         alt=""
                       />
                       <div className="flex flex-col w-full">
-                        <div>{ item.name }</div>
+                        <div>{ item.id_produk }</div>
                         <div className="flex justify-between">
-                          <div>x1</div>
-                          <div>Rp. 4.000</div>
+                          <div>x{ item.quantity }</div>
+                          <div>Rp. { item.subtotal }</div>
                         </div>
                       </div>
                     </div>
