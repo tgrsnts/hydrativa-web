@@ -2,7 +2,7 @@
 
 import NavbarUser from '@/components/NavbarUser';
 import Sidebar from '@/components/Sidebar';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useState, useEffect } from 'react';
 import { User } from '@/lib/interfaces/User';
 import Cookies from "js-cookie";
@@ -10,6 +10,7 @@ import Swal from 'sweetalert2';
 
 export default function Akun() {
     const [userData, setUserData] = useState<User | null>(null);
+
     const getUserInfo = async () => {
         try {
             const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/me`, {
@@ -20,7 +21,7 @@ export default function Akun() {
             });
             setUserData(response.data.data);
         } catch (error) {
-            if (error.response && error.response.status === 401) {
+            if (axios.isAxiosError(error) && error.response && error.response.status === 401) {
                 Swal.fire({
                     icon: 'error',
                     title: error.response.data.message,
@@ -40,8 +41,9 @@ export default function Akun() {
     };
 
 
+
     useEffect(() => {
-        getUserInfo()        
+        getUserInfo()
     })
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
