@@ -2,7 +2,7 @@
 
 import NavbarUser from '@/components/NavbarUser';
 import Sidebar from '@/components/Sidebar';
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { User } from '@/lib/interfaces/User';
 import Cookies from "js-cookie";
@@ -44,7 +44,7 @@ export default function Akun() {
 
     useEffect(() => {
         getUserInfo()
-    })
+    }, [])
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value, type, checked } = e.target;
