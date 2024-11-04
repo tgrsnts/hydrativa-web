@@ -39,16 +39,14 @@ export default function Home() {
     try {
       const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/login`, dataForm);
       setError(null);
-      Cookies.set("token", res.data, {
-        expires: 7,
-        path: "/",
-      });
+      Cookies.set("token", res.data, { expires: 7, path: "/" });
       window.location.href = "/dashboard";
-    } catch (err) {
-      setError(err.response?.data?.message ?? "An error occurred during login.");
-      console.error("Error posting form data:", err.response?.data?.message);
+    } catch (error) {
+      setError("An error occurred during login.");
+      console.error("Error posting form data:", error);
     }
   };
+
 
   useEffect(() => {
     const fetchProducts = async () => {
