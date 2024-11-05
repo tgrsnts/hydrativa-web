@@ -19,18 +19,18 @@ export default function Navbar() {
               </button> */}
             <Link
               href="/keranjang"
-              className="flex justify-center items-center focus:outline-none text-white hover:bg-gray-200 font-medium rounded-md text-sm w-12 aspect-square"
+              className="flex justify-center items-center focus:outline-none text-white hover:bg-background font-medium rounded-md text-sm w-12 aspect-square"
             >
-              <FaShoppingCart className="text-gray-600"/>
+              <FaShoppingCart className="text-white"/>
               <i className="text-gray-600 fa-solid fa-cart-shopping fa-lg" />
             </Link>
           </div>
           <Link
             href="/akun"
-            className="flex items-center gap-2 hover:bg-gray-200 py-1 px-2 rounded-md"
+            className="flex items-center gap-2 hover:bg-background py-1 px-2 rounded-md"
           >
             <img className="w-10 rounded-full" src="/image/avatar-biru.jpg" alt="" />
-            <p className="font-semibold text-nowrap">Mochamad Tegar Santoso</p>
+            <p className="font-semibold text-nowrap text-white">Mochamad Tegar Santoso</p>
           </Link>
         </div>
       </div>
