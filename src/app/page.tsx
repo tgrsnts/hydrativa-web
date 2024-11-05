@@ -39,15 +39,24 @@ export default function Home() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/login`, dataForm);
-      setError(null);
-      Cookies.set("token", res.data, { expires: 7, path: "/" });
-      window.location.href = "/dashboard";
+        const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/login`, dataForm);
+        
+        // Check if the response has a token
+        if (res.data.token) {
+            setError(null);
+            // Save the token in cookies
+            Cookies.set("token", res.data.token, { expires: 7, path: "/" });
+            // Optionally, save user data if you need it later
+            Cookies.set("user", JSON.stringify(res.data.user), { expires: 7, path: "/" });
+            window.location.href = "/dashboard";
+        } else {
+            setError("Login failed: No token returned.");
+        }
     } catch (error) {
-      setError("An error occurred during login.");
-      console.error("Error posting form data:", error);
+        setError("An error occurred during login.");
+        console.error("Error posting form data:", error);
     }
-  };
+};
 
 
   useEffect(() => {
