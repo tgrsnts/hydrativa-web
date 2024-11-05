@@ -1,8 +1,7 @@
 export interface Keranjang {   
-    transaksi_item_id: number;
-    id_transaksi: string;
-    id_produk: string;
-    id_user: string;
+    id: number;
+    nama_produk: string;
     quantity: string;
-    subtotal: string;    
+    harga: string;    
+    gambar: string;
 }
