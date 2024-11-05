@@ -111,33 +111,17 @@ export default function Akun() {
                                             <tr>
                                                 <td className="pr-4">
                                                     <label htmlFor="" className="block text-left">
-                                                        Nama Depan
-                                                    </label>
+                                                        Nama Lengkap                                                    </label>
                                                 </td>
                                                 <td className="pl-4 py-1">
                                                     <input
                                                         className="w-full p-2 border-2 rounded-lg"
                                                         type="text"
-                                                        value={userData?.firstname || ''}
+                                                        value={userData?.name || ''}
                                                         onChange={handleInputChange}
                                                     />
                                                 </td>
-                                            </tr>
-                                            <tr>
-                                                <td className="pr-4">
-                                                    <label htmlFor="" className="block text-left">
-                                                        Nama Belakang
-                                                    </label>
-                                                </td>
-                                                <td className="pl-4 py-1">
-                                                    <input
-                                                        className="w-full p-2 border-2 rounded-lg"
-                                                        type="text"
-                                                        value={userData?.lastname || ''}
-                                                        onChange={handleInputChange}
-                                                    />
-                                                </td>
-                                            </tr>
+                                            </tr>                                        
                                             <tr>
                                                 <td className="pr-4">
                                                     <label htmlFor="" className="block text-left">
