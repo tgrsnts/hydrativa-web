@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FaEye, FaEyeSlash, FaShoppingCart, FaStar } from "react-icons/fa";
-import NavbarLanding from "@/components/NavbarLanding";
+import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Produk } from "@/lib/interfaces/Produk";
 import axios from "axios";
@@ -76,7 +76,7 @@ export default function Home() {
   return (
     <>
       {/* <!-- Navbar --> */}
-      <NavbarLanding/>
+      <Navbar/>
 
       {/* <!-- Modal Login --> */}
       <dialog id="modal_login" className="modal backdrop-blur-lg">
