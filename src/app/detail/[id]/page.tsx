@@ -4,11 +4,52 @@ import { use, useState, useEffect } from 'react';
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import { Produk } from "@/lib/interfaces/Produk";
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
 
 const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
     const { id } = use(params); // Unwrap params with React.use()
     const [product, setProduct] = useState<Produk | null>(null);
+    const [quantity, setQuantity] = useState(1); // Initialize quantity to 1
+
+    const handleIncrement = () => {
+        if (product && quantity < product.stok) {
+            setQuantity(quantity + 1);
+        }
+    };
+
+    const handleDecrement = () => {
+        if (quantity > 1) {
+            setQuantity(quantity - 1);
+        }
+    };
+
+    const handleAddToCart = async () => {
+        try {
+          // Replace with your API URL
+          const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/keranjang/add`, {
+            id_produk: product?.id,
+            quantity: quantity,
+          }, {
+            headers: {
+              Authorization: `Bearer ${Cookies.get('token')}` // Assumes token is stored in cookies
+            }
+          });
+      
+          // Handle the response based on API response structure
+          if (response.status === 200 || response.status === 201) {
+            console.log("Product added to cart successfully:", response.data);
+            alert("Product successfully added to the cart!");
+          } else {
+            console.warn("Failed to add product to cart:", response.data);
+          }
+        } catch (error) {
+          console.error("Error adding product to cart:", error);
+          alert("An error occurred while adding the product to the cart.");
+        }
+      };
+
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -68,31 +109,37 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                                         <div className="text-2xl font-bold">Atur jumlah</div>
                                         <div className="mt-2 flex items-center justify-between">
                                             <div className="flex items-center justify-center">
-                                                <button className="text-primary px-3 py-2 border-2 border-primary rounded-l-lg hover:text-white hover:bg-primary w-full">                                                
-                                                -
+                                                <button
+                                                    onClick={handleDecrement}
+                                                    className="text-primary px-3 py-2 border-2 border-primary rounded-l-lg hover:text-white hover:bg-primary w-full"
+                                                >
+                                                    -
                                                 </button>
                                                 <div className="px-4 py-2 border-y-2 border-primary">
-                                                    <p className="text-center">1</p>
+                                                    <p className="text-center">{quantity}</p> {/* Display the dynamic quantity */}
                                                 </div>
-                                                <button className="text-primary px-3 py-2 border-2 border-primary rounded-r-lg hover:text-white hover:bg-primary w-full">
-                                                +
+                                                <button
+                                                    onClick={handleIncrement}
+                                                    className="text-primary px-3 py-2 border-2 border-primary rounded-r-lg hover:text-white hover:bg-primary w-full"
+                                                >
+                                                    +
                                                 </button>
                                             </div>
-                                            <p>Stok total : {product.stok}</p>
+                                            <p>Stok total: {product.stok}</p>
                                         </div>
                                         <div className="flex items-center justify-between">
                                             <p className="font-semibold">Subtotal</p>
-                                            <p className="text-xl font-bold">Rp. {product.harga}</p>
+                                            <p className="text-xl font-bold">Rp. {product.harga * quantity}</p> {/* Calculate subtotal */}
                                         </div>
                                     </div>
                                     <div className="pt-2">
                                         <div className="hidden lg:flex flex-row lg:flex-col gap-3 items-center justify-center">
-                                            <a
-                                                href="keranjang.html"
+                                            <button
+                                                onClick={handleAddToCart}
                                                 className="bg-primary font-poppins font-semibold rounded-lg px-4 py-2 border-2 border-primary text-white text-center w-full hover:bg-white hover:text-primary"
                                             >
                                                 + Keranjang
-                                            </a>
+                                            </button>
                                             <a
                                                 href="checkout.html"
                                                 className="font-poppins font-semibold rounded-lg px-4 py-2 border-2 text-center w-full bg-white text-primary border-primary hover:bg-primary hover:text-white hover:border-white"
@@ -135,7 +182,7 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                         >
                             <div className="font-poppins modal-box bg-white text-black px-4 pt-2 pb-8">
                                 <div className="flex flex-wrap">
-                                <img src={`/storage/${product.gambar}`} className="h-45 rounded-lg" alt={product.nama} />
+                                    <img src={`/storage/${product.gambar}`} className="h-45 rounded-lg" alt={product.nama} />
                                     <div className="flex flex-col w-1/2 pl-4">
                                         <div className="flex justify-end">
                                             <form method="dialog">
