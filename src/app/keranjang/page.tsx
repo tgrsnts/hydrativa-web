@@ -79,12 +79,12 @@ export default function Keranjang() {
                     <p className="font-semibold text-2xl text-center">Keranjangmu masih kosong nih :(</p>
                     <p className="text-xl text-center">Yuk, isi dengan produk-produk stevia terbaik dari kami!</p>
                     <div className="flex justify-center">
-                    <a
-                      href="checkout.html"
-                      className="bg-primary font-poppins font-semibold rounded-lg px-12 py-2 border-2 border-primary text-white text-center w-fit hover:bg-white hover:text-primary"
-                    >
-                      Mulai Belanja
-                    </a>
+                      <a
+                        href="checkout.html"
+                        className="bg-primary font-poppins font-semibold rounded-lg px-12 py-2 border-2 border-primary text-white text-center w-fit hover:bg-white hover:text-primary"
+                      >
+                        Mulai Belanja
+                      </a>
                     </div>
                   </div>
                 </>
@@ -103,11 +103,13 @@ export default function Keranjang() {
                     </div>
                   </div>
                   <a
-                    href="checkout.html"
-                    className="bg-primary font-poppins font-semibold rounded-lg px-4 py-2 border-2 border-primary text-white text-center w-full hover:bg-white hover:text-primary"
+                    href={data && data.length > 0 ? "/checkout" : "#"}
+                    className={`bg-primary font-poppins font-semibold rounded-lg px-4 py-2 border-2 border-primary text-white text-center w-full hover:bg-white hover:text-primary ${!data || data.length === 0 ? "opacity-50 cursor-not-allowed" : ""
+                      }`}
                   >
                     Beli
                   </a>
+
                 </div>
               </div>
             </div>
