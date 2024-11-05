@@ -72,10 +72,11 @@ export default function Home() {
       {/* <!-- Modal Login --> */}
       <dialog id="modal_login" className="modal backdrop-blur-lg">
         <div className="modal-box font-poppins p-0 w-76 lg:w-96 flex flex-col">
-          <div className="flex items-center bg-primary rounded-t-lg h-24 lg:h-40">
-            <h2 className="text-2xl lg:text-5xl font-bold text-center text-white w-full">Login</h2>
+          <div className="flex items-center bg-primary rounded-t-lg h-24 lg:h-40 p-16">
+            <img src="/image/logo-hydrativa-putih.png" alt="" />
           </div>
           <div className="px-8 pt-4 pb-12">
+          <h2 className="text-2xl lg:text-4xl font-bold text-center text-black w-full mb-4">Login</h2>
             <form id="loginForm" onSubmit={handleSubmit} className="flex flex-col gap-2">
               <div className="flex flex-col">
                 <label htmlFor="username">Username</label>
@@ -135,11 +136,11 @@ export default function Home() {
                 </button>
               </div>
             </form>
-            <div className="divider">atau masuk dengan</div>
+            {/* <div className="divider">atau masuk dengan</div>
             <button className="mt-2 flex justify-center items-center gap-2 w-full border-2 rounded-md py-1 text-black hover:bg-gray-100 hover:text-additional2">
               <FcGoogle />
               Google
-            </button>
+            </button> */}
 
             <div className="mt-2 text-center">
               Belum punya akun?{" "}
@@ -166,10 +167,11 @@ export default function Home() {
       {/* <!-- Modal Register --> */}
       <dialog id="modal_register" className="modal backdrop-blur-lg">
         <div className="modal-box font-poppins p-0 w-76 lg:w-96 flex flex-col">
-          <div className="flex items-center bg-primary rounded-t-lg h-24 lg:h-40">
-            <h2 className="text-2xl lg:text-5xl font-bold text-center text-white w-full">Daftar</h2>
+        <div className="flex items-center bg-primary rounded-t-lg h-24 lg:h-40 p-16">
+            <img src="/image/logo-hydrativa-putih.png" alt="" />
           </div>
           <div className="px-8 pt-4 pb-12">
+          <h2 className="text-2xl lg:text-4xl font-bold text-center text-black w-full mb-4">Daftar</h2>
             <form id="registerForm" className="flex flex-col gap-2">
               <div className="flex flex-col">
                 <label htmlFor="namaRegister">Nama</label>
@@ -244,11 +246,11 @@ export default function Home() {
                 </button>
               </div>
             </form>
-            <div className="divider">atau daftar dengan</div>
+            {/* <div className="divider">atau daftar dengan</div>
             <button className="mt-2 flex justify-center items-center gap-2 w-full border-2 rounded-md py-1 text-black hover:bg-gray-100 hover:text-additional2">
               <FcGoogle />
               Google
-            </button>
+            </button> */}
             <div className="mt-2 text-center">
               Sudah punya akun?{" "}
               <button
