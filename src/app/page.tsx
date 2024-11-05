@@ -1,9 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { FcGoogle } from "react-icons/fc";
+// import { FcGoogle } from "react-icons/fc";
 import { FaEye, FaEyeSlash, FaShoppingCart, FaStar } from "react-icons/fa";
-import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Produk } from "@/lib/interfaces/Produk";
 import axios from "axios";

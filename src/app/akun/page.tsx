@@ -1,6 +1,5 @@
 'use client';
 
-import NavbarUser from '@/components/NavbarUser';
 import Navbar from '@/components/Navbar';
 import Sidebar from '@/components/Sidebar';
 import axios from 'axios';
