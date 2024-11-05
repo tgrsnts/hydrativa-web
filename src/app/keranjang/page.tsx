@@ -74,45 +74,17 @@ export default function Keranjang() {
                   </div>
                 ))
               ) : (
-                <>                  
+                <>
                   <div className="flex flex-col gap-4 bg-white p-6 rounded-lg font-poppins">
-                    <div className="flex gap-4">
-                      <input
-                        type="checkbox"
-                        className="item-checkbox w-4 h-4 accent-primary"
-                      />
-                      <img
-                        className="w-20 rounded-md"
-                        src="image/product/Jagung.png"
-                        alt=""
-                      />
-                      <div className="flex flex-col w-full">
-                        <div>Jagung</div>
-                        <div className="flex justify-between">
-                          <div>x1</div>
-                          <div>Rp. 4.000</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-4 bg-white p-6 rounded-lg font-poppins">
-                    <div className="flex gap-4">
-                      <input
-                        type="checkbox"
-                        className="item-checkbox w-4 h-4 accent-primary"
-                      />
-                      <img
-                        className="w-20 rounded-md"
-                        src="image/product/Brokoli.png"
-                        alt=""
-                      />
-                      <div className="flex flex-col w-full">
-                        <div>Brokoli</div>
-                        <div className="flex justify-between">
-                          <div>x1</div>
-                          <div>Rp. 4.000</div>
-                        </div>
-                      </div>
+                    <p className="font-semibold text-2xl text-center">Keranjangmu masih kosong nih :(</p>
+                    <p className="text-xl text-center">Yuk, isi dengan produk-produk stevia terbaik dari kami!</p>
+                    <div className="flex justify-center">
+                    <a
+                      href="checkout.html"
+                      className="bg-primary font-poppins font-semibold rounded-lg px-12 py-2 border-2 border-primary text-white text-center w-fit hover:bg-white hover:text-primary"
+                    >
+                      Mulai Belanja
+                    </a>
                     </div>
                   </div>
                 </>
