@@ -13,6 +13,7 @@ const config: Config = {
         poppins: ['"Poppins"', 'sans-serif'], // Add fallback font
       },
       colors: {
+        background: '#0A3E0A',
         primary: '#1A5319',
         second: '#508D4E',
         additional1: '#80AF81',
