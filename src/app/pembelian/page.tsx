@@ -1,5 +1,5 @@
 'use client'
-import NavbarUser from '@/components/NavbarUser'
+import Navbar from '@/components/Navbar'
 import Sidebar from '@/components/Sidebar'
 import React from 'react'
 
@@ -7,17 +7,17 @@ export default function Akun() {
 
     return (
         <>
+            <Navbar />
             <div className="flex">
                 <div className="flex">
                     <div className="flex min-h-screen w-80 flex-col bg-primary py-4 text-gray-700">
                         <Sidebar />
                     </div>
                 </div>
-                <div className="flex flex-col w-full">
-                    <NavbarUser />
+                <div className="mt-12 flex flex-col w-full">
                     <section
                         id="dashboard"
-                        className="min-h-screen font-poppins w-full flex gap-2 flex-col mt-4 pt-10 px-4 pb-20 bg-gray-100"
+                        className="min-h-screen font-poppins w-full flex gap-2 flex-col mt-2 pt-10 px-4 pb-20 bg-background"
                     >
                         <div className="flex gap-2 rounded-lg bg-white w-full py-4">
                             <div className="px-4 py-2">Status</div>
