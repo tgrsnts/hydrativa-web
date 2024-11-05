@@ -1,21 +1,52 @@
-'use client'
-import Navbar from '@/components/Navbar'
-import Sidebar from '@/components/Sidebar'
-import React from 'react'
+'use client';
+import Navbar from '@/components/Navbar';
+import Sidebar from '@/components/Sidebar';
+import React, { useEffect, useState } from 'react';
+import { Alamat } from '@/lib/interfaces/Alamat';
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
 export default function Akun() {
+    const [dataAlamat, setDataAlamat] = useState<Alamat[] | null>(null); // State for addresses
+
+    useEffect(() => {
+        const fetchDataAlamat = async () => {
+            try {
+                const response = await axios.get(`http://127.0.0.1:8000/api/alamat`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${Cookies.get('token')}`,
+                    },
+                });
+
+                console.log("API Response:", response.data); // Log to check response structure
+
+                // Check if the response data structure contains 'data' array
+                if (response.data && Array.isArray(response.data.data)) {
+                    setDataAlamat(response.data.data); // Set the fetched data directly
+                } else {
+                    setDataAlamat([]); // Set to empty array if data is not an array
+                }
+            } catch (error) {
+                console.error("Failed to fetch data:", error);
+                setDataAlamat(null); // Set to null on error
+            }
+        };
+
+        fetchDataAlamat(); // Call to fetch address data
+    }, []);
 
     return (
         <>
-        <Navbar/>
+            <Navbar />
             <div className="flex">
                 <div className="flex">
                     <div className="flex min-h-screen w-80 flex-col bg-primary py-4 text-gray-700">
                         <Sidebar />
                     </div>
                 </div>
-                <div className="mt-12 flex flex-col w-full">               
-                <section
+                <div className="mt-12 flex flex-col w-full">
+                    <section
                         id="dashboard"
                         className="min-h-screen font-poppins w-full flex flex-col mt-2 pt-10 px-4 pb-20 bg-background"
                     >
@@ -31,70 +62,54 @@ export default function Akun() {
                                     // onClick={() => {
                                     //     document.getElementById('modalTambahData')!.showModal();
                                     // }}
-                                    
                                 >
                                     Tambah Alamat
                                 </button>
                             </div>
                             <div className="divider" />
                             <div className="flex flex-col gap-4">
-                                <div className="flex justify-between p-4 border-2 rounded-lg">
-                                    <div className="flex flex-col">
-                                        <div className="flex items-center gap-4">
-                                            <div>Rumah</div>
-                                            <div className="p-1 border-2 text-sm text-primary border-primary">
-                                                Utama
+                                {dataAlamat && dataAlamat.length > 0 ? (
+                                    dataAlamat.map((alamat, index) => (
+                                        <div key={index} className="flex justify-between p-4 border-2 rounded-lg">
+                                            <div className="flex flex-col">
+                                                <div className="flex items-center gap-4">
+                                                    <div>{alamat.label_alamat}</div>
+                                                    {alamat.isPrimary === 1 && ( // Only show "Utama" if isPrimary is 1
+                                                        <div className="px-2 py-1 border-2 text-sm text-primary border-primary rounded-md">
+                                                            Utama
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div className="flex flex-col">
+                                                    <div className='text-xl font-semibold'>{alamat.nama_penerima}</div>
+                                                    <div>{alamat.no_telepon}</div>
+                                                </div>
+                                                <div>
+                                                    {alamat.detail}, {alamat.kelurahan}, {alamat.kecamatan}, {alamat.kabupaten}, {alamat.provinsi}, {alamat.kodepos}
+                                                </div>
+                                            </div>
+                                            <div className="flex flex-col gap-2 items-end">
+                                                <a href="" className="text-primary">
+                                                    Ubah
+                                                </a>
+                                                {!alamat.isPrimary && (
+                                                    <button className="p-2 border-2 rounded-lg bg-primary text-white">
+                                                        Atur sebagai Utama
+                                                    </button>
+                                                )}
                                             </div>
                                         </div>
-                                        <div className="flex">
-                                            <div>Tegar Santoso</div>
-                                            <div className="divider divider-horizontal before:bg-black after:bg-black" />
-                                            <div>081234567890</div>
-                                        </div>
-                                        <div>
-                                            Jl. Mawar Indah No. 123, Kel. Melati, Kec. Cempaka, Jakarta, 12345
-                                        </div>
+                                    ))
+                                ) : (
+                                    <div className="text-center text-gray-500">
+                                        Tidak ada alamat yang tersedia.
                                     </div>
-                                    <div className="flex flex-col gap-2 items-end">
-                                        <a href="" className="text-primary">
-                                            Ubah
-                                        </a>
-                                        {/* <button class="p-2 border-2 rounded-lg">Atur sebagai Utama</button> */}
-                                    </div>
-                                </div>
-                                <div className="flex justify-between p-4 border-2 rounded-lg">
-                                    <div className="flex flex-col">
-                                        <div className="flex items-center gap-4">
-                                            <div>Kantor</div>
-                                            {/* <div class="p-1 border-2 text-sm">Utama</div> */}
-                                        </div>
-                                        <div className="flex">
-                                            <div>Tegar Santoso</div>
-                                            <div className="divider divider-horizontal before:bg-black after:bg-black" />
-                                            <div>081234567890</div>
-                                        </div>
-                                        <div>
-                                            Jl. Mawar Indah No. 123, Kel. Melati, Kec. Cempaka, Jakarta, 12345
-                                        </div>
-                                    </div>
-                                    <div className="flex flex-col gap-2 items-end">
-                                        <a href="" className="text-primary">
-                                            Ubah
-                                        </a>
-                                        <button className="p-2 border-2 rounded-lg bg-primary text-white">
-                                            Atur sebagai Utama
-                                        </button>
-                                    </div>
-                                </div>
+                                )}
                             </div>
                         </div>
                     </section>
                 </div>
             </div>
-
-        
-            
-
         </>
-    )
+    );
 }
