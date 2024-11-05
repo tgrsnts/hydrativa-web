@@ -26,7 +26,7 @@ export default function Navbar() {
                 <Link href="#our-products">Produk</Link>
               </li>
               <li className="text-white border-b-2 border-primary md:mr-12 hover:border-white">
-                <Link href="#cart">
+                <Link href="/keranjang">
                   <FaShoppingCart className="text-white" />
                 </Link>
               </li>
