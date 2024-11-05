@@ -8,7 +8,7 @@ export default function Navbar() {
 
   return (
     <header className="shadow fixed top-0 w-full z-10 h-20 bg-primary">
-      <div className="bg-primary flex items-center h-full flex-wrap gap-5 overflow-hidden px-4 py-4 md:px-36 md:mx-auto">
+      <div className="font-poppins bg-primary flex items-center h-full flex-wrap gap-5 overflow-hidden px-4 py-4 md:px-36 md:mx-auto">
         <Link href="/" className="flex items-center whitespace-nowrap text-2xl">
           <img className="h-8" src="/image/logo-hydrativa-putih.png" alt="Logo" />
         </Link>
