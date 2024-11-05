@@ -506,85 +506,42 @@ export default function Home() {
 
 
         <section id="kontak" className="px-4 py-20 bg-gray-100">
-          <div className="flex flex-col gap-10 justify-center bg-white rounded-lg w-full lg:w-1/2 mx-auto font-poppins">
-            <div className="flex items-center bg-primary rounded-t-lg h-40">
-              <h2 className="text-xl lg:text-5xl font-bold text-center text-white w-full">
-                Kontak
-              </h2>
-            </div>
-            <div className="w-full flex flex-wrap px-8 lg:px-8 pb-10 lg:pb-16">
-              {/* <div class="flex flex-col w-full lg:w-1/2 transition duration-300 hover:drop-shadow-2xl">
-                  <iframe
-                      src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d990.8655974168457!2d106.808518!3d-6.589305!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69c57776d4956d%3A0x7d23c109e11fa013!2%20Makan%20HydraTiva!5e0!3m2!1sid!2sid!4v1716653576602!5m2!1sid!2sid"
-                      class="flex flex-col w-full lg:h-full rounded-lg" style="border:0;" allowfullscreen=""
-                      loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-              </div> */}
-              <form
-                action=""
-                className="flex flex-col mt-8 lg:mt-0 w-full lg:ps-4 gap-2 rounded-lg transition duration-300 font-poppins"
-              >
-                <h2 className="text-xl lg:text-2xl font-bold text-center w-full">
-                  Hubungi Kami
-                </h2>
-                <div className="flex flex-col">
-                  <label htmlFor="nama">Nama</label>
-                  <input
-                    type="text"
-                    id="nama"
-                    placeholder="Masukan nama anda"
-                    className="w-full p-2 rounded-md bg-gray-100 focus:outline-none focus:ring focus:ring-primary focus-border-primary"
-                  />
+          <div className="flex flex-row gap-10 justify-center items-center rounded-lg w-full mx-auto font-poppins">
+            <div className="w-1/2 flex justify-center items-center">
+              <div className="bg-primary rounded-full w-60 h-60">
+                <img src="/image/mockup.png" alt="" />
+              </div></div>
+            <div className="w-1/2">
+              <p className="text-4xl font-semibold text-primary">Unduh Aplikasi Kami</p>
+              <p className="text-primary">
+                HydraTiva adalah aplikasi yang dirancang untuk meningkatkan produktivitas dan efisiensi di sektor perkebunan tanaman Stevia. Dengan menggabungkan teknologi IoT (Internet of Things),  HydraTiva memungkinkan petani untuk memantau kondisi lahan secara real-time dan membantu penyaluran hasil perkebunan stevia.
+              </p>
+              <button type="button" className="font-poppins flex items-center justify-center w-48 mt-3 text-white bg-black rounded-lg h-14">
+                <div className="mr-3">
+                  <svg viewBox="30 336.7 120.9 129.2" width="30">
+                    <path fill="#FFD400" d="M119.2,421.2c15.3-8.4,27-14.8,28-15.3c3.2-1.7,6.5-6.2,0-9.7  c-2.1-1.1-13.4-7.3-28-15.3l-20.1,20.2L119.2,421.2z">
+                    </path>
+                    <path fill="#FF3333" d="M99.1,401.1l-64.2,64.7c1.5,0.2,3.2-0.2,5.2-1.3  c4.2-2.3,48.8-26.7,79.1-43.3L99.1,401.1L99.1,401.1z">
+                    </path>
+                    <path fill="#48FF48" d="M99.1,401.1l20.1-20.2c0,0-74.6-40.7-79.1-43.1  c-1.7-1-3.6-1.3-5.3-1L99.1,401.1z">
+                    </path>
+                    <path fill="#3BCCFF" d="M99.1,401.1l-64.3-64.3c-2.6,0.6-4.8,2.9-4.8,7.6  c0,7.5,0,107.5,0,113.8c0,4.3,1.7,7.4,4.9,7.7L99.1,401.1z">
+                    </path>
+                  </svg>
                 </div>
-                <div className="flex flex-col">
-                  <label htmlFor="telepon">No. Telepon</label>
-                  <input
-                    type="text"
-                    id="telepon"
-                    placeholder="Masukan nomor telepon anda"
-                    className="w-full p-2 rounded-md bg-gray-100 focus:outline-none focus:ring focus:ring-primary focus-border-primary"
-                  />
+                <div className="font-poppins">
+                  <div className="text-xs font-poppins">
+                    GET IT ON
+                  </div>
+                  <div className="mt-1 font-sans text-xl font-semibold font-poppins">
+                    Google Play
+                  </div>
                 </div>
-                <div className="flex flex-col">
-                  <label htmlFor="email">Email</label>
-                  <input
-                    type="email"
-                    id="email"
-                    placeholder="Masukan email anda"
-                    className="w-full p-2 rounded-md bg-gray-100 focus:outline-none focus:ring focus:ring-primary focus-border-primary"
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <label htmlFor="subjek">Subjek</label>
-                  <input
-                    type="text"
-                    id="subjek"
-                    placeholder="Subjek"
-                    className="w-full p-2 rounded-md bg-gray-100 focus:outline-none focus:ring focus:ring-primary focus-border-primary"
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <label htmlFor="pesan">Pesan</label>
-                  <textarea
-                    name=""
-                    id="pesan"
-                    placeholder="Pesan anda"
-                    className="w-full p-2 rounded-md bg-gray-100 focus:outline-none focus:ring focus:ring-primary focus-border-primary"
-                    defaultValue={""}
-                  />
-                </div>
-                <div className="flex flex-col mt-4 lg:mt-auto">
-                  {/* <button type="submit"
-                          class="p-2 rounded-md bg-primary text-white hover:bg-additional2">Kirim</button> */}
-                  <button
-                    type="submit"
-                    className="p-2 rounded-md bg-white text-primary ring-2 ring-primary hover:bg-primary hover:text-white"
-                  >
-                    Kirim
-                  </button>
-                </div>
-              </form>
+              </button>
             </div>
           </div>
+
+
         </section>
 
         <Footer />
