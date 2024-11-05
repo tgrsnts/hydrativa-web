@@ -11,6 +11,7 @@ import Link from "next/link";
 
 
 export default function Home() {
+  const [isClient, setIsClient] = useState(false)
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [dataForm, setDataForm] = useState({ username: "", password: "" });
   const [error, setError] = useState<string | null>(null);
@@ -59,6 +60,7 @@ export default function Home() {
 
 
   useEffect(() => {
+    setIsClient(true);
     const fetchProducts = async () => {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/produk`);
