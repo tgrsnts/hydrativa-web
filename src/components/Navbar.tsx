@@ -3,6 +3,7 @@ import Link from "next/link";
 import Cookies from "js-cookie";
 import { useState, useEffect } from "react";
 import { FaEye, FaEyeSlash, FaShoppingCart, FaStar } from "react-icons/fa";
+import axios from "axios";
 
 export default function Navbar() {
   const isLoggedIn = Cookies.get('token');
