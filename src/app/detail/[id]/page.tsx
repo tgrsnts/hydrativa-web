@@ -2,7 +2,7 @@
 
 import { use, useState, useEffect } from 'react';
 import Footer from "@/components/Footer";
-import Navbar from "@/components/Navbar";
+import NavbarLanding from "@/components/NavbarLanding";
 import { Produk } from "@/lib/interfaces/Produk";
 
 
@@ -27,7 +27,7 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
     }, [id]);
     return (
         <>
-            <Navbar />
+            <NavbarLanding />
             {product ? (
 
                 <main>
