@@ -31,7 +31,7 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
             {product ? (
 
                 <main>
-                    <section id="detail" className="py-16 lg:px-36 bg-gray-100 mt-16 mx-auto">
+                    <section id="detail" className="py-16 lg:px-36 bg-background mt-16 mx-auto">
                         <div className="flex flex-wrap justify-center">
                             <div className="flex w-full lg:w-2/3 p-2">
                                 <div className="flex flex-col lg:flex-row bg-white rounded-lg p-4">
