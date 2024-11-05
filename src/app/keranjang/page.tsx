@@ -34,7 +34,7 @@ export default function Keranjang() {
       <Navbar />
       <main>
         {/* Menu */}
-        <section id="detail" className="py-16 lg:px-36 bg-gray-100 mt-16 mx-auto">
+        <section id="detail" className="py-16 lg:px-36 bg-background mt-16 mx-auto">
           <div className="flex flex-wrap gap justify-center">
             <div className="flex flex-col gap-4 w-full lg:w-2/3 p-2">
               <div className="flex flex-col gap-4 bg-white p-6 rounded-lg font-poppins">
