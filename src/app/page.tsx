@@ -11,7 +11,7 @@ import Link from "next/link";
 
 
 export default function Home() {
-  const [isClient, setIsClient] = useState(false)
+  const [isClient, setIsClient] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [dataForm, setDataForm] = useState({ username: "", password: "" });
   const [error, setError] = useState<string | null>(null);
@@ -65,7 +65,7 @@ export default function Home() {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/produk`);
         const result = await response.json();
-        setProducts(result.data);
+        setProducts(result);
       } catch (fetchError) {
         console.error("Failed to fetch products:", fetchError);
       }
