@@ -39,24 +39,24 @@ export default function Home() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-        const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/login`, dataForm);
-        
-        // Check if the response has a token
-        if (res.data.token) {
-            setError(null);
-            // Save the token in cookies
-            Cookies.set("token", res.data.token, { expires: 7, path: "/" });
-            // Optionally, save user data if you need it later
-            Cookies.set("user", JSON.stringify(res.data.user), { expires: 7, path: "/" });
-            window.location.href = "/dashboard";
-        } else {
-            setError("Login failed: No token returned.");
-        }
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/login`, dataForm);
+
+      // Check if the response has a token
+      if (res.data.token) {
+        setError(null);
+        // Save the token in cookies
+        Cookies.set("token", res.data.token, { expires: 7, path: "/" });
+        // Optionally, save user data if you need it later
+        Cookies.set("user", JSON.stringify(res.data.user), { expires: 7, path: "/" });
+        window.location.href = "/dashboard";
+      } else {
+        setError("Login failed: No token returned.");
+      }
     } catch (error) {
-        setError("An error occurred during login.");
-        console.error("Error posting form data:", error);
+      setError("An error occurred during login.");
+      console.error("Error posting form data:", error);
     }
-};
+  };
 
 
   useEffect(() => {
@@ -76,7 +76,57 @@ export default function Home() {
   return (
     <>
       {/* <!-- Navbar --> */}
-      <Navbar/>
+      <header className="shadow fixed top-0 w-full z-10 h-20 bg-primary">
+        <div className="bg-primary relative flex justify-between lg:justify-start flex-col lg:flex-row lg:h-20 overflow-hidden px-4 py-4 md:px-36 md:mx-auto md:flex-wrap md:items-center">
+          <Link href="/" className="flex items-center whitespace-nowrap text-2xl">
+            <img className="h-8" src="/image/logo-hydrativa-putih.png" alt="Logo" />
+          </Link>
+          {/* Hamburger Menu for Mobile */}
+          <input type="checkbox" className="peer hidden" id="navbar-open" />
+          <label className="absolute top-7 right-8 cursor-pointer md:hidden" htmlFor="navbar-open">
+            <span className="sr-only">Toggle Navigation</span>
+            <i className="fa-solid fa-bars h-6 w-6 text-white" />
+          </label>
+          {/* Navigation Menu */}
+          <nav aria-label="Header Navigation" className="peer-checked:max-h-60 max-h-0 w-full lg:w-auto flex-col flex lg:flex-row lg:max-h-full overflow-hidden transition-all duration-300 lg:items-center lg:ml-auto">
+            <ul className="flex flex-col lg:flex-row lg:space-y-0 space-y-4 items-center lg:ml-auto font-poppins font-semibold">
+              <li className="text-white border-b-2 border-primary md:mr-12 hover:border-white">
+                <Link href="#hero">Home</Link>
+              </li>
+              <li className="text-white border-b-2 border-primary md:mr-12 hover:border-white">
+                <Link href="#our-products">Produk</Link>
+              </li>
+              <li className="text-white border-b-2 border-primary md:mr-12 hover:border-white">
+                <Link href="/keranjang">
+                  <FaShoppingCart className="text-white" />
+                </Link>
+              </li>
+              <button
+                className="text-white border-2 md:mr-12 px-4 py-2 rounded-md border-white cursor-pointer hover:bg-primary hover:border-primary"
+                onClick={() => {
+                  const modal = document.getElementById('modal_login') as HTMLDialogElement | null;
+                  if (modal) {
+                    modal.showModal();
+                  }
+                }}
+              >
+                Masuk
+              </button>
+              <button
+                className="text-primary border-2 md:mr-12 px-4 py-2 rounded-md bg-white cursor-pointer hover:text-white hover:bg-primary hover:border-white"
+                onClick={() => {
+                  const modal = document.getElementById('modal_register') as HTMLDialogElement | null;
+                  if (modal) {
+                    modal.showModal();
+                  }
+                }}
+              >
+                Daftar
+              </button>
+            </ul>
+          </nav>
+        </div>
+      </header>
 
       {/* <!-- Modal Login --> */}
       <dialog id="modal_login" className="modal backdrop-blur-lg">
@@ -85,7 +135,7 @@ export default function Home() {
             <img src="/image/logo-hydrativa-putih.png" alt="" />
           </div>
           <div className="px-8 pt-4 pb-12">
-          <h2 className="text-2xl lg:text-4xl font-bold text-center text-black w-full mb-4">Login</h2>
+            <h2 className="text-2xl lg:text-4xl font-bold text-center text-black w-full mb-4">Login</h2>
             <form id="loginForm" onSubmit={handleSubmit} className="flex flex-col gap-2">
               <div className="flex flex-col">
                 <label htmlFor="username">Username</label>
@@ -176,11 +226,11 @@ export default function Home() {
       {/* <!-- Modal Register --> */}
       <dialog id="modal_register" className="modal backdrop-blur-lg">
         <div className="modal-box font-poppins p-0 w-76 lg:w-96 flex flex-col">
-        <div className="flex items-center bg-primary rounded-t-lg h-24 lg:h-40 p-16">
+          <div className="flex items-center bg-primary rounded-t-lg h-24 lg:h-40 p-16">
             <img src="/image/logo-hydrativa-putih.png" alt="" />
           </div>
           <div className="px-8 pt-4 pb-12">
-          <h2 className="text-2xl lg:text-4xl font-bold text-center text-black w-full mb-4">Daftar</h2>
+            <h2 className="text-2xl lg:text-4xl font-bold text-center text-black w-full mb-4">Daftar</h2>
             <form id="registerForm" className="flex flex-col gap-2">
               <div className="flex flex-col">
                 <label htmlFor="namaRegister">Nama</label>
