@@ -5,33 +5,28 @@ import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import type { Keranjang } from "@/lib/interfaces/Keranjang";
 import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
+
 
 export default function Keranjang() {
   const [data, setData] = useState<Keranjang[]>([]); // Set initial state to empty array
   const [selectedItems, setSelectedItems] = useState<number[]>([]); // State for selected items
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`http://127.0.0.1:8000/api/keranjang`, {
-          headers: {
-            'content-type': 'application/json',
-            'Authorization': `Bearer ${Cookies.get('token')}`,
-          },
-        });
-        console.log("API Response:", response);
-        setData(response.data); // Set data from API
-      } catch (error) {
-        console.error("Failed to fetch data:", error);
-        setData(null); // Set to null on error
-      } finally {
-        setLoading(false);
-      }
-    };
+  const router = useRouter()
 
-    fetchData();
-  }, []);
+  const handleBeliClick = () => {
+    if (selectedItems.length === 0) {
+      alert("Pilih barang yang ingin dibeli terlebih dahulu.");
+      return;
+    }
+
+    // Proceed with the purchase
+    const selectedItemsData = data.filter(item => selectedItems.includes(item.id));
+    sessionStorage.setItem('selectedItems', JSON.stringify(selectedItemsData));
+    router.push('/checkout');
+  };
+
 
   // Handle individual item checkbox change
   const handleCheckboxChange = (id: number) => {
@@ -56,8 +51,31 @@ export default function Keranjang() {
 
   // Calculate the total for selected items
   const selectedTotal = data
-    ?.filter(item => selectedItems.includes(item.id))
-    .reduce((acc, item) => acc + item.harga * item.quantity, 0);
+  .filter(item => selectedItems.includes(item.id))
+  .reduce((acc, item) => acc + (item.harga || 0) * (item.quantity || 0), 0);
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://127.0.0.1:8000/api/keranjang`, {
+          headers: {
+            'content-type': 'application/json',
+            'Authorization': `Bearer ${Cookies.get('token')}`,
+          },
+        });
+        console.log("API Response:", response);
+        setData(response.data); // Set data from API
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+        setData([]); // Set to null on error
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <>
@@ -140,12 +158,12 @@ export default function Keranjang() {
                     </div>
                   </div>
                   <a
-                    href={data && data.length > 0 ? "/checkout" : "#"}
-                    className={`bg-primary font-poppins font-semibold rounded-lg px-4 py-2 border-2 border-primary text-white text-center w-full hover:bg-white hover:text-primary ${!data || data.length === 0 ? "opacity-50 cursor-not-allowed" : ""
-                      }`}
+                    onClick={handleBeliClick}
+                    className={`bg-primary font-poppins font-semibold rounded-lg px-4 py-2 border-2 border-primary text-white text-center w-full hover:bg-white hover:text-primary ${!data || data.length === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
                   >
                     Beli
                   </a>
+
                 </div>
               </div>
             </div>
