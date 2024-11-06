@@ -11,6 +11,7 @@ import Swal from 'sweetalert2';
 export default function Akun() {
     const [userData, setUserData] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
+    const [file, setFile] = useState<File | null>(null);
 
     const getUserInfo = async () => {
         try {
@@ -28,8 +29,32 @@ export default function Akun() {
         }
     };
 
+    const updateUserPhoto = async (file: File) => {
+        const formData = new FormData();
+        formData.append('gambar', file);
+
+        try {
+            await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/me/photo`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': `Bearer ${Cookies.get('token')}`,
+                }
+            });
+            Swal.fire({
+                icon: 'success',
+                title: 'Foto profil berhasil diperbarui!',
+                showConfirmButton: false,
+                timer: 1500,
+            });
+            getUserInfo();  // Refresh user data after photo update
+        } catch (error) {
+            handleAxiosError(error);
+        }
+    };
+
     const updateUserInfo = async (e: React.FormEvent) => {
         e.preventDefault(); // Mencegah perilaku submit form standar
+        
         try {
             await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/me/update`, userData, {
                 headers: {
@@ -48,6 +73,7 @@ export default function Akun() {
         }
     };
 
+    // Handle input change
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value, type, checked } = e.target;
         setUserData((prevUserData) =>
@@ -55,6 +81,17 @@ export default function Akun() {
                 ? { ...prevUserData, [name]: type === 'radio' ? value : checked ? checked : value }
                 : null
         );
+    };
+
+    // Handle file change (for image upload)
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            const selectedFile = e.target.files[0];
+            setFile(selectedFile);
+            if (selectedFile) {
+                updateUserPhoto(selectedFile);  // Directly upload when file is selected
+            }
+        }
     };
 
     const handleAxiosError = (error: any) => {
@@ -110,6 +147,7 @@ export default function Akun() {
                                             type="file"
                                             id="gambar"
                                             name="gambar"
+                                            onChange={handleFileChange} 
                                             className="w-full rounded-md bg-gray-100 file:mr-5 file:py-1 file:px-3 file:border-none file:w-full file:bg-gray-100 file:text-stone-700 hover:file:cursor-pointer hover:file:bg-green-50 hover:file:text-primary focus:outline-none focus:ring focus:ring-primary focus-border-primary"
                                         />
                                     </div>
