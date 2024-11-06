@@ -61,10 +61,10 @@ export default function Page() {
             }
         }
     };
-    
+
 
     useEffect(() => {
-        
+
         fetchProducts();
     }, []);
 
@@ -203,7 +203,9 @@ export default function Page() {
                             </dialog>
 
                             {loading ? (
-                                <p>Loading products...</p>
+                                <div className='flex justify-center'>
+                                    <span className="loading loading-spinner loading-md"></span>
+                                </div>
                             ) : (
                                 <div className="overflow-x-auto">
                                     <table className="table border-2">
@@ -219,7 +221,7 @@ export default function Page() {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {products.length? (products.map((product, index) => (
+                                            {products.length ? (products.map((product, index) => (
                                                 <tr key={product.id}>
                                                     <td>{index + 1}</td>
                                                     <td>{product.nama}</td>
@@ -235,8 +237,8 @@ export default function Page() {
                                                                 modal?.showModal();
                                                             }}
                                                             className="w-8 h-8 rounded-md text-white place-items-center bg-green-600 hover:bg-green-700"
-                                                        >                                                            
-                                                            <FaPencil/>
+                                                        >
+                                                            <FaPencil />
                                                         </button>
                                                         <button
                                                             onClick={() => {
@@ -246,11 +248,11 @@ export default function Page() {
                                                             }}
                                                             className="w-8 h-8 rounded-md text-white place-items-center bg-red-600 hover:bg-red-700"
                                                         >
-                                                            <FaTrash/>
+                                                            <FaTrash />
                                                         </button>
                                                     </td>
                                                 </tr>
-                                            ))):(
+                                            ))) : (
                                                 <tr>
                                                     <td colSpan={7} className="text-center">
                                                         Tidak ada produk.
