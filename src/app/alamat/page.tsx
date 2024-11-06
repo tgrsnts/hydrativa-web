@@ -8,6 +8,7 @@ import Cookies from 'js-cookie';
 
 export default function Akun() {
     const [dataAlamat, setDataAlamat] = useState<Alamat[] | null>(null); // State for addresses
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchDataAlamat = async () => {
@@ -23,6 +24,7 @@ export default function Akun() {
 
                 // Check if the response data structure contains 'data' array
                 if (response.data && Array.isArray(response.data)) {
+                    setLoading(false);
                     setDataAlamat(response.data); // Set the fetched data directly
                 } else {
                     setDataAlamat([]); // Set to empty array if data is not an array
@@ -68,42 +70,44 @@ export default function Akun() {
                             </div>
                             <div className="divider" />
                             <div className="flex flex-col gap-4">
-                                {dataAlamat && dataAlamat.length > 0 ? (
-                                    dataAlamat.map((alamat, index) => (
-                                        <div key={index} className="flex justify-between p-4 border-2 rounded-lg">
-                                            <div className="flex flex-col">
-                                                <div className="flex items-center gap-4">
-                                                    <div>{alamat.label_alamat}</div>
-                                                    {alamat.isPrimary === 1 && ( // Only show "Utama" if isPrimary is 1
-                                                        <div className="px-2 py-1 border-2 text-sm text-primary border-primary rounded-md">
-                                                            Utama
-                                                        </div>
+                                {loading? ( <p className='text-center'>Loading Alamat...</p>):(
+                                    dataAlamat && dataAlamat.length > 0 ? (
+                                        dataAlamat.map((alamat, index) => (
+                                            <div key={index} className="flex justify-between p-4 border-2 rounded-lg">
+                                                <div className="flex flex-col">
+                                                    <div className="flex items-center gap-4">
+                                                        <div>{alamat.label_alamat}</div>
+                                                        {alamat.isPrimary === 1 && ( // Only show "Utama" if isPrimary is 1
+                                                            <div className="px-2 py-1 border-2 text-sm text-primary border-primary rounded-md">
+                                                                Utama
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                    <div className="flex flex-col">
+                                                        <div className='text-xl font-semibold'>{alamat.nama_penerima}</div>
+                                                        <div>{alamat.no_telepon}</div>
+                                                    </div>
+                                                    <div>
+                                                        {alamat.detail}, {alamat.kelurahan}, {alamat.kecamatan}, {alamat.kabupaten}, {alamat.provinsi}, {alamat.kodepos}
+                                                    </div>
+                                                </div>
+                                                <div className="flex flex-col gap-2 items-end">
+                                                    <a href="" className="text-primary">
+                                                        Ubah
+                                                    </a>
+                                                    {!alamat.isPrimary && (
+                                                        <button className="p-2 border-2 rounded-lg bg-primary text-white">
+                                                            Atur sebagai Utama
+                                                        </button>
                                                     )}
                                                 </div>
-                                                <div className="flex flex-col">
-                                                    <div className='text-xl font-semibold'>{alamat.nama_penerima}</div>
-                                                    <div>{alamat.no_telepon}</div>
-                                                </div>
-                                                <div>
-                                                    {alamat.detail}, {alamat.kelurahan}, {alamat.kecamatan}, {alamat.kabupaten}, {alamat.provinsi}, {alamat.kodepos}
-                                                </div>
                                             </div>
-                                            <div className="flex flex-col gap-2 items-end">
-                                                <a href="" className="text-primary">
-                                                    Ubah
-                                                </a>
-                                                {!alamat.isPrimary && (
-                                                    <button className="p-2 border-2 rounded-lg bg-primary text-white">
-                                                        Atur sebagai Utama
-                                                    </button>
-                                                )}
-                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="text-center text-gray-500">
+                                            Tidak ada alamat yang tersedia.
                                         </div>
-                                    ))
-                                ) : (
-                                    <div className="text-center text-gray-500">
-                                        Tidak ada alamat yang tersedia.
-                                    </div>
+                                    )
                                 )}
                             </div>
                         </div>
