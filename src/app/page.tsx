@@ -484,7 +484,7 @@ export default function Home() {
                   <div className="text-xs font-poppins">
                     GET IT ON
                   </div>
-                  <div className="mt-1 font-sans text-xl font-semibold font-poppins">
+                  <div className="mt-1 text-xl font-semibold font-poppins">
                     Google Play
                   </div>
                 </div>
