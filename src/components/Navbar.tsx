@@ -36,9 +36,9 @@ export default function Navbar() {
       const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/login`, dataForm);
 
       if (res.data.token) {
-        setError(null);
-        Cookies.set("token", res.data.token, { expires: 7, path: "/" });
-        Cookies.set("user", JSON.stringify(res.data.user), { expires: 7, path: "/" });
+        setError(null);        
+        Cookies.set("token", res.data.token, { expires: 7, path: "/" });        
+        Cookies.set("name", res.data.user.name, { expires: 7, path: "/" });
         window.location.href = "/dashboard";
       } else {
         setError("Gagal login: Token tidak ditemukan.");
@@ -48,6 +48,7 @@ export default function Navbar() {
       console.error("Error posting form data:", error);
     }
   };
+
 
   useEffect(() => {
     const clientToken = Cookies.get('token');
@@ -87,7 +88,7 @@ export default function Navbar() {
                       className="flex items-center gap-2 hover:bg-background py-1 px-2 rounded-md"
                     >
                       <img className="w-10 rounded-full" src="/image/avatar-biru.jpg" alt="User Avatar" />
-                      <p className="font-semibold text-nowrap text-white">Mochamad Tegar Santoso</p>
+                      <p className="font-semibold text-nowrap text-white">{Cookies.get('name')}</p>
                     </Link>
                   </div>
                 ) : (
