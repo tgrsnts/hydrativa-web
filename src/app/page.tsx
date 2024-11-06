@@ -405,7 +405,7 @@ export default function Home() {
                     key={product.id} // Pastikan ada key untuk setiap elemen
                   >
                     <img
-                      src={`/storage/produk/${product.gambar}`} // Path gambar sesuai dengan data produk
+                      src={product.gambar} // Path gambar sesuai dengan data produk
                       alt={product.nama} // Menggunakan nama produk sebagai alt
                       className="w-full object-cover mb-2 rounded-t-lg"
                     />
