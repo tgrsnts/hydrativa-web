@@ -6,4 +6,5 @@ export interface User {
     email: string;
     telepon: string;
     jenis_kelamin: string;
+    gambar: string;
 }
