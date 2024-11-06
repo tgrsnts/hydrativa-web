@@ -6,6 +6,7 @@ import Navbar from "@/components/Navbar";
 import type { Keranjang } from "@/lib/interfaces/Keranjang";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+import Swal from 'sweetalert2';
 
 
 export default function Keranjang() {
@@ -13,11 +14,16 @@ export default function Keranjang() {
   const [selectedItems, setSelectedItems] = useState<number[]>([]); // State for selected items
   const [loading, setLoading] = useState(true);
 
-  const router = useRouter()
+  const router = useRouter() 
 
   const handleBeliClick = () => {
     if (selectedItems.length === 0) {
-      alert("Pilih barang yang ingin dibeli terlebih dahulu.");
+      Swal.fire({
+        title: 'Oops!',
+        text: 'Pilih barang yang ingin dibeli terlebih dahulu.',
+        icon: 'warning',
+        confirmButtonText: 'OK',
+      });
       return;
     }
 
@@ -26,6 +32,7 @@ export default function Keranjang() {
     sessionStorage.setItem('selectedItems', JSON.stringify(selectedItemsData));
     router.push('/checkout');
   };
+
 
 
   // Handle individual item checkbox change
@@ -51,8 +58,8 @@ export default function Keranjang() {
 
   // Calculate the total for selected items
   const selectedTotal = data
-  .filter(item => selectedItems.includes(item.id))
-  .reduce((acc, item) => acc + (item.harga || 0) * (item.quantity || 0), 0);
+    .filter(item => selectedItems.includes(item.id))
+    .reduce((acc, item) => acc + (item.harga || 0) * (item.quantity || 0), 0);
 
 
   useEffect(() => {
