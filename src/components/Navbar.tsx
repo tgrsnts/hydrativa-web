@@ -2,9 +2,8 @@ import React from "react";
 import Link from "next/link";
 import Cookies from "js-cookie";
 import { useState, useEffect } from "react";
-import { FaEye, FaEyeSlash, FaShoppingCart, FaStar } from "react-icons/fa";
+import { FaEye, FaEyeSlash, FaShoppingCart } from "react-icons/fa";
 import axios from "axios";
-import { Produk } from "@/lib/interfaces/Produk";
 
 export default function Navbar() {
   const [token, setToken] = useState<string | null>(null);
@@ -36,19 +35,16 @@ export default function Navbar() {
     try {
       const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/login`, dataForm);
 
-      // Check if the response has a token
       if (res.data.token) {
         setError(null);
-        // Save the token in cookies
         Cookies.set("token", res.data.token, { expires: 7, path: "/" });
-        // Optionally, save user data if you need it later
         Cookies.set("user", JSON.stringify(res.data.user), { expires: 7, path: "/" });
         window.location.href = "/dashboard";
       } else {
-        setError("Login failed: No token returned.");
+        setError("Gagal login: Token tidak ditemukan.");
       }
     } catch (error) {
-      setError("An error occurred during login.");
+      setError("Terjadi kesalahan saat login.");
       console.error("Error posting form data:", error);
     }
   };
@@ -65,17 +61,15 @@ export default function Navbar() {
           <Link href="/" className="flex items-center whitespace-nowrap text-2xl">
             <img className="h-8" src="/image/logo-hydrativa-putih.png" alt="Logo" />
           </Link>
-          {/* Hamburger Menu for Mobile */}
           <input type="checkbox" className="peer hidden" id="navbar-open" />
           <label className="absolute top-7 right-8 cursor-pointer md:hidden" htmlFor="navbar-open">
             <span className="sr-only">Toggle Navigation</span>
             <i className="fa-solid fa-bars h-6 w-6 text-white" />
           </label>
-          {/* Navigation Menu */}
           <nav aria-label="Header Navigation" className="peer-checked:max-h-60 max-h-0 w-full lg:w-auto flex-col flex lg:flex-row lg:max-h-full overflow-hidden transition-all duration-300 lg:items-center lg:ml-auto">
             <ul className="flex flex-col lg:flex-row lg:space-y-0 space-y-4 items-center lg:ml-auto font-poppins font-semibold">
               <li className="text-white border-b-2 border-primary md:mr-12 hover:border-white">
-                <Link href="#hero">Home</Link>
+                <Link href="#hero">Beranda</Link>
               </li>
               <li className="text-white border-b-2 border-primary md:mr-12 hover:border-white">
                 <Link href="#our-products">Produk</Link>
@@ -97,17 +91,18 @@ export default function Navbar() {
                     </Link>
                   </div>
                 ) : (
-                  <><button
-                    className="text-white border-2 md:mr-12 px-4 py-2 rounded-md border-white cursor-pointer hover:bg-primary hover:border-primary"
-                    onClick={() => {
-                      const modal = document.getElementById('modal_login') as HTMLDialogElement | null;
-                      if (modal) {
-                        modal.showModal();
-                      }
-                    }}
-                  >
-                    Masuk
-                  </button>
+                  <>
+                    <button
+                      className="text-white border-2 md:mr-12 px-4 py-2 rounded-md border-white cursor-pointer hover:bg-primary hover:border-primary"
+                      onClick={() => {
+                        const modal = document.getElementById('modal_login') as HTMLDialogElement | null;
+                        if (modal) {
+                          modal.showModal();
+                        }
+                      }}
+                    >
+                      Masuk
+                    </button>
                     <button
                       className="text-primary border-2 md:mr-12 px-4 py-2 rounded-md bg-white cursor-pointer hover:text-white hover:bg-primary hover:border-white"
                       onClick={() => {
@@ -125,10 +120,10 @@ export default function Navbar() {
             </ul>
           </nav>
         </div>
-      </header >
+      </header>
 
-      {/* <!-- Modal Login --> */}
-      < dialog id="modal_login" className="modal backdrop-blur-lg" >
+      {/* Modal Login */}
+      <dialog id="modal_login" className="modal backdrop-blur-lg">
         <div className="modal-box font-poppins p-0 w-76 lg:w-96 flex flex-col">
           <div className="flex items-center bg-primary rounded-t-lg h-24 lg:h-40 p-16">
             <img src="/image/logo-hydrativa-putih.png" alt="" />
@@ -137,20 +132,20 @@ export default function Navbar() {
             <h2 className="text-2xl lg:text-4xl font-bold text-center text-black w-full mb-4">Login</h2>
             <form id="loginForm" onSubmit={handleSubmit} className="flex flex-col gap-2">
               <div className="flex flex-col">
-                <label htmlFor="username">Username</label>
+                <label htmlFor="username">Nama Pengguna</label>
                 <input
                   type="text"
                   id="username"
                   name="username"
                   value={dataForm.username}
                   onChange={handleChange}
-                  placeholder="Masukkan username"
+                  placeholder="Masukkan nama pengguna"
                   className="w-full p-2 rounded-md bg-gray-100 focus:outline-none focus:ring focus:ring-primary focus:border-primary"
                   required
                 />
               </div>
               <div className="flex flex-col">
-                <label htmlFor="password">Password</label>
+                <label htmlFor="password">Kata Sandi</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 right-0 flex items-center px-2">
                     <input
@@ -173,7 +168,7 @@ export default function Navbar() {
                     name="password"
                     value={dataForm.password}
                     onChange={handleChange}
-                    placeholder="Masukkan password"
+                    placeholder="Masukkan kata sandi"
                     className="w-full p-2 rounded-md bg-gray-100 focus:outline-none focus:ring focus:ring-primary focus:border-primary"
                     required
                   />
@@ -190,16 +185,10 @@ export default function Navbar() {
                   type="submit"
                   className="p-2 rounded-md bg-primary text-white hover:bg-additional2"
                 >
-                  Login
+                  Masuk
                 </button>
               </div>
             </form>
-            {/* <div className="divider">atau masuk dengan</div>
-            <button className="mt-2 flex justify-center items-center gap-2 w-full border-2 rounded-md py-1 text-black hover:bg-gray-100 hover:text-additional2">
-              <FcGoogle />
-              Google
-            </button> */}
-
             <div className="mt-2 text-center">
               Belum punya akun?{" "}
               <button
@@ -212,124 +201,95 @@ export default function Navbar() {
                   }
                 }}
               >
-                Daftar!
+                Registrasi!
               </button>
             </div>
           </div>
         </div>
         <form method="dialog" className="modal-backdrop">
-          <button type="button" onClick={() => closeModal('modal_login')}>close</button>
+          <button type="button" onClick={() => closeModal('modal_login')}>Tutup</button>
         </form>
-      </dialog >
+      </dialog>
 
-      {/* <!-- Modal Register --> */}
-      < dialog id="modal_register" className="modal backdrop-blur-lg" >
+      {/* Modal Register */}
+      <dialog id="modal_register" className="modal backdrop-blur-lg">
         <div className="modal-box font-poppins p-0 w-76 lg:w-96 flex flex-col">
           <div className="flex items-center bg-primary rounded-t-lg h-24 lg:h-40 p-16">
             <img src="/image/logo-hydrativa-putih.png" alt="" />
           </div>
           <div className="px-8 pt-4 pb-12">
-            <h2 className="text-2xl lg:text-4xl font-bold text-center text-black w-full mb-4">Daftar</h2>
+            <h2 className="text-2xl lg:text-4xl font-bold text-center text-black w-full mb-4">Registrasi</h2>
             <form id="registerForm" className="flex flex-col gap-2">
               <div className="flex flex-col">
-                <label htmlFor="namaRegister">Nama</label>
+                <label htmlFor="name">Nama</label>
                 <input
                   type="text"
-                  id="namaRegister"
-                  name="nama"
+                  id="name"
                   placeholder="Masukkan nama"
                   className="w-full p-2 rounded-md bg-gray-100 focus:outline-none focus:ring focus:ring-primary focus:border-primary"
                   required
                 />
-
               </div>
               <div className="flex flex-col">
-                <label htmlFor="username-register">Username</label>
+                <label htmlFor="username">Nama Pengguna</label>
                 <input
-                  type="text"
-                  id="username-register"
-                  name="username"
-                  placeholder="Masukkan username"
+                  type="username"
+                  id="username"
+                  placeholder="Masukkan nama pengguna"
                   className="w-full p-2 rounded-md bg-gray-100 focus:outline-none focus:ring focus:ring-primary focus:border-primary"
                   required
                 />
-
               </div>
               <div className="flex flex-col">
-                <label htmlFor="email-register">Email</label>
+                <label htmlFor="email">Email</label>
                 <input
                   type="email"
-                  id="email-register"
-                  name="email"
+                  id="email"
                   placeholder="Masukkan email"
                   className="w-full p-2 rounded-md bg-gray-100 focus:outline-none focus:ring focus:ring-primary focus:border-primary"
                   required
                 />
-
               </div>
               <div className="flex flex-col">
-                <label htmlFor="password-register">Password</label>
+                <label htmlFor="register-password">Kata Sandi</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 right-0 flex items-center px-2">
                     <input
                       className="hidden"
-                      id="toggle-register-password"
+                      id="toggle-password-register"
                       type="checkbox"
-                      checked={isPasswordVisible}
-                      onChange={togglePasswordVisibility}
                     />
                     <label
                       className="bg-gray-300 hover:bg-gray-400 rounded px-2 py-1 text-sm text-gray-600 font-mono cursor-pointer"
-                      htmlFor="toggle-register-password"
+                      htmlFor="toggle-password-register"
                     >
-                      {isPasswordVisible ? <FaEye /> : <FaEyeSlash />}
+                      <FaEye />
                     </label>
                   </div>
                   <input
-                    type={isPasswordVisible ? 'text' : 'password'}
-                    id="password-register"
+                    type="password"
+                    id="register-password"
                     placeholder="Masukkan password"
                     className="w-full p-2 rounded-md bg-gray-100 focus:outline-none focus:ring focus:ring-primary focus:border-primary"
                     required
                   />
-
                 </div>
               </div>
-              <div className="flex flex-col mt-4">
+              <div className="flex flex-col mt-2">
                 <button
                   type="submit"
                   className="p-2 rounded-md bg-primary text-white hover:bg-additional2"
                 >
-                  Daftar
+                  Register
                 </button>
               </div>
             </form>
-            {/* <div className="divider">atau daftar dengan</div>
-            <button className="mt-2 flex justify-center items-center gap-2 w-full border-2 rounded-md py-1 text-black hover:bg-gray-100 hover:text-additional2">
-              <FcGoogle />
-              Google
-            </button> */}
-            <div className="mt-2 text-center">
-              Sudah punya akun?{" "}
-              <button
-                className="text-primary hover:text-additional2 hover:underline hover:underline-offset-4"
-                onClick={() => {
-                  closeModal('modal_register');
-                  const modal = document.getElementById('modal_login') as HTMLDialogElement | null;
-                  if (modal) {
-                    modal.showModal();
-                  }
-                }}
-              >
-                Login!
-              </button>
-            </div>
           </div>
         </div>
         <form method="dialog" className="modal-backdrop">
-          <button type="button" onClick={() => closeModal('modal_register')}>close</button>
+          <button type="button" onClick={() => closeModal('modal_register')}>Tutup</button>
         </form>
-      </dialog >
+      </dialog>
     </>
   );
 }
