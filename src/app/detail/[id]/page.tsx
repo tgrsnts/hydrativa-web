@@ -85,10 +85,10 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
             {product ? (
 
                 <main>
-                    <section id="detail" className="py-16 lg:px-36 bg-background mt-16 mx-auto">
+                    <section id="detail" className="py-16 lg:px-36 bg-slate-50 mt-16 mx-auto">
                         <div className="flex flex-wrap justify-center">
                             <div className="flex w-full lg:w-2/3 p-2">
-                                <div className="flex flex-col lg:flex-row bg-white rounded-lg p-4">
+                                <div className="flex flex-col lg:flex-row bg-white rounded-lg p-4 shadow-md">
                                     <div className="flex w-full lg:w-1/3 rounded-lg justify-center">
                                         <div className="h-45">
                                             <img src={product.gambar} className="h-45 rounded-lg" alt={product.nama} />
@@ -116,7 +116,7 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                                 </div>
                             </div>
                             <div className="flex w-full lg:w-1/3 rounded-lg p-2">
-                                <div className="flex-col w-full gap-2 rounded-lg p-4 font-poppins bg-white hidden lg:flex">
+                                <div className="flex-col w-full gap-2 rounded-lg p-4 font-poppins bg-white hidden lg:flex shadow-md">
                                     {/* Large Screen */}
                                     <div>
                                         <div className="text-2xl font-bold">Atur jumlah</div>
@@ -164,7 +164,7 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                                 </div>
                             </div>
                         </div>
-                        <div className="lg:hidden drop-shadow-2xl fixed bottom-0 lg:static w-full bg-white lg:bg-transparent p-2 flex flex-row lg:flex-col gap-2 items-center justify-center">
+                        <div className="lg:hidden drop-shadow-2xl fixed bottom-0 lg:static w-full bg-white shadow-md p-2 flex flex-row lg:flex-col gap-2 items-center justify-center">
                             <button
                                 onClick={() => {
                                     const modal = document.getElementById('my_modal') as HTMLDialogElement | null;
@@ -249,7 +249,7 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                             </div>
                         </dialog>
                         <div className="mt-0 p-2 flex flex-col lg:flex-row w-full">
-                            <div className="flex flex-col lg:flex-row justify-start gap-5 px-4 bg-white rounded-lg p-4 w-full font-poppins">
+                            <div className="flex flex-col lg:flex-row justify-start gap-5 px-4 bg-white shadow-md rounded-lg p-4 w-full font-poppins">
                                 <div className="flex flex-col">
                                     <p className="text-2xl font-semibold">Rating</p>
                                     <div className="flex items-center justify-center gap-3">
