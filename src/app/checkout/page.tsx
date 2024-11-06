@@ -9,25 +9,14 @@ import { FaLocationDot } from "react-icons/fa6";
 import Cookies from "js-cookie";
 
 export default function Keranjang() {
-  const [data, setData] = useState<Keranjang[] | null>(null); // State for products
-  const [dataAlamat, setDataAlamat] = useState<Alamat[] | null>(null); // State for addresses
+  const [dataAlamat, setDataAlamat] = useState<Alamat[] | null>(null);
+  const [selectedItems, setSelectedItems] = useState<Keranjang[]>([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`http://127.0.0.1:8000/api/keranjang`, {
-          headers: {
-            'content-type': 'application/json',
-            'Authorization': `Bearer ${Cookies.get('token')}`,
-          },
-        });
-        console.log("API Response:", response.data); // Log to check response structure
-        setData(response.data.data || []); // Assuming data is nested within response.data
-      } catch (error) {
-        console.error("Failed to fetch data:", error);
-        setData(null); // Set to null on error
-      }
-    };
+    const storedItems = sessionStorage.getItem('selectedItems');
+    if (storedItems) {
+      setSelectedItems(JSON.parse(storedItems)); // Parse to get the array of objects
+    }
 
     const fetchDataAlamat = async () => {
       try {
@@ -40,7 +29,6 @@ export default function Keranjang() {
 
         console.log("API Response:", response.data); // Log to check response structure
 
-        // Check if the response data structure contains 'data' array
         if (response.data && Array.isArray(response.data.data)) {
           setDataAlamat(response.data.data); // Set the fetched data directly
         } else {
@@ -52,7 +40,6 @@ export default function Keranjang() {
       }
     };
 
-    fetchData();
     fetchDataAlamat(); // Call to fetch address data
   }, []);
 
@@ -95,9 +82,6 @@ export default function Keranjang() {
                       </a>
                     </div>
                   </div>
-                  <div className="flex flex-col gap-2 items-end">
-                    {/* Optional buttons for each address */}
-                  </div>
                 </div>
               ))
             ) : (
@@ -110,7 +94,6 @@ export default function Keranjang() {
       </dialog>
 
       <main>
-        {/* Menu */}
         <section id="detail" className="py-16 lg:px-36 bg-background mt-16 mx-auto">
           <div className="flex flex-wrap gap justify-center">
             <div className="flex flex-col gap-4 w-full lg:w-2/3 p-2">
@@ -118,22 +101,20 @@ export default function Keranjang() {
                 <div className="text-slate-700 font-semibold">ALAMAT PENGIRIMAN</div>
                 <div className="flex items-center gap-2">
                   <FaLocationDot />
-                  <i className="fa-solid fa-location-dot text-primary" />
                   {primaryAddress && (
                     <div className="flex flex-col">
-                    <div>
-                      {primaryAddress.label_alamat} • {primaryAddress.nama_penerima}
-                    </div>
-                    <div>
-                      {primaryAddress.no_telepon}
-                    </div>
+                      <div>
+                        {primaryAddress.label_alamat} • {primaryAddress.nama_penerima}
+                      </div>
+                      <div>
+                        {primaryAddress.no_telepon}
+                      </div>
                     </div>
                   )}
-                  
                 </div>
                 {primaryAddress && (
                   <div>
-                    {primaryAddress.detail}, {primaryAddress.kelurahan}, {primaryAddress.kecamatan}, {primaryAddress.kabupaten}, {primaryAddress.provinsi}, {primaryAddress.kodepos}                
+                    {primaryAddress.detail}, {primaryAddress.kelurahan}, {primaryAddress.kecamatan}, {primaryAddress.kabupaten}, {primaryAddress.provinsi}, {primaryAddress.kodepos}
                   </div>
                 )}
                 <div>
@@ -152,11 +133,11 @@ export default function Keranjang() {
               </div>
               <div className="flex flex-col gap-4 bg-white p-6 rounded-lg font-poppins">
                 <div className="text-slate-700 font-semibold">PESANAN</div>
-                {data && data.length > 0 && data.map((item, index) => (
+                {selectedItems && selectedItems.length > 0 && selectedItems.map((item, index) => (
                   <div key={index} className="flex gap-4">
                     <img
                       className="w-20 rounded-md"
-                      src={item.imageUrl} // Assuming the image URL is part of the item
+                      src={item.gambar} // Assuming the image URL is part of the item
                       alt={item.nama_produk} // Use the product name for alt text
                     />
                     <div className="flex flex-col w-full">
@@ -176,17 +157,17 @@ export default function Keranjang() {
                   <div className="text-2xl font-bold">Ringkasan Belanja</div>
                   <div className="text-md font-medium">
                     <div className="flex justify-between">
-                      <div>Total Harga (2 Barang)</div>
-                      <div>Rp 8.000</div>
+                      <div>Total Harga</div>
+                      <div>Rp 8.000</div> {/* Dynamic total price based on selected items */}
                     </div>
                     <div className="flex justify-between">
                       <div>Total Ongkos Kirim</div>
-                      <div>Rp 12.000</div>
+                      <div>Rp 12.000</div> {/* Static shipping cost */}
                     </div>
                     <div className="divider" />
                     <div className="flex justify-between">
                       <div>Total Belanja</div>
-                      <div>Rp 20.000</div>
+                      <div>Rp 20.000</div> {/* Dynamic total */}
                     </div>
                   </div>
                   <button
@@ -204,7 +185,7 @@ export default function Keranjang() {
       <div className="pt-2 lg:hidden">
         <div className="drop-shadow-2xl fixed bottom-0 lg:relative left-0 right-0 flex justify-between bg-white z-50 p-4">
           <div className="flex items-center gap-2">
-            <span className="text-primary text-xl font-semibold">Rp 20.000</span>
+            <span className="text-primary text-xl font-semibold">Rp 20.000</span> {/* Dynamic total */}
           </div>
           <div className="flex justify-center items-center">
             <button className="btn-primary">Checkout</button>
