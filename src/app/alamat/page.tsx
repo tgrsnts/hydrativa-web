@@ -22,8 +22,8 @@ export default function Akun() {
                 console.log("API Response:", response.data); // Log to check response structure
 
                 // Check if the response data structure contains 'data' array
-                if (response.data && Array.isArray(response.data.data)) {
-                    setDataAlamat(response.data.data); // Set the fetched data directly
+                if (response.data && Array.isArray(response.data)) {
+                    setDataAlamat(response.data); // Set the fetched data directly
                 } else {
                     setDataAlamat([]); // Set to empty array if data is not an array
                 }
