@@ -60,7 +60,7 @@ export default function Akun() {
                                 </div>
                                 <button
                                     type="submit"
-                                    className="bg-primary hover:bg-[#035700] text-white px-3 py-1 rounded-md"
+                                    className="bg-primary hover:bg-background text-white px-4 rounded-lg"
                                 // onClick={() => {
                                 //     document.getElementById('modalTambahData')!.showModal();
                                 // }}
