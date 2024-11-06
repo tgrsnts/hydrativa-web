@@ -19,7 +19,7 @@ export default function Akun() {
                     'Authorization': `Bearer ${Cookies.get('token')}`,
                 }
             });
-            setUserData(response.data.data);
+            setUserData(response.data);
         } catch (error) {
             if (axios.isAxiosError(error) && error.response && error.response.status === 401) {
                 Swal.fire({
