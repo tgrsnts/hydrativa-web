@@ -16,6 +16,7 @@ export default function Home() {
   const [dataForm, setDataForm] = useState({ username: "", password: "" });
   const [error, setError] = useState<string | null>(null);
   const [products, setProducts] = useState<Produk[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible((prev) => !prev);
@@ -66,6 +67,7 @@ export default function Home() {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/produk`);
         const result = await response.json();
         setProducts(result);
+        setLoading(false);
       } catch (fetchError) {
         console.error("Failed to fetch products:", fetchError);
       }
@@ -397,17 +399,36 @@ export default function Home() {
       </div> */}
             {/* Card */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              {products.length > 0 ? (
+              {loading ? (
+                // Show skeleton loader when loading is true
+                Array(4).fill(0).map((_, index) => (
+                  <Link
+                    href={`/detail/1`} // Adjusted path as needed
+                    className="flex flex-col w-full lg:w-full bg-white rounded-lg shadow-md transition-transform duration-300 transform hover:bg-gray-100 hover:scale-105"
+                    key={`skeleton-${index}`} // Unique key for each skeleton
+                  >
+                    <div className="flex w-full flex-col gap-4">
+                      <div className="skeleton h-72 w-full rounded-t-lg rounded-b-none"></div>
+                      <div className="flex flex-col gap-2 p-4 pt-0">
+                        <div className="skeleton h-4 w-28"></div>
+                        <div className="skeleton h-4 w-20"></div>
+                        <div className="skeleton h-4 w-16"></div>
+                      </div>
+                    </div>
+                  </Link>
+                ))
+              ) : (
+                // Once loading is false, render the actual products
                 products.map((product) => (
                   <Link
-                    href={`/detail/${product.id}`} // Ganti dengan path yang sesuai
+                    href={`/detail/${product.id}`} // Adjusted path with dynamic product ID
                     className="flex flex-col w-full lg:w-full bg-white rounded-lg shadow-md transition-transform duration-300 transform hover:bg-gray-100 hover:scale-105"
-                    key={product.id} // Pastikan ada key untuk setiap elemen
+                    key={product.id} // Ensure unique keys
                   >
                     <img
                       src={product.gambar} // Path gambar sesuai dengan data produk
                       alt={product.nama} // Menggunakan nama produk sebagai alt
-                      className="w-full object-cover mb-2 rounded-t-lg"
+                      className="h-72 object-cover mb-2 rounded-t-lg"
                     />
                     <div className="flex flex-col items-start p-4 pt-0">
                       <p className="text-sm lg:text-lg font-poppins font-semibold">
@@ -415,96 +436,12 @@ export default function Home() {
                       </p>
                       <div className="font-poppins text-gray-700">Rp {product.harga}</div>
                       <div className="flex items-center justify-start gap-1">
-                        <FaStar className="text-yellow-400"></FaStar>
+                        <FaStar className="text-yellow-400" />
                         <div className="font-poppins text-gray-600">4.5</div>
                       </div>
                     </div>
                   </Link>
                 ))
-              ) : (
-                // <p>Loading products...</p> // Menangani kondisi ketika tidak ada produk
-                <>
-                  <Link
-                    href={`/detail/1`} // Adjusted path as needed
-                    className="flex flex-col w-full lg:w-full bg-white rounded-lg shadow-md transition-transform duration-300 transform hover:bg-gray-100 hover:scale-105"
-                    key="product1"
-                  >
-                    <img
-                      src="/storage/produk/Group 185.png"
-                      alt="Ayam Goreng"
-                      className="w-full object-cover mb-2 rounded-t-lg"
-                    />
-                    <div className="flex flex-col items-start p-4 pt-0">
-                      <p className="text-sm lg:text-lg font-poppins font-semibold">HydraTiva</p>
-                      <div className="font-poppins text-gray-700">Rp 1.500.000</div>
-                      <div className="flex items-center justify-start gap-1">
-                        <FaStar className="text-yellow-400"></FaStar>
-                        <div className="font-poppins text-gray-600">4.5</div>
-                      </div>
-
-                    </div>
-                  </Link>
-
-                  <Link
-                    href={`/detail/2`}
-                    className="flex flex-col w-full lg:w-full bg-white rounded-lg shadow-md transition-transform duration-300 transform hover:bg-gray-100 hover:scale-105"
-                    key="product2"
-                  >
-                    <img
-                      src="/storage/produk/Group 186.png"
-                      alt="Es Jeruk"
-                      className="w-full object-cover mb-2 rounded-t-lg"
-                    />
-                    <div className="flex flex-col items-start p-4 pt-0">
-                      <p className="text-sm lg:text-lg font-poppins font-semibold">Daun Stevia Kering</p>
-                      <div className="font-poppins text-gray-700">Rp 150.000</div>
-                      <div className="flex items-center justify-start gap-1">
-                        <FaStar className="text-yellow-400"></FaStar>
-                        <div className="font-poppins text-gray-600">4.5</div>
-                      </div>
-                    </div>
-                  </Link>
-
-                  <Link
-                    href={`/detail/3`}
-                    className="flex flex-col w-full lg:w-full bg-white rounded-lg shadow-md transition-transform duration-300 transform hover:bg-gray-100 hover:scale-105"
-                    key="product3"
-                  >
-                    <img
-                      src="/storage/produk/teh stevia.jpeg"
-                      alt="Nasi"
-                      className="w-full object-cover mb-2 rounded-t-lg"
-                    />
-                    <div className="flex flex-col items-start p-4 pt-0">
-                      <p className="text-sm lg:text-lg font-poppins font-semibold">Teh Stevia</p>
-                      <div className="font-poppins text-gray-700">Rp 120.000</div>
-                      <div className="flex items-center justify-start gap-1">
-                        <FaStar className="text-yellow-400"></FaStar>
-                        <div className="font-poppins text-gray-600">4.5</div>
-                      </div>
-                    </div>
-                  </Link>
-
-                  <Link
-                    href={`/detail/4`}
-                    className="flex flex-col w-full lg:w-full bg-white rounded-lg shadow-md transition-transform duration-300 transform hover:bg-gray-100 hover:scale-105"
-                    key="product4"
-                  >
-                    <img
-                      src="/storage/produk/liquid stevia.jpeg"
-                      alt="Es teh"
-                      className="w-full object-cover mb-2 rounded-t-lg"
-                    />
-                    <div className="flex flex-col items-start p-4 pt-0">
-                      <p className="text-sm lg:text-lg font-poppins font-semibold">Liquid Stevia</p>
-                      <div className="font-poppins text-gray-700">Rp 96.000</div>
-                      <div className="flex items-center justify-start gap-1">
-                        <FaStar className="text-yellow-400"></FaStar>
-                        <div className="font-poppins text-gray-600">4.5</div>
-                      </div>
-                    </div>
-                  </Link>
-                </>
               )}
             </div>
             <div className="flex justify-end mt-4">
