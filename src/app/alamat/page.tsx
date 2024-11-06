@@ -61,19 +61,23 @@ export default function Akun() {
                                 <button
                                     type="submit"
                                     className="bg-primary hover:bg-[#035700] text-white px-3 py-1 rounded-md"
-                                    // onClick={() => {
-                                    //     document.getElementById('modalTambahData')!.showModal();
-                                    // }}
+                                // onClick={() => {
+                                //     document.getElementById('modalTambahData')!.showModal();
+                                // }}
                                 >
                                     Tambah Alamat
                                 </button>
                             </div>
                             <div className="divider" />
                             <div className="flex flex-col gap-4">
-                                {loading? ( <p className='text-center'>Loading Alamat...</p>):(
+                                {loading ? (<p className='text-center'>Loading Alamat...</p>) : (
                                     dataAlamat && dataAlamat.length > 0 ? (
                                         dataAlamat.map((alamat, index) => (
-                                            <div key={index} className="flex justify-between p-4 border-2 rounded-lg">
+                                            <div
+                                                key={index}
+                                                className={`flex justify-between p-4 border-2 rounded-lg ${alamat.isPrimary ? 'border-second' : ''}`}
+                                            >
+
                                                 <div className="flex flex-col">
                                                     <div className="flex items-center gap-4">
                                                         <div>{alamat.label_alamat}</div>
