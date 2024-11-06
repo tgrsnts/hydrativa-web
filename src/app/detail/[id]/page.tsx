@@ -6,6 +6,8 @@ import Navbar from "@/components/Navbar";
 import { Produk } from "@/lib/interfaces/Produk";
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import Swal from 'sweetalert2';
+
 
 
 const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
@@ -27,28 +29,39 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
 
     const handleAddToCart = async () => {
         try {
-          // Replace with your API URL
-          const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/keranjang/add`, {
-            id_produk: product?.id,
-            quantity: quantity,
-          }, {
-            headers: {
-              Authorization: `Bearer ${Cookies.get('token')}` // Assumes token is stored in cookies
+            // Replace with your API URL
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/keranjang/add`, {
+                id_produk: product?.id,
+                quantity: quantity,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${Cookies.get('token')}` // Assumes token is stored in cookies
+                }
+            });
+
+            // Handle the response based on API response structure
+            if (response.status === 200 || response.status === 201) {
+                console.log("Product added to cart successfully:", response.data);
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Product successfully added to the cart!',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+            } else {
+                console.warn("Failed to add product to cart:", response.data);
             }
-          });
-      
-          // Handle the response based on API response structure
-          if (response.status === 200 || response.status === 201) {
-            console.log("Product added to cart successfully:", response.data);
-            alert("Product successfully added to the cart!");
-          } else {
-            console.warn("Failed to add product to cart:", response.data);
-          }
         } catch (error) {
-          console.error("Error adding product to cart:", error);
-          alert("An error occurred while adding the product to the cart.");
+            console.error("Error adding product to cart:", error);
+            Swal.fire({
+                title: 'Error!',
+                text: 'An error occurred while adding the product to the cart.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
         }
-      };
+    };
+
 
 
     useEffect(() => {
