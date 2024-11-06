@@ -10,6 +10,7 @@ import Swal from 'sweetalert2';
 
 export default function Akun() {
     const [userData, setUserData] = useState<User | null>(null);
+    const [loading, setLoading] = useState(true);
 
     const getUserInfo = async () => {
         try {
@@ -19,6 +20,7 @@ export default function Akun() {
                     'Authorization': `Bearer ${Cookies.get('token')}`,
                 }
             });
+            setLoading(false);
             setUserData(response.data);
         } catch (error) {
             if (axios.isAxiosError(error) && error.response && error.response.status === 401) {
@@ -79,9 +81,10 @@ export default function Akun() {
                             <div className="font-semibold">Akun Saya</div>
                             <div>Kelola informasi profil Anda.</div>
                             <div className="divider" />
-                            <form action="" className="flex w-full">
+                            { loading? ( <p className='text-center'>Loading...</p> ) : (
+                                <form action="" className="flex w-full">
                                 <div className="w-1/4 flex flex-col items-center gap-4">
-                                    <img className="w-full" src="image/avatar-biru.jpg" alt="" />
+                                    <img className="w-full" src={userData?.gambar   } alt="" />
                                     <input
                                         type="file"
                                         id="gambar"
@@ -197,6 +200,7 @@ export default function Akun() {
                                     </table>
                                 </div>
                             </form>
+                            )}
                         </div>
                     </section>
                 </div>
