@@ -11,7 +11,7 @@ export default function Dashboard() {
     const fetchProducts = async () => {
       const response = await fetch('http://127.0.0.1:8000/api/produk'); // Ganti dengan URL API kamu
       const result = await response.json();
-      setProducts(result.data); // Ambil data dari response dan set ke state
+      setProducts(result); // Ambil data dari response dan set ke state
     };
 
     fetchProducts();
