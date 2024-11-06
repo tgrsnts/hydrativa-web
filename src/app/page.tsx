@@ -83,7 +83,7 @@ export default function Home() {
         <section id="our-products" className="px-4 lg:px-36 py-20 bg-primary">
           <div className="container mx-auto text-center">
             <h2 className="text-xl lg:text-5xl text-center font-poppins font-bold mb-8 text-white">
-              Our Products
+              Produk Kami
             </h2>
             {/* Accordion Horizontal
 
@@ -131,14 +131,14 @@ export default function Home() {
                       alt={product.nama} // Menggunakan nama produk sebagai alt
                       className="h-72 object-cover mb-2 rounded-t-lg"
                     />
-                    <div className="flex flex-col items-start p-4 pt-0 gap-4">
-                      <p className="text-sm lg:text-lg/[0px] font-poppins font-semibold">
+                    <div className="flex flex-col items-start p-4 pt-0">
+                      <p className="text-sm lg:text-lg font-poppins font-semibold">
                         {product.nama} {/* Menggunakan properti yang benar */}
                       </p>
-                      <div className="font-poppins text-gray-700">Rp {product.harga}</div>
+                      <div className="font-poppins text-gray-700 text-sm">Rp {product.harga}</div>
                       <div className="flex items-center justify-start gap-1 h-4">
                         <FaStar className="text-yellow-400" />
-                        <div className="font-poppins text-gray-600">4.5</div>
+                        <div className="font-poppins text-gray-600 text-sm">4.5</div>
                       </div>
                     </div>
                   </Link>
@@ -183,7 +183,7 @@ export default function Home() {
                 </div>
                 <div className="font-poppins">
                   <div className="text-xs font-poppins">
-                    GET IT ON
+                    Dapatkan di
                   </div>
                   <div className="mt-1 text-xl font-semibold font-poppins">
                     Google Play
