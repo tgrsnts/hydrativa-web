@@ -50,7 +50,7 @@ export default function Akun() {
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value, type, checked } = e.target;
-        setUserData((prevUserData) => 
+        setUserData((prevUserData) =>
             prevUserData
                 ? { ...prevUserData, [name]: type === 'radio' ? value : checked ? checked : value }
                 : null
@@ -148,6 +148,7 @@ export default function Akun() {
                                                     </td>
                                                     <td className="pl-4 py-1">
                                                         <input
+                                                            disabled
                                                             className="w-full p-2 border-2 rounded-lg"
                                                             type="email"
                                                             name="email"
