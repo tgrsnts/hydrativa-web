@@ -70,7 +70,11 @@ export default function Akun() {
                             </div>
                             <div className="divider" />
                             <div className="flex flex-col gap-4">
-                                {loading ? (<p className='text-center'>Loading Alamat...</p>) : (
+                                {loading ? (
+                                    <div className='flex justify-center'>
+                                        <span className="loading loading-spinner loading-md"></span>
+                                    </div>
+                                ) : (
                                     dataAlamat && dataAlamat.length > 0 ? (
                                         dataAlamat.map((alamat, index) => (
                                             <div
