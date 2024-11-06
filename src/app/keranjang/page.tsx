@@ -9,6 +9,7 @@ import Cookies from "js-cookie";
 export default function Keranjang() {
   const [data, setData] = useState<Keranjang[]>([]); // Set initial state to empty array
   const [selectedItems, setSelectedItems] = useState<number[]>([]); // State for selected items
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -24,6 +25,8 @@ export default function Keranjang() {
       } catch (error) {
         console.error("Failed to fetch data:", error);
         setData(null); // Set to null on error
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -78,44 +81,52 @@ export default function Keranjang() {
                   </div>
                 </div>
               </div>
-              {data.length > 0 ? (
-                data.map((item) => (
-                  <div key={item.id} className="flex flex-col gap-4 bg-white p-6 rounded-lg font-poppins">
-                    <div className="flex gap-4">
-                      <input
-                        type="checkbox"
-                        className="item-checkbox w-4 h-4 accent-primary"
-                        checked={selectedItems.includes(item.id)} // Check if this item is selected
-                        onChange={() => handleCheckboxChange(item.id)} // Handle individual checkbox
-                      />
-                      <img
-                        className="w-20 rounded-md"
-                        src={`/storage/produk/` + item.gambar}
-                        alt={item.nama_produk}
-                      />
-                      <div className="flex flex-col w-full">
-                        <div>{item.nama_produk}</div>
-                        <div className="flex justify-between">
-                          <div>x{item.quantity}</div>
-                          <div>Rp. {item.harga}</div>
+              {loading ? (
+                <div className="flex flex-col gap-4 bg-white p-6 rounded-lg font-poppins">
+                  <div className='flex justify-center'>
+                    <span className="loading loading-spinner loading-md"></span>
+                  </div>
+                </div>
+              ) : (
+                data.length > 0 ? (
+                  data.map((item) => (
+                    <div key={item.id} className="flex flex-col gap-4 bg-white p-6 rounded-lg font-poppins">
+                      <div className="flex gap-4">
+                        <input
+                          type="checkbox"
+                          className="item-checkbox w-4 h-4 accent-primary"
+                          checked={selectedItems.includes(item.id)} // Check if this item is selected
+                          onChange={() => handleCheckboxChange(item.id)} // Handle individual checkbox
+                        />
+                        <img
+                          className="w-20 rounded-md"
+                          src={item.gambar}
+                          alt={item.nama_produk}
+                        />
+                        <div className="flex flex-col w-full">
+                          <div>{item.nama_produk}</div>
+                          <div className="flex justify-between">
+                            <div>x{item.quantity}</div>
+                            <div>Rp. {item.harga}</div>
+                          </div>
                         </div>
                       </div>
                     </div>
+                  ))
+                ) : (
+                  <div className="flex flex-col gap-4 bg-white p-6 rounded-lg font-poppins">
+                    <p className="font-semibold text-2xl text-center">Keranjangmu masih kosong nih :(</p>
+                    <p className="text-xl text-center">Yuk, isi dengan produk-produk stevia terbaik dari kami!</p>
+                    <div className="flex justify-center">
+                      <a
+                        href="checkout.html"
+                        className="bg-primary font-poppins font-semibold rounded-lg px-12 py-2 border-2 border-primary text-white text-center w-fit hover:bg-white hover:text-primary"
+                      >
+                        Mulai Belanja
+                      </a>
+                    </div>
                   </div>
-                ))
-              ) : (
-                <div className="flex flex-col gap-4 bg-white p-6 rounded-lg font-poppins">
-                  <p className="font-semibold text-2xl text-center">Keranjangmu masih kosong nih :(</p>
-                  <p className="text-xl text-center">Yuk, isi dengan produk-produk stevia terbaik dari kami!</p>
-                  <div className="flex justify-center">
-                    <a
-                      href="checkout.html"
-                      className="bg-primary font-poppins font-semibold rounded-lg px-12 py-2 border-2 border-primary text-white text-center w-fit hover:bg-white hover:text-primary"
-                    >
-                      Mulai Belanja
-                    </a>
-                  </div>
-                </div>
+                )
               )}
             </div>
             <div className="w-full lg:w-1/3 p-2">
