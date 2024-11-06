@@ -29,7 +29,7 @@ export default function Akun() {
     };
 
     const updateUserInfo = async (e: React.FormEvent) => {
-        e.preventDefault(); // Prevents the default form submission behavior
+        e.preventDefault(); // Mencegah perilaku submit form standar
         try {
             await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/me/update`, userData, {
                 headers: {
@@ -39,7 +39,7 @@ export default function Akun() {
             });
             Swal.fire({
                 icon: 'success',
-                title: 'Data updated successfully!',
+                title: 'Data berhasil diperbarui!',
                 showConfirmButton: false,
                 timer: 1500,
             });
@@ -99,11 +99,13 @@ export default function Akun() {
                             <div>Kelola informasi profil Anda.</div>
                             <div className="divider" />
                             {loading ? (
-                                <p className="text-center">Loading...</p>
+                                <div className='flex justify-center'>
+                                    <span className="loading loading-spinner loading-md"></span>
+                                </div>
                             ) : (
                                 <form onSubmit={updateUserInfo} className="flex w-full">
                                     <div className="w-1/4 flex flex-col items-center gap-4">
-                                        <img className="w-full" src={userData?.gambar} alt="" />
+                                        <img className="w-full" src={userData?.gambar} alt="Foto Profil" />
                                         <input
                                             type="file"
                                             id="gambar"
@@ -116,7 +118,7 @@ export default function Akun() {
                                             <tbody>
                                                 <tr>
                                                     <td className="w-1/4 pr-4">
-                                                        <label htmlFor="username" className="block text-left">Username</label>
+                                                        <label htmlFor="username" className="block text-left">Nama Pengguna</label>
                                                     </td>
                                                     <td className="w-3/4 pl-4 py-1">
                                                         <input
