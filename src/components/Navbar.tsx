@@ -36,8 +36,8 @@ export default function Navbar() {
       const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/login`, dataForm);
 
       if (res.data.token) {
-        setError(null);        
-        Cookies.set("token", res.data.token, { expires: 7, path: "/" });        
+        setError(null);
+        Cookies.set("token", res.data.token, { expires: 7, path: "/" });
         Cookies.set("name", res.data.user.name, { expires: 7, path: "/" });
         window.location.href = "/dashboard";
       } else {
@@ -75,8 +75,11 @@ export default function Navbar() {
               <li className="text-white border-b-2 border-primary md:mr-12 hover:border-white">
                 <Link href="#our-products">Produk</Link>
               </li>
-              <li className="text-white border-b-2 border-primary md:mr-12 hover:border-white">
-                <Link href="/keranjang">
+              <li className="md:mr-12">
+                <Link
+                  href="/keranjang"
+                  className="flex justify-center items-center focus:outline-none text-white hover:bg-background font-medium rounded-md text-sm w-12 aspect-square hover:text-decoration-none"
+                >
                   <FaShoppingCart className="text-white" />
                 </Link>
               </li>
