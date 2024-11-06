@@ -17,16 +17,16 @@ export default function Akun() {
                 <div className="mt-12 flex flex-col w-full">
                     <section
                         id="dashboard"
-                        className="min-h-screen font-poppins w-full flex gap-2 flex-col mt-2 pt-10 px-4 pb-20 bg-background"
+                        className="min-h-screen font-poppins w-full flex gap-2 flex-col mt-2 pt-10 px-4 pb-20 bg-slate-50"
                     >
-                        <div className="flex flex-col gap-2 rounded-lg bg-white w-full py-4">
+                        <div className="flex flex-col gap-2 rounded-lg bg-white w-full py-4 shadow-md">
                             <div className="px-4 py-2">
                                 <p className='font-semibold'>Histori Transaksi Saya</p>
                                 <p>Melihat daftar transaksi yang anda lakukan.</p>
                             </div>
                         </div>
                         <div className="flex flex-col gap-2">
-                            <div className="flex gap-4 flex-col bg-white w-full p-4 rounded-lg">
+                            <div className="flex gap-4 flex-col bg-white w-full p-4 rounded-lg shadow-md">
                                 <div className="flex justify-end w-full gap-5">
                                     <p>Status : Dalam Perjalanan</p>
                                 </div>
@@ -66,7 +66,7 @@ export default function Akun() {
                                     </div>
                                 </div>
                             </div>
-                            <div className="flex gap-4 flex-col bg-white w-full p-4 rounded-lg">
+                            <div className="flex gap-4 flex-col bg-white w-full p-4 rounded-lg  shadow-md">
                                 <div className="flex justify-end w-full gap-5">
                                     <p>Status : Selesai</p>
                                 </div>

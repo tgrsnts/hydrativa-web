@@ -53,9 +53,9 @@ export default function Akun() {
                 <div className="mt-12 flex flex-col w-full">
                     <section
                         id="dashboard"
-                        className="min-h-screen font-poppins w-full flex flex-col mt-2 pt-10 px-4 pb-20 bg-background"
+                        className="min-h-screen font-poppins w-full flex flex-col mt-2 pt-10 px-4 pb-20 bg-slate-50"
                     >
-                        <div className="flex flex-col bg-white p-4 w-full rounded-lg">
+                        <div className="flex flex-col bg-white p-4 w-full rounded-lg shadow-md">
                             <div className="flex justify-between">
                                 <div className="flex flex-col">
                                     <div className="font-semibold">Alamat Saya</div>
