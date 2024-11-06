@@ -23,56 +23,73 @@ export default function Akun() {
             setLoading(false);
             setUserData(response.data);
         } catch (error) {
-            if (axios.isAxiosError(error) && error.response && error.response.status === 401) {
-                Swal.fire({
-                    icon: 'error',
-                    title: error.response.data.message,
-                    showConfirmButton: false,
-                    timer: 1500,
-                });
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Terjadi kesalahan',
-                    text: 'Mohon coba lagi nanti.',
-                    showConfirmButton: false,
-                    timer: 1500,
-                });
-            }
+            setLoading(false);
+            handleAxiosError(error);
         }
     };
 
-
-
-    useEffect(() => {
-        getUserInfo()
-    }, [])
+    const updateUserInfo = async (e: React.FormEvent) => {
+        e.preventDefault(); // Prevents the default form submission behavior
+        try {
+            await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/me/update`, userData, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${Cookies.get('token')}`,
+                }
+            });
+            Swal.fire({
+                icon: 'success',
+                title: 'Data updated successfully!',
+                showConfirmButton: false,
+                timer: 1500,
+            });
+        } catch (error) {
+            handleAxiosError(error);
+        }
+    };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value, type, checked } = e.target;
-    
-        setUserData((prevUserData) =>
+        setUserData((prevUserData) => 
             prevUserData
-                ? {
-                    ...prevUserData,
-                    [name as keyof User]: type === 'radio' ? (checked ? value : prevUserData[name as keyof User]) : value,
-                }
+                ? { ...prevUserData, [name]: type === 'radio' ? value : checked ? checked : value }
                 : null
         );
     };
-    
 
+    const handleAxiosError = (error: any) => {
+        if (axios.isAxiosError(error) && error.response) {
+            Swal.fire({
+                icon: 'error',
+                title: error.response.data.message || 'Error',
+                showConfirmButton: false,
+                timer: 1500,
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Terjadi kesalahan',
+                text: 'Mohon coba lagi nanti.',
+                showConfirmButton: false,
+                timer: 1500,
+            });
+        }
+    };
+
+    useEffect(() => {
+        getUserInfo();
+    }, []);
 
     return (
         <>
-        <Navbar/>
+            <Navbar />
             <div className="flex">
                 <div className="flex">
                     <div className="flex min-h-screen w-80 flex-col bg-primary py-4 text-gray-700">
                         <Sidebar />
                     </div>
                 </div>
-                <div className="mt-12 flex flex-col w-full">               
+                <div className="mt-12 flex flex-col w-full">
                     <section
                         id="dashboard"
                         className="min-h-screen font-poppins w-full flex flex-col mt-2 pt-10 px-4 pb-20 bg-background"
@@ -81,131 +98,127 @@ export default function Akun() {
                             <div className="font-semibold">Akun Saya</div>
                             <div>Kelola informasi profil Anda.</div>
                             <div className="divider" />
-                            { loading? ( <p className='text-center'>Loading...</p> ) : (
-                                <form action="" className="flex w-full">
-                                <div className="w-1/4 flex flex-col items-center gap-4">
-                                    <img className="w-full" src={userData?.gambar   } alt="" />
-                                    <input
-                                        type="file"
-                                        id="gambar"
-                                        placeholder="gambar"
-                                        className="w-full rounded-md bg-gray-100 file:mr-5 file:py-1 file:px-3 file:border-none file:w-full file:bg-gray-100 file:text-stone-700 hover:file:cursor-pointer hover:file:bg-green-50 hover:file:text-primary focus:outline-none focus:ring focus:ring-primary focus-border-primary"
-                                    />
-                                </div>
-                                <div className="flex w-3/4 pl-8">
-                                    <table className="w-full">
-                                        <tbody>
-                                            <tr>
-                                                <td className="w-1/4 pr-4">
-                                                    <label htmlFor="" className="block text-left">
-                                                        Username
-                                                    </label>
-                                                </td>
-                                                <td className="w-3/4 pl-4 py-1">
-                                                    <input
-                                                        className="w-full p-2 border-2 rounded-lg"
-                                                        type="text"
-                                                        value={userData?.username || ''}
-                                                        onChange={handleInputChange}
-                                                    />
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td className="pr-4">
-                                                    <label htmlFor="" className="block text-left">
-                                                        Nama Lengkap                                                    </label>
-                                                </td>
-                                                <td className="pl-4 py-1">
-                                                    <input
-                                                        className="w-full p-2 border-2 rounded-lg"
-                                                        type="text"
-                                                        value={userData?.name || ''}
-                                                        onChange={handleInputChange}
-                                                    />
-                                                </td>
-                                            </tr>                                        
-                                            <tr>
-                                                <td className="pr-4">
-                                                    <label htmlFor="" className="block text-left">
-                                                        Email
-                                                    </label>
-                                                </td>
-                                                <td className="pl-4 py-1">
-                                                    <input
-                                                        className="w-full p-2 border-2 rounded-lg"
-                                                        type="email"
-                                                        value={userData?.email || ''}
-                                                        onChange={handleInputChange}
-                                                    />
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td className="pr-4">
-                                                    <label htmlFor="" className="block text-left">
-                                                        Telepon
-                                                    </label>
-                                                </td>
-                                                <td className="pl-4 py-1">
-                                                    <input
-                                                        className="w-full p-2 border-2 rounded-lg"
-                                                        type="text"
-                                                        value={userData?.telepon || ''}
-                                                        onChange={handleInputChange}
-                                                    />
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td className="pr-4">
-                                                    <label htmlFor="" className="block text-left">
-                                                        Jenis Kelamin
-                                                    </label>
-                                                </td>
-                                                <td className="pl-4 py-1 flex gap-8">
-                                                    <div className="flex items-center gap-1">
+                            {loading ? (
+                                <p className="text-center">Loading...</p>
+                            ) : (
+                                <form onSubmit={updateUserInfo} className="flex w-full">
+                                    <div className="w-1/4 flex flex-col items-center gap-4">
+                                        <img className="w-full" src={userData?.gambar} alt="" />
+                                        <input
+                                            type="file"
+                                            id="gambar"
+                                            name="gambar"
+                                            className="w-full rounded-md bg-gray-100 file:mr-5 file:py-1 file:px-3 file:border-none file:w-full file:bg-gray-100 file:text-stone-700 hover:file:cursor-pointer hover:file:bg-green-50 hover:file:text-primary focus:outline-none focus:ring focus:ring-primary focus-border-primary"
+                                        />
+                                    </div>
+                                    <div className="flex w-3/4 pl-8">
+                                        <table className="w-full">
+                                            <tbody>
+                                                <tr>
+                                                    <td className="w-1/4 pr-4">
+                                                        <label htmlFor="username" className="block text-left">Username</label>
+                                                    </td>
+                                                    <td className="w-3/4 pl-4 py-1">
                                                         <input
-                                                            className="accent-primary"
-                                                            name="jenis_kelamin"
-                                                            type="radio"
-                                                            value="Laki-laki"
-                                                            checked={userData?.jenis_kelamin === "Laki-laki"}
+                                                            className="w-full p-2 border-2 rounded-lg"
+                                                            type="text"
+                                                            name="username"
+                                                            value={userData?.username || ''}
                                                             onChange={handleInputChange}
                                                         />
-                                                        <label htmlFor="">Laki-laki</label>
-                                                    </div>
-                                                    <div className="flex items-center gap-1">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td className="pr-4">
+                                                        <label htmlFor="name" className="block text-left">Nama Lengkap</label>
+                                                    </td>
+                                                    <td className="pl-4 py-1">
                                                         <input
-                                                            className="accent-primary"
-                                                            name="jenis_kelamin"
-                                                            type="radio"
-                                                            value="Perempuan"
-                                                            checked={userData?.jenis_kelamin === "Perempuan"}
+                                                            className="w-full p-2 border-2 rounded-lg"
+                                                            type="text"
+                                                            name="name"
+                                                            value={userData?.name || ''}
                                                             onChange={handleInputChange}
                                                         />
-                                                        <label htmlFor="">Perempuan</label>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td className="pr-4" />
-                                                <td className="pl-4 pt-8">
-                                                    <button
-                                                        type="submit"
-                                                        className="bg-primary hover:bg-[#237F20] text-white px-4 py-2 rounded-md"
-                                                    >
-                                                        Simpan
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </form>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td className="pr-4">
+                                                        <label htmlFor="email" className="block text-left">Email</label>
+                                                    </td>
+                                                    <td className="pl-4 py-1">
+                                                        <input
+                                                            className="w-full p-2 border-2 rounded-lg"
+                                                            type="email"
+                                                            name="email"
+                                                            value={userData?.email || ''}
+                                                            onChange={handleInputChange}
+                                                        />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td className="pr-4">
+                                                        <label htmlFor="telepon" className="block text-left">Telepon</label>
+                                                    </td>
+                                                    <td className="pl-4 py-1">
+                                                        <input
+                                                            className="w-full p-2 border-2 rounded-lg"
+                                                            type="text"
+                                                            name="telepon"
+                                                            value={userData?.telepon || ''}
+                                                            onChange={handleInputChange}
+                                                        />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td className="pr-4">
+                                                        <label htmlFor="jenis_kelamin" className="block text-left">Jenis Kelamin</label>
+                                                    </td>
+                                                    <td className="pl-4 py-1 flex gap-8">
+                                                        <div className="flex items-center gap-1">
+                                                            <input
+                                                                className="accent-primary"
+                                                                name="jenis_kelamin"
+                                                                type="radio"
+                                                                value="Laki-laki"
+                                                                checked={userData?.jenis_kelamin === 'Laki-laki'}
+                                                                onChange={handleInputChange}
+                                                            />
+                                                            <label>Laki-laki</label>
+                                                        </div>
+                                                        <div className="flex items-center gap-1">
+                                                            <input
+                                                                className="accent-primary"
+                                                                name="jenis_kelamin"
+                                                                type="radio"
+                                                                value="Perempuan"
+                                                                checked={userData?.jenis_kelamin === 'Perempuan'}
+                                                                onChange={handleInputChange}
+                                                            />
+                                                            <label>Perempuan</label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td className="pr-4" />
+                                                    <td className="pl-4 pt-8">
+                                                        <button
+                                                            type="submit"
+                                                            className="bg-primary hover:bg-[#237F20] text-white px-4 py-2 rounded-md"
+                                                        >
+                                                            Simpan
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </form>
                             )}
                         </div>
                     </section>
                 </div>
             </div>
-
         </>
-    )
+    );
 }
