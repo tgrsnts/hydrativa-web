@@ -8,9 +8,65 @@ import type { Alamat } from "@/lib/interfaces/Alamat";
 import { FaLocationDot } from "react-icons/fa6";
 import Cookies from "js-cookie";
 
-export default function Keranjang() {
+declare global {
+  interface Window {
+    snap: any;
+  }
+}
+
+export default function Checkout() {
   const [dataAlamat, setDataAlamat] = useState<Alamat[] | null>(null);
   const [selectedItems, setSelectedItems] = useState<Keranjang[]>([]);
+  const [total, setTotal] = useState<number>(0);
+
+  const handlePayment = async () => {
+    try {
+      // Calculate the total price based on selected items
+      const totalPrice = calculateTotalPrice();
+
+      // Prepare the data to send in the POST request
+      const requestData = {
+        id_item: selectedItems.map(item => item.id),  // Extracts the item IDs
+        total: totalPrice,  // Send the total price
+      };
+
+      // Send the payment request
+      const response = await axios.post(
+        'http://127.0.0.1:8000/api/bayar',
+        requestData,  // Send the request data
+        {
+          headers: {
+            'Authorization': `Bearer ${Cookies.get('token')}`,
+          },
+        }
+      );
+
+      if (response) {
+        window.snap.pay(response, {          
+          onSuccess: (result) => {
+            console.log('Payment successful:', result);
+          },
+          onPending: (result) => {
+            console.log('Payment pending:', result);
+          },
+          onError: (error) => {
+            console.error('Payment error:', error);
+          },
+          onClose: () => {
+            console.log('Payment popup closed');
+          },
+        }); // Assuming response contains the token
+      }
+    } catch (error) {
+      console.error("Checkout failed:", error);
+    }
+  };
+
+
+  const calculateTotalPrice = () => {
+    return selectedItems.reduce((total, item) => total + item.harga * item.quantity, 0);
+  };
+
 
   useEffect(() => {
     const storedItems = sessionStorage.getItem('selectedItems');
@@ -41,7 +97,26 @@ export default function Keranjang() {
     };
 
     fetchDataAlamat(); // Call to fetch address data
+
+    const snapScript = 'https://app.sandbox.midtrans.com/snap/snap.js';
+    const clientKey = process.env.NEXT_PUBLIC_CLIENT_KEY;
+    const script = document.createElement('script');
+    script.src = snapScript
+    script.setAttribute('data-client-key', clientKey);
+    script.async = true;
+    script.type = 'text/javascript';
+
+    document.head.appendChild(script);
+
+
+    return () => {
+      document.head.removeChild(script);
+    }
   }, []);
+
+  useEffect(() => {
+    
+  });
 
   const primaryAddress = dataAlamat?.find(alamat => alamat.isPrimary === 1);
 
@@ -158,7 +233,7 @@ export default function Keranjang() {
                   <div className="text-md font-medium">
                     <div className="flex justify-between">
                       <div>Total Harga</div>
-                      <div>Rp 8.000</div> {/* Dynamic total price based on selected items */}
+                      <div>Rp {total}</div>
                     </div>
                     <div className="flex justify-between">
                       <div>Total Ongkos Kirim</div>
@@ -171,10 +246,12 @@ export default function Keranjang() {
                     </div>
                   </div>
                   <button
+                    onClick={handlePayment}
+
                     className="bg-primary font-poppins font-semibold rounded-lg px-4 py-2 border-2 border-primary text-white text-center w-full hover:bg-white hover:text-primary"
                   >
                     Pilih Pembayaran
-                  </button>
+                  </button>                  
                 </div>
               </div>
             </div>
