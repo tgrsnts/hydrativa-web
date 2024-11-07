@@ -7,6 +7,7 @@ import { Produk } from "@/lib/interfaces/Produk";
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
+import { FaStar } from 'react-icons/fa';
 
 
 
@@ -103,7 +104,7 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                                                     <p>Terjual 100+</p>
                                                     <p>•</p>
                                                     <div>
-                                                        <i className="fa-solid fa-star text-yellow-400" /> (5
+                                                        <FaStar className='text-yellow-400'/> (5
                                                         rating)
                                                     </div>
                                                 </div>
@@ -255,7 +256,7 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                                     <div className="flex items-center justify-center gap-3">
                                         <i className="text-4xl fa-solid fa-star text-yellow-400" />
                                         <p className="text-5xl">
-                                            4.0<span className="text-sm">/5.0</span>
+                                            {product.final_rating}<span className="text-sm">/5.0</span>
                                         </p>
                                     </div>
                                     <div className="flex flex-col items-center justify-center">
@@ -263,36 +264,36 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                                         <p>5 rating • 4 ulasan</p>
                                     </div>
                                     <div className="flex flex-col">
-                                        <div className="flex items-center gap-2">
-                                            <i className="fa-solid fa-star text-yellow-400" />
+                                        <div className="flex items-center gap-2">                                    
+                                            <FaStar className='text-yellow-400'/>
                                             <p className="w-4 text-center">5</p>
                                             <progress className="progress w-full" value={0} max={100} />
                                             {/* <progress class="progress w-64 h-8 rounded-full bg-blue-500 border-4 border-green-500 shadow-lg" value="70" max="100"></progress> */}
                                             <p className="w-4 text-center">0</p>
                                         </div>
                                         <div className="flex items-center gap-2 w-full">
-                                            <i className="fa-solid fa-star text-yellow-400" />
+                                            <FaStar className='text-yellow-400'/>
                                             <p className="w-4 text-center">4</p>
                                             <progress className="progress w-full" value={100} max={100} />
                                             {/* <progress class="progress w-64 h-8 rounded-full bg-blue-500 border-4 border-green-500 shadow-lg" value="70" max="100"></progress> */}
                                             <p className="w-4 text-center">4</p>
                                         </div>
                                         <div className="flex items-center gap-2 w-full">
-                                            <i className="fa-solid fa-star text-yellow-400" />
+                                            <FaStar className='text-yellow-400'/>
                                             <p className="w-4 text-center">3</p>
                                             <progress className="progress w-full" value={0} max={100} />
                                             {/* <progress class="progress w-64 h-8 rounded-full bg-blue-500 border-4 border-green-500 shadow-lg" value="70" max="100"></progress> */}
                                             <p className="w-4 text-center">0</p>
                                         </div>
                                         <div className="flex items-center gap-2 w-full">
-                                            <i className="fa-solid fa-star text-yellow-400" />
+                                            <FaStar className='text-yellow-400'/>
                                             <p className="w-4 text-center">2</p>
                                             <progress className="progress w-full" value={0} max={100} />
                                             {/* <progress class="progress w-64 h-8 rounded-full bg-blue-500 border-4 border-green-500 shadow-lg" value="70" max="100"></progress> */}
                                             <p className="w-4 text-center">0</p>
                                         </div>
                                         <div className="flex items-center gap-2 w-full">
-                                            <i className="fa-solid fa-star text-yellow-400" />
+                                            <FaStar className='text-yellow-400'/>
                                             <p className="w-4 text-center">1</p>
                                             <progress className="progress w-full" value={10} max={100} />
                                             {/* <progress class="progress w-64 h-8 rounded-full bg-blue-500 border-4 border-green-500 shadow-lg" value="70" max="100"></progress> */}
@@ -303,131 +304,34 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                                 <div className="flex flex-1 flex-col gap-3">
                                     <p className="text-2xl font-semibold">Ulasan</p>
                                     <div className="flex flex-col">
-                                        <div className="first:pt-0 pt-2 pb-2 border-b-2 last:border-b-0">
-                                            <div className="flex items-start gap-3">
-                                                <img
-                                                    className="w-10 rounded-full"
-                                                    src="/image/avatar-biru.jpg"
-                                                    alt=""
-                                                />
-                                                <div>
-                                                    <div className="flex flex-wrap items-end lg:gap-3 text-md">
-                                                        <p className="font-semibold">Mochamad Tegar Santoso</p>
-                                                        <p>2 jam yang lalu</p>
+                                        {
+                                            product.rating.map((item, index) => (
+                                                <div key={index} className="first:pt-0 pt-2 pb-2 border-b-2 last:border-b-0">
+                                                    <div className="flex items-start gap-3">
+                                                        <img
+                                                            className="w-10 rounded-full"
+                                                            src="/image/avatar-biru.jpg"
+                                                            alt=""
+                                                        />
+                                                        <div>
+                                                            <div className="flex flex-wrap items-end lg:gap-3 text-md">
+                                                                <p className="font-semibold">{item.nama_user}</p>
+                                                                <p>{item.tanggal}</p>
+                                                            </div>
+                                                            <div className='flex'>
+                                                                {Array.from({ length: 5 }, (_, index) => (
+                                                                    <FaStar key={index}
+                                                                    className={`${index < item.rating_user ? 'text-yellow-400' : ''}`}/>                                                                    
+                                                                ))}
+                                                            </div>
+                                                            <p className="text-sm line-clamp-3 lg:line-clamp-none">
+                                                                {item.komen_user}
+                                                            </p>
+                                                        </div>
                                                     </div>
-                                                    <div>
-                                                        <i className="fa-solid fa-star text-yellow-400" />
-                                                        <i className="fa-solid fa-star text-yellow-400" />
-                                                        <i className="fa-solid fa-star text-yellow-400" />
-                                                        <i className="fa-solid fa-star text-yellow-400" />
-                                                        <i className="fa-solid fa-star" />
-                                                    </div>
-                                                    <p className="text-sm line-clamp-3 lg:line-clamp-none">
-                                                        alat nya keren bgt, udah terintegrasi sama aplikasi juga
-                                                    </p>
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div className="first:pt-0 pt-2 pb-2 border-b-2 last:border-b-0">
-                                            <div className="flex items-start gap-3">
-                                                <img
-                                                    className="w-10 rounded-full"
-                                                    src="/image/avatar-biru.jpg"
-                                                    alt=""
-                                                />
-                                                <div>
-                                                    <div className="flex flex-wrap items-end lg:gap-3 text-md">
-                                                        <p className="font-semibold">Mochamad Tegar Santoso</p>
-                                                        <p>2 jam yang lalu</p>
-                                                    </div>
-                                                    <div>
-                                                        <i className="fa-solid fa-star text-yellow-400" />
-                                                        <i className="fa-solid fa-star text-yellow-400" />
-                                                        <i className="fa-solid fa-star text-yellow-400" />
-                                                        <i className="fa-solid fa-star text-yellow-400" />
-                                                        <i className="fa-solid fa-star" />
-                                                    </div>
-                                                    <p className="text-sm line-clamp-3 lg:line-clamp-none">
-                                                        mantap
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="first:pt-0 pt-2 pb-2 border-b-2 last:border-b-0">
-                                            <div className="flex items-start gap-3">
-                                                <img
-                                                    className="w-10 rounded-full"
-                                                    src="/image/avatar-biru.jpg"
-                                                    alt=""
-                                                />
-                                                <div>
-                                                    <div className="flex flex-wrap items-end lg:gap-3 text-md">
-                                                        <p className="font-semibold">Mochamad Tegar Santoso</p>
-                                                        <p>2 jam yang lalu</p>
-                                                    </div>
-                                                    <div>
-                                                        <i className="fa-solid fa-star text-yellow-400" />
-                                                        <i className="fa-solid fa-star text-yellow-400" />
-                                                        <i className="fa-solid fa-star text-yellow-400" />
-                                                        <i className="fa-solid fa-star text-yellow-400" />
-                                                        <i className="fa-solid fa-star" />
-                                                    </div>
-                                                    <p className="text-sm line-clamp-3 lg:line-clamp-none">
-                                                        okane bgt
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="first:pt-0 pt-2 pb-2 border-b-2 last:border-b-0">
-                                            <div className="flex items-start gap-3">
-                                                <img
-                                                    className="w-10 rounded-full"
-                                                    src="/image/avatar-biru.jpg"
-                                                    alt=""
-                                                />
-                                                <div>
-                                                    <div className="flex flex-wrap items-end lg:gap-3 text-md">
-                                                        <p className="font-semibold">Mochamad Tegar Santoso</p>
-                                                        <p>2 jam yang lalu</p>
-                                                    </div>
-                                                    <div>
-                                                        <i className="fa-solid fa-star text-yellow-400" />
-                                                        <i className="fa-solid fa-star text-yellow-400" />
-                                                        <i className="fa-solid fa-star text-yellow-400" />
-                                                        <i className="fa-solid fa-star text-yellow-400" />
-                                                        <i className="fa-solid fa-star" />
-                                                    </div>
-                                                    <p className="text-sm line-clamp-3 lg:line-clamp-none">
-                                                        cincayy
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="first:pt-0 pt-2 pb-2 border-b-2 last:border-b-0">
-                                            <div className="flex items-start gap-3">
-                                                <img
-                                                    className="w-10 rounded-full"
-                                                    src="/image/avatar-biru.jpg"
-                                                    alt=""
-                                                />
-                                                <div>
-                                                    <div className="flex flex-wrap items-end lg:gap-3 text-md">
-                                                        <p className="font-semibold">Mochamad Tegar Santoso</p>
-                                                        <p>2 jam yang lalu</p>
-                                                    </div>
-                                                    <div>
-                                                        <i className="fa-solid fa-star text-yellow-400" />
-                                                        <i className="fa-solid fa-star" />
-                                                        <i className="fa-solid fa-star" />
-                                                        <i className="fa-solid fa-star" />
-                                                        <i className="fa-solid fa-star" />
-                                                    </div>
-                                                    {/* <p class="text-sm line-clamp-3 lg:line-clamp-none">
-                                      enak bgt, bumbunya gurih.
-                                  </p> */}
-                                                </div>
-                                            </div>
-                                        </div>
+                                            ))
+                                        }
                                     </div>
                                 </div>
                             </div>
