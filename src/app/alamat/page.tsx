@@ -113,14 +113,14 @@ export default function Akun() {
                                         <div className="flex flex-col">
                                             <label htmlFor="kodepos">Kode Pos</label>
                                             <input type="text" id="kodepos" placeholder="Masukkan Kode Pos" className="w-full p-2 rounded-md bg-gray-100" />
-                                        </div>
-                                        <div className="flex flex-col">
-                                            <label htmlFor="isPrimary">Is Primary</label>
-                                            <input type="checkbox" id="isPrimary" className="w-full p-2 rounded-md bg-gray-100" />
-                                        </div>
+                                        </div>                                        
                                         <div className="flex flex-col">
                                             <label htmlFor="catatan_kurir">Catatan Kurir</label>
                                             <textarea id="catatan_kurir" placeholder="Masukkan Catatan Kurir" className="w-full p-2 rounded-md bg-gray-100"></textarea>
+                                        </div>
+                                        <div className="flex gap-2 mt-2 mb-4">
+                                            <input type="checkbox" id="isPrimary" className="w-fit p-2 rounded-md bg-gray-100" />
+                                            <label htmlFor="isPrimary">Jadikan Alamat Utama</label>
                                         </div>
                                         <div className="flex flex-col mt-2">
                                             <button type="submit" className="p-2 rounded-md bg-primary text-white">Tambah</button>
@@ -224,16 +224,7 @@ export default function Akun() {
                                                 placeholder="Masukkan Kode Pos"
                                                 className="w-full p-2 rounded-md bg-gray-100"
                                             />
-                                        </div>
-                                        <div className="flex flex-col">
-                                            <label htmlFor="isPrimary">Utama</label>
-                                            <input
-                                                type="checkbox"
-                                                id="isPrimary"
-                                                checked={currentAlamat?.isPrimary}
-                                                className="w-full p-2 rounded-md bg-gray-100"
-                                            />
-                                        </div>
+                                        </div>                                        
                                         <div className="flex flex-col">
                                             <label htmlFor="catatan_kurir">Catatan Kurir</label>
                                             <textarea
