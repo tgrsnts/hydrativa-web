@@ -5,39 +5,116 @@ import React, { useEffect, useState } from 'react';
 import { Alamat } from '@/lib/interfaces/Alamat';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import Swal from 'sweetalert2';
 
 export default function Akun() {
     const [dataAlamat, setDataAlamat] = useState<Alamat[]>([]);
     const [currentAlamat, setCurrentAlamat] = useState<Alamat | null>(null);
     const [loading, setLoading] = useState(true);
+    const [dataForm, setDataForm] = useState({
+        label_alamat: '',
+        nama_penerima: '',
+        no_telepon: '',
+        provinsi: '',
+        kabupaten: '',
+        kecamatan: '',
+        kelurahan: '',
+        kodepos: '',
+        detail: '',
+        catatan_kurir: '',
+        isPrimary: false,
+    });
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setDataForm({
+            ...dataForm,
+            [name]: value,
+        });
+    };
+
+    const handleSubmitAdd = async (e: React.FormEvent) => {
+        e.preventDefault();
+        try {
+            // Make the POST request
+            const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/alamat/add`, dataForm, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${Cookies.get('token')}`,
+                },
+            });
+
+            
+            Swal.fire({
+                icon: 'success',
+                title: 'Alamat berhasil ditambahkan!',
+                showConfirmButton: false,
+                timer: 1500,
+            });
+
+            // Optionally, clear the form fields
+            setDataForm({
+                label_alamat: '',
+                nama_penerima: '',
+                no_telepon: '',
+                provinsi: '',
+                kabupaten: '',
+                kecamatan: '',
+                kelurahan: '',
+                kodepos: '',
+                detail: '',
+                catatan_kurir: '',
+                isPrimary: false,
+            });
+
+            // Close the modal if it is open
+            const modal = document.getElementById('modalTambahData') as HTMLDialogElement | null;
+            if (modal) {
+                modal.close();
+            }
+
+            // Optionally, you can refresh the address list or do other actions
+            await fetchDataAlamat();
+        } catch (error) {
+            console.error("Error posting form data:", error);
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Terjadi kesalahan saat menambahkan alamat.',
+                showConfirmButton: false,
+                timer: 1500,
+            });
+        }
+    };
+
+
+    const fetchDataAlamat = async () => {
+        try {
+            const response = await axios.get(`http://127.0.0.1:8000/api/alamat`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${Cookies.get('token')}`,
+                },
+            });
+
+            console.log("API Response:", response.data); // Log to check response structure
+
+            // Check if the response data structure contains 'data' array
+            if (response.data && Array.isArray(response.data)) {
+                setLoading(false);
+                setDataAlamat(response.data || []); // Set the fetched data directly
+            } else {
+                setDataAlamat([]); // Set to empty array if data is not an array
+            }
+        } catch (error) {
+            console.error("Failed to fetch data:", error);
+            setDataAlamat([]); // Set to null on error
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        const fetchDataAlamat = async () => {
-            try {
-                const response = await axios.get(`http://127.0.0.1:8000/api/alamat`, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${Cookies.get('token')}`,
-                    },
-                });
-
-                console.log("API Response:", response.data); // Log to check response structure
-
-                // Check if the response data structure contains 'data' array
-                if (response.data && Array.isArray(response.data)) {
-                    setLoading(false);
-                    setDataAlamat(response.data || []); // Set the fetched data directly
-                } else {
-                    setDataAlamat([]); // Set to empty array if data is not an array
-                }
-            } catch (error) {
-                console.error("Failed to fetch data:", error);
-                setDataAlamat([]); // Set to null on error
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchDataAlamat(); // Call to fetch address data
     }, []);
 
@@ -75,57 +152,144 @@ export default function Akun() {
                                 </button>
                             </div>
                             <dialog id="modalTambahData" className="modal">
-                                <div className="modal-box">
+                                <div className="modal-box max-w-3xl">
                                     <h3 className="font-bold text-lg">Form Tambah Data</h3>
-                                    <form className="flex flex-col mt-4 w-full gap-2 rounded-lg font-poppins">
-                                        <div className="flex flex-col">
-                                            <label htmlFor="label_alamat">Label Alamat</label>
-                                            <input type="text" id="label_alamat" placeholder="Masukkan Label Alamat" className="w-full p-2 rounded-md bg-gray-100" />
+                                    <form className="flex flex-col mt-4 w-full gap-2 rounded-lg font-poppins" onSubmit={handleSubmitAdd}>
+                                        <div className="flex gap-4">
+                                            <div className="flex flex-col w-1/2">
+                                                <label htmlFor="label_alamat">Label Alamat</label>
+                                                <input
+                                                    type="text"
+                                                    id="label_alamat"
+                                                    name="label_alamat"
+                                                    placeholder="Masukkan Label Alamat"
+                                                    className="w-full p-2 rounded-md bg-gray-100"
+                                                    onChange={handleChange}
+                                                />
+                                            </div>
+                                            <div className="flex flex-col w-1/2">
+                                                <label htmlFor="nama_penerima">Nama Penerima</label>
+                                                <input
+                                                    type="text"
+                                                    id="nama_penerima"
+                                                    name="nama_penerima"
+                                                    placeholder="Masukkan Nama Penerima"
+                                                    className="w-full p-2 rounded-md bg-gray-100"
+                                                    onChange={handleChange}
+                                                />
+                                            </div>
                                         </div>
-                                        <div className="flex flex-col">
-                                            <label htmlFor="nama_penerima">Nama Penerima</label>
-                                            <input type="text" id="nama_penerima" placeholder="Masukkan Nama Penerima" className="w-full p-2 rounded-md bg-gray-100" />
+                                        <div className="flex gap-4">
+                                            <div className="flex flex-col w-1/2">
+                                                <label htmlFor="no_telepon">No Telepon</label>
+                                                <input
+                                                    type="text"
+                                                    id="no_telepon"
+                                                    name="no_telepon"
+                                                    placeholder="Masukkan No Telepon"
+                                                    className="w-full p-2 rounded-md bg-gray-100"
+                                                    onChange={handleChange}
+                                                />
+                                            </div>
+                                            <div className="flex flex-col w-1/2">
+                                                <label htmlFor="provinsi">Provinsi</label>
+                                                <input
+                                                    type="text"
+                                                    id="provinsi"
+                                                    name="provinsi"
+                                                    placeholder="Masukkan Provinsi"
+                                                    className="w-full p-2 rounded-md bg-gray-100"
+                                                    onChange={handleChange}
+                                                />
+                                            </div>
                                         </div>
-                                        <div className="flex flex-col">
-                                            <label htmlFor="no_telepon">No Telepon</label>
-                                            <input type="text" id="no_telepon" placeholder="Masukkan No Telepon" className="w-full p-2 rounded-md bg-gray-100" />
+                                        <div className="flex gap-4">
+                                            <div className="flex flex-col w-1/2">
+                                                <label htmlFor="kabupaten">Kabupaten</label>
+                                                <input
+                                                    type="text"
+                                                    id="kabupaten"
+                                                    name="kabupaten"
+                                                    placeholder="Masukkan Kabupaten"
+                                                    className="w-full p-2 rounded-md bg-gray-100"
+                                                    onChange={handleChange}
+                                                />
+                                            </div>
+                                            <div className="flex flex-col w-1/2">
+                                                <label htmlFor="kecamatan">Kecamatan</label>
+                                                <input
+                                                    type="text"
+                                                    id="kecamatan"
+                                                    name="kecamatan"
+                                                    placeholder="Masukkan Kecamatan"
+                                                    className="w-full p-2 rounded-md bg-gray-100"
+                                                    onChange={handleChange}
+                                                />
+                                            </div>
                                         </div>
-                                        <div className="flex flex-col">
-                                            <label htmlFor="detail">Detail Alamat</label>
-                                            <textarea id="detail" placeholder="Masukkan Detail Alamat" className="w-full p-2 rounded-md bg-gray-100"></textarea>
+                                        <div className="flex gap-4">
+                                            <div className="flex flex-col w-1/2">
+                                                <label htmlFor="kelurahan">Kelurahan</label>
+                                                <input
+                                                    type="text"
+                                                    id="kelurahan"
+                                                    name="kelurahan"
+                                                    placeholder="Masukkan Kelurahan"
+                                                    className="w-full p-2 rounded-md bg-gray-100"
+                                                    onChange={handleChange}
+                                                />
+                                            </div>
+                                            <div className="flex flex-col w-1/2">
+                                                <label htmlFor="kodepos">Kode Pos</label>
+                                                <input
+                                                    type="text"
+                                                    id="kodepos"
+                                                    name="kodepos"
+                                                    placeholder="Masukkan Kode Pos"
+                                                    className="w-full p-2 rounded-md bg-gray-100"
+                                                    onChange={handleChange}
+                                                />
+                                            </div>
                                         </div>
-                                        <div className="flex flex-col">
-                                            <label htmlFor="kelurahan">Kelurahan</label>
-                                            <input type="text" id="kelurahan" placeholder="Masukkan Kelurahan" className="w-full p-2 rounded-md bg-gray-100" />
+                                        <div className="flex gap-4">
+                                            <div className="flex flex-col w-1/2">
+                                                <label htmlFor="detail">Detail Alamat</label>
+                                                <textarea
+                                                    id="detail"
+                                                    name="detail"
+                                                    placeholder="Masukkan Detail Alamat"
+                                                    className="w-full p-2 rounded-md bg-gray-100"
+                                                    onChange={handleChange}
+                                                ></textarea>
+                                            </div>
+                                            <div className="flex flex-col w-1/2">
+                                                <label htmlFor="catatan_kurir">Catatan Kurir</label>
+                                                <textarea
+                                                    id="catatan_kurir"
+                                                    name="catatan_kurir"
+                                                    placeholder="Masukkan Catatan Kurir"
+                                                    className="w-full p-2 rounded-md bg-gray-100"
+                                                    onChange={handleChange}
+                                                ></textarea>
+                                            </div>
                                         </div>
-                                        <div className="flex flex-col">
-                                            <label htmlFor="kecamatan">Kecamatan</label>
-                                            <input type="text" id="kecamatan" placeholder="Masukkan Kecamatan" className="w-full p-2 rounded-md bg-gray-100" />
-                                        </div>
-                                        <div className="flex flex-col">
-                                            <label htmlFor="kabupaten">Kabupaten</label>
-                                            <input type="text" id="kabupaten" placeholder="Masukkan Kabupaten" className="w-full p-2 rounded-md bg-gray-100" />
-                                        </div>
-                                        <div className="flex flex-col">
-                                            <label htmlFor="provinsi">Provinsi</label>
-                                            <input type="text" id="provinsi" placeholder="Masukkan Provinsi" className="w-full p-2 rounded-md bg-gray-100" />
-                                        </div>
-                                        <div className="flex flex-col">
-                                            <label htmlFor="kodepos">Kode Pos</label>
-                                            <input type="text" id="kodepos" placeholder="Masukkan Kode Pos" className="w-full p-2 rounded-md bg-gray-100" />
-                                        </div>                                        
-                                        <div className="flex flex-col">
-                                            <label htmlFor="catatan_kurir">Catatan Kurir</label>
-                                            <textarea id="catatan_kurir" placeholder="Masukkan Catatan Kurir" className="w-full p-2 rounded-md bg-gray-100"></textarea>
-                                        </div>
+
                                         <div className="flex gap-2 mt-2 mb-4">
-                                            <input type="checkbox" id="isPrimary" className="w-fit p-2 rounded-md bg-gray-100" />
+                                            <input
+                                                type="checkbox"
+                                                id="isPrimary"
+                                                name="isPrimary"
+                                                className="w-fit p-2 rounded-md bg-gray-100"
+                                                onChange={handleChange}
+                                                value={1}
+                                            />
                                             <label htmlFor="isPrimary">Jadikan Alamat Utama</label>
                                         </div>
                                         <div className="flex flex-col mt-2">
                                             <button type="submit" className="p-2 rounded-md bg-primary text-white">Tambah</button>
                                         </div>
                                     </form>
+
                                 </div>
                                 <form method="dialog" className="modal-backdrop">
                                     <button>close</button>
@@ -224,7 +388,7 @@ export default function Akun() {
                                                 placeholder="Masukkan Kode Pos"
                                                 className="w-full p-2 rounded-md bg-gray-100"
                                             />
-                                        </div>                                        
+                                        </div>
                                         <div className="flex flex-col">
                                             <label htmlFor="catatan_kurir">Catatan Kurir</label>
                                             <textarea
