@@ -22,9 +22,11 @@ export default function Home() {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/produk`);
         const result = await response.json();
         setProducts(result);
-        setLoading(false);
+        
       } catch (fetchError) {
         console.error("Failed to fetch products:", fetchError);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -34,7 +36,7 @@ export default function Home() {
   return (
     <>
       {/* <!-- Navbar --> */}
-      <Navbar/>
+      <Navbar />
 
       <main>
         {/* Hero */}
@@ -103,20 +105,20 @@ export default function Home() {
               {loading ? (
                 // Show skeleton loader when loading is true
                 Array(4).fill(0).map((_, index) => (
-                  <Link
-                    href={`/detail/1`} // Adjusted path as needed
-                    className="flex flex-col w-full lg:w-full bg-white rounded-lg shadow-md transition-transform duration-300 transform hover:bg-gray-100 hover:scale-105"
+                  <div
+                    // Adjusted path as needed
+                    className="hover:cursor-pointer flex flex-col w-full lg:w-full bg-white rounded-lg shadow-md transition-transform duration-300 transform hover:bg-gray-100 hover:scale-105"
                     key={`skeleton-${index}`} // Unique key for each skeleton
                   >
-                    <div className="flex w-full flex-col gap-4">
-                      <div className="skeleton h-72 w-full rounded-t-lg rounded-b-none"></div>
-                      <div className="flex flex-col gap-2 p-4 pt-0">
-                        <div className="skeleton h-4 w-28"></div>
-                        <div className="skeleton h-4 w-20"></div>
-                        <div className="skeleton h-4 w-16"></div>
-                      </div>
+
+                    <div className="skeleton h-72 mb-2 w-full rounded-t-lg rounded-b-none"></div>
+                    <div className="h-20 flex flex-col items-start p-4 pt-0 gap-2">
+                      <div className="skeleton h-4 w-28"></div>
+                      <div className="skeleton h-4 w-20"></div>
+                      <div className="skeleton h-4 w-16"></div>
                     </div>
-                  </Link>
+
+                  </div>
                 ))
               ) : (
                 // Once loading is false, render the actual products
@@ -131,14 +133,20 @@ export default function Home() {
                       alt={product.nama} // Menggunakan nama produk sebagai alt
                       className="h-72 object-cover mb-2 rounded-t-lg"
                     />
-                    <div className="flex flex-col items-start p-4 pt-0">
-                      <p className="text-sm lg:text-lg font-poppins font-semibold">
-                        {product.nama} {/* Menggunakan properti yang benar */}
-                      </p>
-                      <div className="font-poppins text-gray-700 text-sm">Rp {product.harga}</div>
-                      <div className="flex items-center justify-start gap-1 h-4">
-                        <FaStar className="text-yellow-400" />
-                        <div className="font-poppins text-gray-600 text-sm">4.5</div>
+                    <div className="h-20 flex flex-col items-start p-4 pt-0 gap-2">
+                      <div className="h-4">
+                        <p className="text-sm lg:text-lg font-poppins font-semibold">
+                          {product.nama} {/* Menggunakan properti yang benar */}
+                        </p>
+                      </div>
+                      <div className="h-4">
+                        <div className="font-poppins text-gray-700 text-sm">Rp {product.harga}</div>
+                      </div>
+                      <div className="h-4">
+                        <div className="flex items-center justify-start gap-1 h-4">
+                          <FaStar className="text-yellow-400" />
+                          <div className="font-poppins text-gray-600 text-sm">4.5</div>
+                        </div>
                       </div>
                     </div>
                   </Link>
