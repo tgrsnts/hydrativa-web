@@ -105,8 +105,7 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                                                     <p>Terjual {product.jumlah_terjual}</p>
                                                     <p>•</p>
                                                     <div className='flex items-center gap-1'>
-                                                        <FaStar className='text-yellow-400' /> ({product.jumlah_rating}
-                                                        rating)
+                                                        <FaStar className='text-yellow-400' /> ({product.jumlah_rating} rating)
                                                     </div>
                                                 </div>
                                             </div>
