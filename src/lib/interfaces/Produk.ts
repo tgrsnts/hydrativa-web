@@ -9,6 +9,7 @@ export interface Produk {
     jumlah_rating: number;
     jumlah_ulasan: number;
     rating: Array<{
+        profile_picture: string;
         nama_user: string;
         rating_user: number;
         komen_user: string;

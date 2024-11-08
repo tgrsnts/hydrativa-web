@@ -289,7 +289,7 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                                                     <div className="flex items-start gap-3">
                                                         <img
                                                             className="w-10 rounded-full"
-                                                            src="/image/avatar-biru.jpg"
+                                                            src={item.profile_picture}
                                                             alt=""
                                                         />
                                                         <div>
