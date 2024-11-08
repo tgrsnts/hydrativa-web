@@ -164,12 +164,12 @@ export default function Keranjang() {
                       <div>Rp {selectedTotal?.toLocaleString()}</div> {/* Display selected total */}
                     </div>
                   </div>
-                  <a
+                  <button
                     onClick={handleBeliClick}
                     className={`bg-primary font-poppins font-semibold rounded-lg px-4 py-2 border-2 border-primary text-white text-center w-full hover:bg-white hover:text-primary ${!data || data.length === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
                   >
                     Beli
-                  </a>
+                  </button>
 
                 </div>
               </div>
