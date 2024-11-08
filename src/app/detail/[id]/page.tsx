@@ -15,6 +15,7 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
     const { id } = use(params); // Unwrap params with React.use()
     const [product, setProduct] = useState<Produk | null>(null);
     const [quantity, setQuantity] = useState(1); // Initialize quantity to 1
+    const ratings = [5, 4, 3, 2, 1];
 
     const handleIncrement = () => {
         if (product && quantity < product.stok) {
@@ -101,10 +102,10 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                                             <div className="flex flex-row lg:flex-col justify-between">
                                                 <p className="lg:text-3xl font-bold">Rp. {product.harga}</p>
                                                 <div className="flex flex-row items-center gap-3">
-                                                    <p>Terjual 100+</p>
+                                                    <p>Terjual {product.jumlah_terjual}</p>
                                                     <p>•</p>
-                                                    <div>
-                                                        <FaStar className='text-yellow-400'/> (5
+                                                    <div className='flex items-center gap-1'>
+                                                        <FaStar className='text-yellow-400' /> ({product.jumlah_rating}
                                                         rating)
                                                     </div>
                                                 </div>
@@ -260,45 +261,24 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                                         </p>
                                     </div>
                                     <div className="flex flex-col items-center justify-center">
-                                        <p className="font-semibold">100% pembeli merasa puas</p>
-                                        <p>5 rating • 4 ulasan</p>
+                                        <p className="font-semibold">{product.persentase_puas}% pembeli merasa puas</p>
+                                        <p>{product.jumlah_rating} rating • {product.jumlah_ulasan} ulasan</p>
                                     </div>
-                                    <div className="flex flex-col">
-                                        <div className="flex items-center gap-2">                                    
-                                            <FaStar className='text-yellow-400'/>
-                                            <p className="w-4 text-center">5</p>
-                                            <progress className="progress w-full" value={0} max={100} />
-                                            {/* <progress class="progress w-64 h-8 rounded-full bg-blue-500 border-4 border-green-500 shadow-lg" value="70" max="100"></progress> */}
-                                            <p className="w-4 text-center">0</p>
-                                        </div>
-                                        <div className="flex items-center gap-2 w-full">
-                                            <FaStar className='text-yellow-400'/>
-                                            <p className="w-4 text-center">4</p>
-                                            <progress className="progress w-full" value={100} max={100} />
-                                            {/* <progress class="progress w-64 h-8 rounded-full bg-blue-500 border-4 border-green-500 shadow-lg" value="70" max="100"></progress> */}
-                                            <p className="w-4 text-center">4</p>
-                                        </div>
-                                        <div className="flex items-center gap-2 w-full">
-                                            <FaStar className='text-yellow-400'/>
-                                            <p className="w-4 text-center">3</p>
-                                            <progress className="progress w-full" value={0} max={100} />
-                                            {/* <progress class="progress w-64 h-8 rounded-full bg-blue-500 border-4 border-green-500 shadow-lg" value="70" max="100"></progress> */}
-                                            <p className="w-4 text-center">0</p>
-                                        </div>
-                                        <div className="flex items-center gap-2 w-full">
-                                            <FaStar className='text-yellow-400'/>
-                                            <p className="w-4 text-center">2</p>
-                                            <progress className="progress w-full" value={0} max={100} />
-                                            {/* <progress class="progress w-64 h-8 rounded-full bg-blue-500 border-4 border-green-500 shadow-lg" value="70" max="100"></progress> */}
-                                            <p className="w-4 text-center">0</p>
-                                        </div>
-                                        <div className="flex items-center gap-2 w-full">
-                                            <FaStar className='text-yellow-400'/>
-                                            <p className="w-4 text-center">1</p>
-                                            <progress className="progress w-full" value={10} max={100} />
-                                            {/* <progress class="progress w-64 h-8 rounded-full bg-blue-500 border-4 border-green-500 shadow-lg" value="70" max="100"></progress> */}
-                                            <p className="w-4 text-center">1</p>
-                                        </div>
+                                    <div className="flex flex-col">                                        
+                                        {ratings.map((rating) => {
+                                            // Get the data for the current rating
+                                            const jumlah = product.distribusi_rating[rating-1]?.jumlah || 0;
+                                            const persentase = product.distribusi_rating[rating-1]?.persentase || 0;
+
+                                            return (
+                                                <div key={rating} className="flex items-center gap-2 w-full">
+                                                    <FaStar className="text-yellow-400" />
+                                                    <p className="w-4 text-center">{rating}</p>
+                                                    <progress className="progress w-full" value={persentase} max={100} />
+                                                    <p className="w-4 text-center">{jumlah}</p>
+                                                </div>
+                                            );
+                                        })} 
                                     </div>
                                 </div>
                                 <div className="flex flex-1 flex-col gap-3">
@@ -321,7 +301,7 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                                                             <div className='flex'>
                                                                 {Array.from({ length: 5 }, (_, index) => (
                                                                     <FaStar key={index}
-                                                                    className={`${index < item.rating_user ? 'text-yellow-400' : ''}`}/>                                                                    
+                                                                        className={`${index < item.rating_user ? 'text-yellow-400' : ''}`} />
                                                                 ))}
                                                             </div>
                                                             <p className="text-sm line-clamp-3 lg:line-clamp-none">
