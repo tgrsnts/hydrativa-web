@@ -71,10 +71,10 @@ export default function Navbar() {
           <nav aria-label="Header Navigation" className="peer-checked:max-h-60 max-h-0 w-full lg:w-auto flex-col flex lg:flex-row lg:max-h-full overflow-hidden transition-all duration-300 lg:items-center lg:ml-auto">
             <ul className="flex flex-col lg:flex-row lg:space-y-0 space-y-4 items-center lg:ml-auto font-poppins font-semibold">
               <li className="text-white border-b-2 border-primary md:mr-12 hover:border-white">
-                <Link href="#hero">Beranda</Link>
+                <Link href="/#hero">Beranda</Link>
               </li>
               <li className="text-white border-b-2 border-primary md:mr-12 hover:border-white">
-                <Link href="#our-products">Produk</Link>
+                <Link href="/#our-products">Produk</Link>
               </li>
               <li className="md:mr-12">
                 <Link
