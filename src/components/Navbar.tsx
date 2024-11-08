@@ -39,6 +39,7 @@ export default function Navbar() {
         setError(null);
         Cookies.set("token", res.data.token, { expires: 7, path: "/" });
         Cookies.set("name", res.data.user.name, { expires: 7, path: "/" });
+        Cookies.set("gambar", res.data.gambar, { expires: 7, path: "/" })
         window.location.href = "/dashboard";
       } else {
         setError("Gagal login: Token tidak ditemukan.");
@@ -90,7 +91,7 @@ export default function Navbar() {
                       href="/akun"
                       className="flex items-center gap-2 hover:bg-background py-1 px-2 rounded-md"
                     >
-                      <img className="w-10 rounded-full" src="/image/avatar-biru.jpg" alt="User Avatar" />
+                      <img className="w-10 rounded-full" src={Cookies.get("gambar")} alt="User Avatar" />
                       <p className="font-semibold text-nowrap text-white">{Cookies.get('name')}</p>
                     </Link>
                   </div>

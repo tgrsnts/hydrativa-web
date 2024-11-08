@@ -23,6 +23,8 @@ export default function Akun() {
             });
             setLoading(false);
             setUserData(response.data);
+            Cookies.set("name", response.data.name, { expires: 7, path: "/" });
+            Cookies.set("gambar", response.data.gambar, { expires: 7, path: "/" })
         } catch (error) {
             setLoading(false);
             handleAxiosError(error);
@@ -54,7 +56,7 @@ export default function Akun() {
 
     const updateUserInfo = async (e: React.FormEvent) => {
         e.preventDefault(); // Mencegah perilaku submit form standar
-        
+
         try {
             await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/me/update`, userData, {
                 headers: {
@@ -68,6 +70,7 @@ export default function Akun() {
                 showConfirmButton: false,
                 timer: 1500,
             });
+            getUserInfo();
         } catch (error) {
             handleAxiosError(error);
         }
@@ -147,7 +150,7 @@ export default function Akun() {
                                             type="file"
                                             id="gambar"
                                             name="gambar"
-                                            onChange={handleFileChange} 
+                                            onChange={handleFileChange}
                                             className="w-full rounded-md bg-gray-100 file:mr-5 file:py-1 file:px-3 file:border-none file:w-full file:bg-gray-100 file:text-stone-700 hover:file:cursor-pointer hover:file:bg-green-50 hover:file:text-primary focus:outline-none focus:ring focus:ring-primary focus-border-primary"
                                         />
                                     </div>
