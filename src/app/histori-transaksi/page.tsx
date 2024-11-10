@@ -98,7 +98,7 @@ export default function HistoriTransaksi() {
                                         </div>
                                         {transaction.produk.map((product) => (
                                             <div key={product.produk_id} className="flex w-full gap-5">
-                                                <img className="w-20 rounded-lg" src={`/storage/produk/${product.produk_name.toLowerCase().replace(' ', '_')}.jpeg`} alt={product.produk_name} />
+                                                <img className="w-20 rounded-lg" src={product.gambar} />
                                                 <div className="flex flex-col w-full">
                                                     <div>{product.produk_name}</div>
                                                     <div className="flex justify-between">
