@@ -125,7 +125,7 @@ export default function Dashboard() {
                       <div className="h-4">
                         <div className="flex items-center justify-start gap-1 h-4">
                           <FaStar className="text-yellow-400" />
-                          <div className="font-poppins text-gray-600 text-sm">4.5</div>
+                          <div className="font-poppins text-gray-600 text-sm">{product.final_rating}</div>
                         </div>
                       </div>
                     </div>
