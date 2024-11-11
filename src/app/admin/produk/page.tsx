@@ -72,17 +72,19 @@ export default function Page() {
         <>
             <Navbar />
             <div className="flex">
-                <div className="flex min-h-screen w-80 flex-col bg-primary py-4 text-gray-700">
-                    <Sidebar />
+                <div className="flex">
+                    <div className="flex min-h-screen w-80 flex-col bg-primary py-4 text-gray-700">
+                        <Sidebar />
+                    </div>
                 </div>
                 <div className="mt-12 flex flex-col w-full">
                     <section
                         id="dashboard"
-                        className="min-h-screen font-poppins w-full flex flex-col mt-2 pt-10 px-4 pb-20 bg-background"
+                        className="min-h-screen font-poppins w-full flex flex-col mt-2 pt-10 px-4 pb-20 bg-slate-50"
                     >
-                        <div className="flex flex-col gap-3 bg-white rounded-md p-8">
+                        <div className="flex flex-col gap-4 bg-white p-4 w-full rounded-lg shadow-md">
                             <div className="flex justify-between items-center">
-                                <div className="font-semibold text-xl">Data Produk</div>
+                                <div className="font-semibold">Data Produk</div>
                                 <button
                                     type="button"
                                     className="bg-primary hover:bg-background text-white px-4 py-2 rounded-md"
