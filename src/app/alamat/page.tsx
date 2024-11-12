@@ -7,11 +7,13 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
 
-export default function Akun() {
+export default function Alamat() {
     const [dataAlamat, setDataAlamat] = useState<Alamat[]>([]);
     const [currentAlamat, setCurrentAlamat] = useState<Alamat | null>(null);
     const [loading, setLoading] = useState(true);
-    const [dataForm, setDataForm] = useState({
+
+    // Improved form state typing
+    const [dataForm, setDataForm] = useState<Alamat>({
         label_alamat: '',
         nama_penerima: '',
         no_telepon: '',
@@ -22,7 +24,7 @@ export default function Akun() {
         kodepos: '',
         detail: '',
         catatan_kurir: '',
-        isPrimary: false,
+        isPrimary: 0,
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,14 +39,13 @@ export default function Akun() {
         e.preventDefault();
         try {
             // Make the POST request
-            const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/alamat/add`, dataForm, {
+            await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/alamat/add`, dataForm, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${Cookies.get('token')}`,
                 },
             });
 
-            
             Swal.fire({
                 icon: 'success',
                 title: 'Alamat berhasil ditambahkan!',
@@ -52,7 +53,7 @@ export default function Akun() {
                 timer: 1500,
             });
 
-            // Optionally, clear the form fields
+            // Reset form fields
             setDataForm({
                 label_alamat: '',
                 nama_penerima: '',
@@ -73,24 +74,36 @@ export default function Akun() {
                 modal.close();
             }
 
-            // Optionally, you can refresh the address list or do other actions
+            // Refresh address list after adding
             await fetchDataAlamat();
         } catch (error) {
             console.error("Error posting form data:", error);
+            handleAxiosError(error); // Handle error with a consistent approach
+        }
+    };
 
+    const handleAxiosError = (error: unknown) => {
+        if (axios.isAxiosError(error) && error.response) {
             Swal.fire({
                 icon: 'error',
-                title: 'Terjadi kesalahan saat menambahkan alamat.',
+                title: error.response.data.message || 'Error',
+                showConfirmButton: false,
+                timer: 1500,
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Terjadi kesalahan',
+                text: 'Mohon coba lagi nanti.',
                 showConfirmButton: false,
                 timer: 1500,
             });
         }
     };
 
-
     const fetchDataAlamat = async () => {
         try {
-            const response = await axios.get(`http://127.0.0.1:8000/api/alamat`, {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/alamat`, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${Cookies.get('token')}`,
@@ -108,7 +121,8 @@ export default function Akun() {
             }
         } catch (error) {
             console.error("Failed to fetch data:", error);
-            setDataAlamat([]); // Set to null on error
+            handleAxiosError(error); // Pass error to consistent error handling
+            setDataAlamat([]); // Set to empty array on error
         } finally {
             setLoading(false);
         }
@@ -460,7 +474,7 @@ export default function Akun() {
                                                 </div>
                                                 <div className="flex flex-col gap-2 items-end">
                                                     <a href="" className="text-primary" onClick={() => {
-                                                        setCurrentProduct(alamat);
+                                                        setCurrentAlamat(alamat);
                                                         const modal = document.getElementById('modalEditData') as HTMLDialogElement | null;
                                                         modal?.showModal();
                                                     }}>

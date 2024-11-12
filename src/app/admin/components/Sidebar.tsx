@@ -17,7 +17,7 @@ export default function Sidebar() {
 
     const logout = async () => {
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/logout`, {
+            await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/logout`, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${Cookies.get('token')}`,
@@ -26,7 +26,26 @@ export default function Sidebar() {
             Cookies.remove('token');
             router.push('/');
         } catch (error) {
-        
+            handleAxiosError(error); // Use the error handler
+        }
+    };    
+
+    const handleAxiosError = (error: unknown) => {
+        if (axios.isAxiosError(error) && error.response) {
+            Swal.fire({
+                icon: 'error',
+                title: error.response.data.message || 'Error',
+                showConfirmButton: false,
+                timer: 1500,
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Terjadi kesalahan',
+                text: 'Mohon coba lagi nanti.',
+                showConfirmButton: false,
+                timer: 1500,
+            });
         }
     };
 

@@ -120,7 +120,7 @@ export default function HistoriTransaksi() {
         }
     };
 
-    const handleAxiosError = (error: any) => {
+    const handleAxiosError = (error: unknown) => {
         if (axios.isAxiosError(error) && error.response) {
             Swal.fire({
                 icon: 'error',

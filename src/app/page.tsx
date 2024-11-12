@@ -2,34 +2,50 @@
 
 import { useState, useEffect } from "react";
 // import { FcGoogle } from "react-icons/fc";
-import { FaEye, FaEyeSlash, FaShoppingCart, FaStar } from "react-icons/fa";
+import { FaStar } from "react-icons/fa";
 import Footer from "@/components/Footer";
 import { Produk } from "@/lib/interfaces/Produk";
-import axios from "axios";
-import Cookies from "js-cookie";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 
 export default function Home() {
-  const [error, setError] = useState<string | null>(null);
   const [products, setProducts] = useState<Produk[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const handleAxiosError = (error: unknown) => {
+    if (axios.isAxiosError(error) && error.response) {
+      Swal.fire({
+        icon: 'error',
+        title: error.response.data.message || 'Error',
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Terjadi kesalahan',
+        text: 'Mohon coba lagi nanti.',
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    }
+  };
+  
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/produk`);
-        const result = await response.json();
-        setProducts(result);
-        
-      } catch (fetchError) {
-        console.error("Failed to fetch products:", fetchError);
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/produk`);
+        setProducts(response);
+      } catch (error) {
+        handleAxiosError(error); 
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchProducts();
   }, []);
 
@@ -53,9 +69,6 @@ export default function Home() {
             </div>
           </div>
         </section>
-        {/* Display the error message if one exists */}
-        {error && <p style={{ color: "red" }}>{error}</p>}
-
 
         {/* Know About Us */}
         <section className="px-4 lg:px-40 py-20 bg-gray-100">

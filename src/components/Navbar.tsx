@@ -4,12 +4,12 @@ import Cookies from "js-cookie";
 import { useState, useEffect } from "react";
 import { FaEye, FaEyeSlash, FaShoppingCart } from "react-icons/fa";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 export default function Navbar() {
   const [token, setToken] = useState<string | null>(null);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [dataForm, setDataForm] = useState({ username: "", password: "" });
-  const [error, setError] = useState<string | null>(null);
 
   const closeModal = (modalId: string) => {
     const modal = document.getElementById(modalId) as HTMLDialogElement | null;
@@ -30,23 +30,38 @@ export default function Navbar() {
     });
   };
 
+  const handleAxiosError = (error: unknown) => {
+    if (axios.isAxiosError(error) && error.response) {
+      Swal.fire({
+        icon: "error",
+        title: error.response.data.message || "Error",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Terjadi kesalahan",
+        text: "Mohon coba lagi nanti.",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/login`, dataForm);
 
       if (res.data.token) {
-        setError(null);
         Cookies.set("token", res.data.token, { expires: 7, path: "/" });
         Cookies.set("name", res.data.user.name, { expires: 7, path: "/" });
-        Cookies.set("gambar", res.data.gambar, { expires: 7, path: "/" })
+        Cookies.set("gambar", res.data.gambar, { expires: 7, path: "/" });
         window.location.href = "/dashboard";
-      } else {
-        setError("Gagal login: Token tidak ditemukan.");
       }
     } catch (error) {
-      setError("Terjadi kesalahan saat login.");
-      console.error("Error posting form data:", error);
+      handleAxiosError(error);
     }
   };
 
