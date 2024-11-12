@@ -110,13 +110,13 @@ export default function Dashboard() {
                   >
                     <img
                       src={product.gambar} // Path gambar sesuai dengan data produk
-                      alt={product.nama} // Menggunakan nama produk sebagai alt
+                      alt={product.nama_produk} // Menggunakan nama produk sebagai alt
                       className="h-72 object-cover mb-2 rounded-t-lg"
                     />
                     <div className="h-20 flex flex-col items-start p-4 pt-0 gap-2">
                       <div className="h-4">
                         <p className="text-sm lg:text-lg font-poppins font-semibold">
-                          {product.nama} {/* Menggunakan properti yang benar */}
+                          {product.nama_produk} {/* Menggunakan properti yang benar */}
                         </p>
                       </div>
                       <div className="h-4">

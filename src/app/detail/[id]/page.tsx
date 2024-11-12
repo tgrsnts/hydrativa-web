@@ -90,15 +90,15 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                     <section id="detail" className="py-16 lg:px-36 bg-slate-50 mt-16 mx-auto">
                         <div className="flex flex-wrap justify-center">
                             <div className="flex w-full lg:w-2/3 p-2">
-                                <div className="flex flex-col lg:flex-row bg-white rounded-lg p-4 shadow-md">
+                                <div className="flex flex-col lg:flex-row w-full bg-white rounded-lg p-4 shadow-md">
                                     <div className="flex w-full lg:w-1/3 rounded-lg justify-center">
-                                        <div className="h-45">
-                                            <img src={product.gambar} className="h-45 rounded-lg" alt={product.nama} />
+                                        <div className="w-64 h-64">
+                                            <img src={product.gambar} className="w-64 h-64 rounded-lg" alt={product.nama_produk} />
                                         </div>
                                     </div>
                                     <div className="flex flex-col w-full lg:w-2/3 px-0 lg:px-4 mt-4 lg:mt-0 gap-2 rounded-lg transition duration-300 font-poppins">
                                         <div className="flex flex-col">
-                                            <p className="text-2xl font-bold">{product.nama}</p>
+                                            <p className="text-2xl font-bold">{product.nama_produk}</p>
                                             <div className="flex flex-row lg:flex-col justify-between">
                                                 <p className="lg:text-3xl font-bold">Rp. {product.harga}</p>
                                                 <div className="flex flex-row items-center gap-3">
@@ -196,7 +196,7 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                         >
                             <div className="font-poppins modal-box bg-white text-black px-4 pt-2 pb-8">
                                 <div className="flex flex-wrap">
-                                    <img src={`/storage/${product.gambar}`} className="h-45 rounded-lg" alt={product.nama} />
+                                    <img src={`/storage/${product.gambar}`} className="h-45 rounded-lg" alt={product.nama_produk} />
                                     <div className="flex flex-col w-1/2 pl-4">
                                         <div className="flex justify-end">
                                             <form method="dialog">
@@ -204,7 +204,7 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                                             </form>
                                         </div>
                                         <div className="mt-auto">
-                                            <p className="font-bold text-md">{product.nama}</p>
+                                            <p className="font-bold text-md">{product.nama_produk}</p>
                                             <p className="font-semibold text-md">Rp. {product.harga}</p>
                                             <p>Stok total : {product.stok}</p>
                                         </div>
