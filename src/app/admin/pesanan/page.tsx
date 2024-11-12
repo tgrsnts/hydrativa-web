@@ -109,7 +109,7 @@ export default function Pesanan() {
                                                     <div key={product.transaksi_item_id} className="flex w-full gap-5">
                                                         <img className="w-20 rounded-lg" src={product.gambar} />
                                                         <div className="flex flex-col w-full">
-                                                            <div>{product.produk_name}</div>
+                                                            <div>{product.nama_produk}</div>
                                                             <div className="flex justify-between">
                                                                 <div>x{product.quantity}</div>
                                                                 <div>Rp. {product.harga.toLocaleString()}</div>
