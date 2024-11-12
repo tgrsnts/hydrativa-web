@@ -1,6 +1,7 @@
 export interface Produk {
     id: number;
-    nama: string;
+    nama_produk: string;
+    kategori: string;
     harga: number;
     gambar: string;
     stok: number;
