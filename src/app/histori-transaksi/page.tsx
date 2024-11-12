@@ -8,7 +8,7 @@ import Swal from 'sweetalert2'
 
 export default function HistoriTransaksi() {
     const [transactions, setTransactions] = useState([]);
-    const [loading, setLoading] = useState(true); // Loading state
+    const [loading, setLoading] = useState(true);
 
     // Fetch transaction data
     const fetchData = async () => {
@@ -94,27 +94,55 @@ export default function HistoriTransaksi() {
                                 transactions.map((transaction) => (
                                     <div key={transaction.transaksi_id} className="flex gap-4 flex-col bg-white w-full p-4 rounded-lg shadow-md">
                                         <div className="flex justify-end w-full gap-5">
-                                            <p>Status: {transaction.status}</p>
+                                            {
+                                                transaction.status === 'delivered' ? (
+                                                    <p>Status: Pesanan telah diterima</p>
+                                                ) : transaction.status === 'delivering' ? (
+                                                    <p>Status: Pesanan sedang dikirim</p>
+                                                ) : transaction.status === 'pending' ? (
+                                                    <p>Status: Belum dibayar</p>
+                                                ) : transaction.status === 'failed' ? (
+                                                    <p>Status: Gagal dibayar</p>
+                                                ) : (
+                                                    <p>Status: Tidak diketahui</p>
+                                                )
+                                            }
                                         </div>
                                         {transaction.produk.map((product) => (
-                                            <div key={product.produk_id} className="flex w-full gap-5">
-                                                <img className="w-20 rounded-lg" src={product.gambar} />
+                                            <div key={product.transaksi_item_id} className="flex w-full gap-5">
+                                                <img className="w-20 h-20 rounded-lg" src={product.gambar} />
                                                 <div className="flex flex-col w-full">
                                                     <div>{product.produk_name}</div>
                                                     <div className="flex justify-between">
                                                         <div>x{product.quantity}</div>
                                                         <div>Rp. {product.harga.toLocaleString()}</div>
                                                     </div>
+                                                    {
+                                                        transaction.status === 'delivered' && product.israted == 0 ? (
+                                                            <div className='flex justify-end mt-2'>
+                                                                <button
+
+                                                                    className="text-sm bg-primary font-poppins rounded-lg px-4 py-2 border-2 border-primary text-white text-center hover:bg-white hover:text-primary"
+                                                                >
+                                                                    Beri ulasan
+                                                                </button>
+                                                            </div>) : (null)
+                                                    }
                                                 </div>
                                             </div>
                                         ))}
                                         <div className="flex justify-between">
                                             <div className="flex items-center gap-2">
-                                                <button
-                                                    className="bg-primary font-poppins rounded-lg px-4 py-2 border-2 border-primary text-white text-center w-full hover:bg-white hover:text-primary"
-                                                >
-                                                    {transaction.status === 'success' ? 'Review' : 'Pesanan telah diterima'}
-                                                </button>
+                                                {
+                                                    transaction.status === 'delivering' ? (
+                                                        <button
+
+                                                            className="bg-primary font-poppins rounded-lg px-4 py-2 border-2 border-primary text-white text-center w-full hover:bg-white hover:text-primary"
+                                                        >
+                                                            Pesanan sudah diterima
+                                                        </button>
+                                                    ) : (null)
+                                                }
                                             </div>
                                             <div className="flex justify-end gap-4">
                                                 <div>Total Pesanan:</div>
