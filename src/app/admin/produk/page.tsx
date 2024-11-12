@@ -15,6 +15,7 @@ export default function Page() {
     const [imagePreview, setImagePreview] = useState<string | null>(null); // State for image preview
     const [selectedImage, setSelectedImage] = useState<File | null>(null); // State for selected image file
     const [newProduct, setNewProduct] = useState<Produk>({
+        id: 0,
         nama_produk: '',
         kategori: '',
         deskripsi: '',
@@ -112,9 +113,10 @@ export default function Page() {
             const formData = new FormData();
             formData.append('nama_produk', newProduct.nama_produk);
             formData.append('kategori', newProduct.kategori);
-            formData.append('deskripsi', newProduct.deskripsi);
-            formData.append('harga', newProduct.harga);
-            formData.append('stok', newProduct.stok);
+            formData.append('deskripsi', newProduct.deskripsi || '');  
+            formData.append('harga', newProduct.harga.toString());   
+            formData.append('stok', newProduct.stok.toString());  
+            
 
             // Menambahkan gambar ke formData jika ada
             if (selectedImage) {
@@ -561,7 +563,7 @@ export default function Page() {
                                                     <td><p className="line-clamp-3">{product.deskripsi}</p></td>
                                                     <td>Rp. {product.harga}</td>
                                                     <td>{product.stok}</td>
-                                                    <td><img className="rounded-lg w-16" src={product.gambar} alt={product.nama} /></td>
+                                                    <td><img className="rounded-lg w-16" src={product.gambar} alt={product.nama_produk} /></td>
                                                     <td className='flex gap-2'>
                                                         <button
                                                             onClick={() => {
