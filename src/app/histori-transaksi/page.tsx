@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react'
 import Cookies from 'js-cookie'
 import axios from 'axios'
 import Swal from 'sweetalert2'
+import Link from 'next/link'
 
 export default function HistoriTransaksi() {
     const [transactions, setTransactions] = useState([]);
@@ -40,6 +41,68 @@ export default function HistoriTransaksi() {
     useEffect(() => {
         fetchData();
     }, []);
+
+    const handleMarkAsReceived = async (transactionId) => {
+        // Tampilkan dialog konfirmasi dengan SweetAlert
+        const result = await Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: "Anda akan menandai pesanan ini sebagai diterima.",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, tandai sebagai diterima',
+            cancelButtonText: 'Tidak, batalkan',
+        });
+
+        if (result.isConfirmed) {
+            try {
+                const response = await axios.post(
+                    `${process.env.NEXT_PUBLIC_API_URL}/sampai/${transactionId}`,
+                    {},
+                    {
+                        headers: {
+                            Authorization: `Bearer ${Cookies.get('token')}`,
+                        },
+                    }
+                );
+
+                if (response.status === 200) {
+                    // Tampilkan alert sukses setelah status diupdate
+                    Swal.fire({
+                        title: 'Sukses!',
+                        text: 'Pesanan telah diterima.',
+                        icon: 'success',
+                        confirmButtonText: 'OK',
+                    });
+
+                    // Update status lokal di state transaksi
+                    setTransactions((prevTransactions) =>
+                        prevTransactions.map((transaction) =>
+                            transaction.transaksi_id === transactionId
+                                ? { ...transaction, status: 'delivered' }
+                                : transaction
+                        )
+                    );
+                } else {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Gagal menandai pesanan sebagai diterima',
+                        icon: 'error',
+                        confirmButtonText: 'OK',
+                    });
+                }
+            } catch (error) {
+                console.error("Terjadi kesalahan saat mengupdate status pesanan:", error);
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Terjadi kesalahan saat mengupdate status pesanan.',
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                });
+            }
+        }
+    };
+
+
 
     return (
         <>
@@ -120,12 +183,12 @@ export default function HistoriTransaksi() {
                                                     {
                                                         transaction.status === 'delivered' && product.israted == 0 ? (
                                                             <div className='flex justify-end mt-2'>
-                                                                <button
-
+                                                                <Link
+                                                                    href="/ulasan"
                                                                     className="text-sm bg-primary font-poppins rounded-lg px-4 py-2 border-2 border-primary text-white text-center hover:bg-white hover:text-primary"
                                                                 >
                                                                     Beri ulasan
-                                                                </button>
+                                                                </Link>
                                                             </div>) : (null)
                                                     }
                                                 </div>
@@ -136,7 +199,7 @@ export default function HistoriTransaksi() {
                                                 {
                                                     transaction.status === 'delivering' ? (
                                                         <button
-
+                                                            onClick={() => handleMarkAsReceived(transaction.transaksi_id)}
                                                             className="bg-primary font-poppins rounded-lg px-4 py-2 border-2 border-primary text-white text-center w-full hover:bg-white hover:text-primary"
                                                         >
                                                             Pesanan sudah diterima
