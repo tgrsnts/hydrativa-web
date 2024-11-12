@@ -1,6 +1,6 @@
 export interface Alamat {   
-    id: number;
-    id_user: number;
+    id?: number;
+    id_user?: number;
     label_alamat: string;
     nama_penerima: string;
     no_telepon: string;

@@ -2,7 +2,7 @@
 import Navbar from '@/components/Navbar';
 import Sidebar from '@/components/Sidebar';
 import React, { useEffect, useState } from 'react';
-import { Alamat } from '@/lib/interfaces/Alamat';
+import type { Alamat } from '@/lib/interfaces/Alamat';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
@@ -27,13 +27,14 @@ export default function Alamat() {
         isPrimary: 0,
     });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setDataForm({
             ...dataForm,
             [name]: value,
         });
     };
+    
 
     const handleSubmitAdd = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -65,7 +66,7 @@ export default function Alamat() {
                 kodepos: '',
                 detail: '',
                 catatan_kurir: '',
-                isPrimary: false,
+                isPrimary: 0,
             });
 
             // Close the modal if it is open
@@ -431,7 +432,7 @@ export default function Alamat() {
                                         <button type="button" className="w-full p-2 rounded-md bg-white text-primary border-primary hover:bg-primary hover:text-white">
                                             Tidak
                                         </button>
-                                        <button type="submit" className="w-full p-2 rounded-md bg-red-600 text-white hover:bg-red-800" onClick={() => deleteProduct(currentProduct?.id)}>
+                                        <button type="submit" className="w-full p-2 rounded-md bg-red-600 text-white hover:bg-red-800">
                                             Ya
                                         </button>
                                     </form>
