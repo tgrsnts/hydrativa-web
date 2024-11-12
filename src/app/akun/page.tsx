@@ -10,8 +10,7 @@ import Swal from 'sweetalert2';
 
 export default function Akun() {
     const [userData, setUserData] = useState<User | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [file, setFile] = useState<File | null>(null);
+    const [loading, setLoading] = useState(true);    
 
     const getUserInfo = async () => {
         try {
@@ -86,18 +85,16 @@ export default function Akun() {
         );
     };
 
-    // Handle file change (for image upload)
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
             const selectedFile = e.target.files[0];
-            setFile(selectedFile);
             if (selectedFile) {
                 updateUserPhoto(selectedFile);  // Directly upload when file is selected
             }
         }
-    };
+    };    
 
-    const handleAxiosError = (error: any) => {
+    const handleAxiosError = (error: unknown) => {
         if (axios.isAxiosError(error) && error.response) {
             Swal.fire({
                 icon: 'error',
