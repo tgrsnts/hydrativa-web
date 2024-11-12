@@ -1,5 +1,4 @@
 import { Alamat } from "./Alamat";
-import { Produk } from "./Produk";
 
 interface Transaksi {
   transaksi_id: number;
