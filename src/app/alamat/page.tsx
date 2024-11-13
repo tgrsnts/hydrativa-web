@@ -287,19 +287,7 @@ export default function Alamat() {
                                                     onChange={handleChange}
                                                 ></textarea>
                                             </div>
-                                        </div>
-
-                                        <div className="flex gap-2 mt-2 mb-4">
-                                            <input
-                                                type="checkbox"
-                                                id="isPrimary"
-                                                name="isPrimary"
-                                                className="w-fit p-2 rounded-md bg-gray-100"
-                                                onChange={handleChange}
-                                                value={1}
-                                            />
-                                            <label htmlFor="isPrimary">Jadikan Alamat Utama</label>
-                                        </div>
+                                        </div>                                        
                                         <div className="flex flex-col mt-2">
                                             <button type="submit" className="p-2 rounded-md bg-primary text-white">Tambah</button>
                                         </div>
