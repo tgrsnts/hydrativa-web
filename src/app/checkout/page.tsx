@@ -52,6 +52,7 @@ export default function Checkout() {
 
       // Prepare the data to send in the POST request
       const requestData = {
+        id_alamat: 1,
         id_item: selectedItems.map(item => item.id),  // Extracts the item IDs
         total: totalPrice,  // Send the total price
       };
@@ -74,7 +75,11 @@ export default function Checkout() {
           transaction_id: response.data.transaction_id,  // Extract the transaction ID
         };
 
-        window.snap.pay(paymentResponse, {
+
+
+        console.log(response)
+
+        window.snap.pay(response.data, {
           onSuccess: (result) => {
             console.log('Payment successful:', result);
           },
@@ -94,6 +99,7 @@ export default function Checkout() {
     }
   };
 
+  
 
 
   const calculateTotalPrice = () => {
