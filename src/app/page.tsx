@@ -135,7 +135,7 @@ export default function Home() {
                 ))
               ) : (
                 // Once loading is false, render the actual products
-                products.map((product) => (
+                Array.isArray(products) && products.map((product) => (
                   <Link
                     href={`/detail/${product.id}`} // Adjusted path with dynamic product ID
                     className="flex flex-col w-full lg:w-full bg-white rounded-lg shadow-md transition-transform duration-300 transform hover:bg-gray-100 hover:scale-105"
