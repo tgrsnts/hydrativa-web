@@ -8,6 +8,38 @@ import Swal from 'sweetalert2'
 import Link from 'next/link'
 import Transaksi from '@/lib/interfaces/Transaksi'
 
+
+declare global {
+    interface Window {
+        snap: {
+            pay: (response: PaymentResponse, options: {
+                onSuccess: (result: PaymentResult) => void;
+                onPending: (result: PaymentResult) => void;
+                onError: (error: PaymentError) => void;
+                onClose: () => void;
+            }) => void;
+        };
+    }
+}
+
+interface PaymentResponse {
+    status: string;
+    transaction_id: string;
+    // Add other properties from the response that are important
+}
+
+interface PaymentResult {
+    transaction_status: string;
+    // Add other properties from the result if needed
+}
+
+interface PaymentError {
+    code: string;
+    message: string;
+    // Add other properties related to the error if needed
+}
+
+
 export default function HistoriTransaksi() {
     const [transactions, setTransactions] = useState<Transaksi[]>([]);
     const [loading, setLoading] = useState(true);
@@ -21,8 +53,9 @@ export default function HistoriTransaksi() {
                 }
             });
 
+            console.log(response)
+            setTransactions(response.data);
             if (response.status === 200 || response.status === 201) {
-                setTransactions(response.data);
             } else {
                 console.warn("Failed to fetch transactions:", response.data);
             }
@@ -39,8 +72,98 @@ export default function HistoriTransaksi() {
         }
     };
 
+    const handleBayarUlang = async (transactionId: number) => {
+        try {
+
+
+            // Send the payment request
+            const response = await axios.get(
+                `${process.env.NEXT_PUBLIC_API_URL}/bayar/${transactionId}`,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${Cookies.get('token')}`,
+                    },
+                }
+            );
+
+            if (response && response.data) {
+                // Extract the necessary fields from response.data
+
+
+                console.log(response)
+
+                window.snap.pay(response.data.snaptoken, {
+                    onSuccess: (result) => {
+                        handleBayarBerhasil(response.data.transaksi_id)
+                        console.log('Payment successful:', result);
+                    },
+                    onPending: (result) => {
+                        console.log('Payment pending:', result);
+                    },
+                    onError: (error) => {
+                        console.error('Payment error:', error);
+                    },
+                    onClose: () => {
+                        console.log('Payment popup closed');
+                    },
+                });
+            }
+        } catch (error) {
+            console.error("Checkout failed:", error);
+        }
+    };
+
+    const handleBayarBerhasil = async (transactionId: number) => {
+        try {
+
+
+            // Send the payment request
+            const response = await axios.get(
+                `${process.env.NEXT_PUBLIC_API_URL}/bayar/berhasil/${transactionId}`,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${Cookies.get('token')}`,
+                    },
+                }
+            );
+
+            if (response && response.data) {
+                Swal.fire({
+                    title: 'Sukses!',
+                    text: 'Pesanan telah dibayar.',
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                });
+            }
+        } catch (error) {
+            console.error("Checkout failed:", error);
+        }
+    };
+
+
+
     useEffect(() => {
         fetchData();
+
+        const snapScript = 'https://app.sandbox.midtrans.com/snap/snap.js';
+        const clientKey = process.env.NEXT_PUBLIC_CLIENT_KEY;
+
+        const script = document.createElement('script');
+        if (clientKey) {
+            script.src = snapScript;
+            script.setAttribute('data-client-key', clientKey);
+            script.async = true;
+            script.type = 'text/javascript';
+
+            document.head.appendChild(script);
+        } else {
+            console.error("Client key is not defined");
+        }
+
+
+        return () => {
+            document.head.removeChild(script);
+        }
     }, []);
 
     const handleMarkAsReceived = async (transactionId: number) => {
@@ -163,6 +286,8 @@ export default function HistoriTransaksi() {
                                                     <p>Status: Pesanan telah diterima</p>
                                                 ) : transaction.status === 'delivering' ? (
                                                     <p>Status: Pesanan sedang dikirim</p>
+                                                ) : transaction.status === 'success' ? (
+                                                    <p>Status: Sudah dibayar</p>
                                                 ) : transaction.status === 'pending' ? (
                                                     <p>Status: Belum dibayar</p>
                                                 ) : transaction.status === 'failed' ? (
@@ -204,6 +329,13 @@ export default function HistoriTransaksi() {
                                                             className="bg-primary font-poppins rounded-lg px-4 py-2 border-2 border-primary text-white text-center w-full hover:bg-white hover:text-primary"
                                                         >
                                                             Pesanan sudah diterima
+                                                        </button>
+                                                    ) : transaction.status === 'pending' ? (
+                                                        <button
+                                                            onClick={() => handleBayarUlang(transaction.transaksi_id)}
+                                                            className="bg-primary font-poppins rounded-lg px-4 py-2 border-2 border-primary text-white text-center w-full hover:bg-white hover:text-primary"
+                                                        >
+                                                            Bayar
                                                         </button>
                                                     ) : (null)
                                                 }
