@@ -15,8 +15,7 @@ export default function Dashboard() {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/produk`);
         const result = await response.json();
-        setProducts(result);
-
+        setProducts(result.data || []);
       } catch (fetchError) {
         console.error("Failed to fetch products:", fetchError);
       } finally {

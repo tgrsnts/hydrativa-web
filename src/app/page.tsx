@@ -33,19 +33,20 @@ export default function Home() {
       });
     }
   };
-  
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/produk`);
-        setProducts(response.data);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/produk`);
+        const result = await response.json();
+        setProducts(result.data || []);
       } catch (error) {
-        handleAxiosError(error); 
+        handleAxiosError(error);
       } finally {
         setLoading(false);
       }
     };
-  
+
     fetchProducts();
   }, []);
 
