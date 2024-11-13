@@ -149,7 +149,7 @@ export default function Home() {
                     <div className="h-20 flex flex-col items-start p-4 pt-0 gap-2">
                       <div className="h-4">
                         <p className="text-sm lg:text-lg font-poppins font-semibold">
-                          {product.nama} {/* Menggunakan properti yang benar */}
+                          {product.nama_produk} {/* Menggunakan properti yang benar */}
                         </p>
                       </div>
                       <div className="h-4">
