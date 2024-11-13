@@ -39,7 +39,7 @@ export default function Page() {
                 throw new Error('Failed to fetch products');
             }
             const result = await response.json();
-            setProducts(result || []); // Set products directly to the result array
+            setProducts(result.data || []); // Set products directly to the result array
         } catch (error) {
             console.error('Failed to fetch products:', error);
             setProducts([]);
@@ -136,7 +136,13 @@ export default function Page() {
 
             if (response.status === 200) {
                 // Update state tanpa memanggil fetchProducts
-                setProducts(prevProducts => [...prevProducts, newProduct]); // Tambahkan produk baru ke state
+                setProducts((prevProducts) => {
+                    if (Array.isArray(prevProducts)) {
+                      return [...prevProducts, newProduct]; // Spread the previous state and add new product
+                    }
+                    console.error("prevProducts is not an array:", prevProducts);
+                    return  prevProducts;
+                  });// Tambahkan produk baru ke state
                 Swal.fire({
                     icon: 'success',
                     title: 'Produk berhasil ditambahkan!',
