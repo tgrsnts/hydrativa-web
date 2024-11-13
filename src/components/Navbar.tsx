@@ -10,6 +10,12 @@ export default function Navbar() {
   const [token, setToken] = useState<string | null>(null);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [dataForm, setDataForm] = useState({ username: "", password: "" });
+  const [dataRegisterForm, setDataRegisterForm] = useState({
+    name: "",
+    username: "",
+    email: "",
+    password: "",
+  });
 
   const closeModal = (modalId: string) => {
     const modal = document.getElementById(modalId) as HTMLDialogElement | null;
@@ -26,6 +32,14 @@ export default function Navbar() {
     const { name, value } = e.target;
     setDataForm({
       ...dataForm,
+      [name]: value,
+    });
+  };
+
+  const handleRegisterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setDataRegisterForm({
+      ...dataRegisterForm,
       [name]: value,
     });
   };
@@ -58,6 +72,24 @@ export default function Navbar() {
         Cookies.set("token", res.data.token, { expires: 7, path: "/" });
         Cookies.set("name", res.data.user.name, { expires: 7, path: "/" });
         Cookies.set("gambar", res.data.gambar, { expires: 7, path: "/" });
+        closeModal('modal_login');
+        window.location.href = "/dashboard";
+      }
+    } catch (error) {
+      handleAxiosError(error);
+    }
+  };
+
+  const handleRegisterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/register`, dataRegisterForm);
+
+      if (res.data.token) {
+        Cookies.set("token", res.data.token, { expires: 7, path: "/" });
+        Cookies.set("name", res.data.user.name, { expires: 7, path: "/" });
+        Cookies.set("gambar", res.data.gambar, { expires: 7, path: "/" });
+        closeModal('modal_register');
         window.location.href = "/dashboard";
       }
     } catch (error) {
@@ -239,12 +271,15 @@ export default function Navbar() {
           </div>
           <div className="px-8 pt-4 pb-12">
             <h2 className="text-2xl lg:text-4xl font-bold text-center text-black w-full mb-4">Registrasi</h2>
-            <form id="registerForm" className="flex flex-col gap-2">
+            <form id="registerForm" onSubmit={handleRegisterSubmit} className="flex flex-col gap-2">
               <div className="flex flex-col">
                 <label htmlFor="name">Nama</label>
                 <input
                   type="text"
                   id="name"
+                  name="name"
+                  value={dataRegisterForm.name}
+                  onChange={handleRegisterChange}
                   placeholder="Masukkan nama"
                   className="w-full p-2 rounded-md bg-gray-100 focus:outline-none focus:ring focus:ring-primary focus:border-primary"
                   required
@@ -253,8 +288,11 @@ export default function Navbar() {
               <div className="flex flex-col">
                 <label htmlFor="username">Nama Pengguna</label>
                 <input
-                  type="username"
+                  type="text"
                   id="username"
+                  name="username"
+                  value={dataRegisterForm.username}
+                  onChange={handleRegisterChange}
                   placeholder="Masukkan nama pengguna"
                   className="w-full p-2 rounded-md bg-gray-100 focus:outline-none focus:ring focus:ring-primary focus:border-primary"
                   required
@@ -265,6 +303,9 @@ export default function Navbar() {
                 <input
                   type="email"
                   id="email"
+                  name="email"
+                  value={dataRegisterForm.email}
+                  onChange={handleRegisterChange}
                   placeholder="Masukkan email"
                   className="w-full p-2 rounded-md bg-gray-100 focus:outline-none focus:ring focus:ring-primary focus:border-primary"
                   required
@@ -278,17 +319,21 @@ export default function Navbar() {
                       className="hidden"
                       id="toggle-password-register"
                       type="checkbox"
+                      onClick={() => setIsPasswordVisible(!isPasswordVisible)}
                     />
                     <label
                       className="bg-gray-300 hover:bg-gray-400 rounded px-2 py-1 text-sm text-gray-600 font-mono cursor-pointer"
                       htmlFor="toggle-password-register"
                     >
-                      <FaEye />
+                      {isPasswordVisible ? <FaEyeSlash /> : <FaEye />}
                     </label>
                   </div>
                   <input
-                    type="password"
+                    type={isPasswordVisible ? "text" : "password"}
                     id="register-password"
+                    name="password"
+                    value={dataRegisterForm.password}
+                    onChange={handleRegisterChange}
                     placeholder="Masukkan password"
                     className="w-full p-2 rounded-md bg-gray-100 focus:outline-none focus:ring focus:ring-primary focus:border-primary"
                     required
@@ -304,6 +349,7 @@ export default function Navbar() {
                 </button>
               </div>
             </form>
+
           </div>
         </div>
         <form method="dialog" className="modal-backdrop">
