@@ -422,7 +422,7 @@ export default function Alamat() {
                                     <button>close</button>
                                 </form>
                             </dialog>
-                            <dialog id="modalHapusData" className="modal">
+                            {/* <dialog id="modalHapusData" className="modal">
                                 <div className="modal-box">
                                     <h3 className="font-bold text-lg">Apakah Anda yakin ingin menghapus {currentAlamat?.label_alamat}?</h3>
                                     <div className="flex items-center justify-center h-[100px]">
@@ -440,7 +440,7 @@ export default function Alamat() {
                                 <form method="dialog" className="modal-backdrop">
                                     <button>close</button>
                                 </form>
-                            </dialog>
+                            </dialog> */}
 
                             <div className="divider" />
                             <div className="flex flex-col gap-4">

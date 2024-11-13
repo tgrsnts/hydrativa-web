@@ -10,9 +10,35 @@ import Cookies from "js-cookie";
 
 declare global {
   interface Window {
-    snap: any;
+    snap: {
+      pay: (response: PaymentResponse, options: {
+        onSuccess: (result: PaymentResult) => void;
+        onPending: (result: PaymentResult) => void;
+        onError: (error: PaymentError) => void;
+        onClose: () => void;
+      }) => void;
+    };
   }
 }
+
+interface PaymentResponse {
+  status: string;
+  transaction_id: string;
+  // Add other properties from the response that are important
+}
+
+interface PaymentResult {
+  transaction_status: string;
+  // Add other properties from the result if needed
+}
+
+interface PaymentError {
+  code: string;
+  message: string;
+  // Add other properties related to the error if needed
+}
+
+
 
 export default function Checkout() {
   const [dataAlamat, setDataAlamat] = useState<Alamat[] | null>(null);
@@ -41,8 +67,14 @@ export default function Checkout() {
         }
       );
 
-      if (response) {
-        window.snap.pay(response, {          
+      if (response && response.data) {
+        // Extract the necessary fields from response.data
+        const paymentResponse: PaymentResponse = {
+          status: response.data.status,  // Assuming status is part of the response
+          transaction_id: response.data.transaction_id,  // Extract the transaction ID
+        };
+
+        window.snap.pay(paymentResponse, {
           onSuccess: (result) => {
             console.log('Payment successful:', result);
           },
@@ -55,12 +87,13 @@ export default function Checkout() {
           onClose: () => {
             console.log('Payment popup closed');
           },
-        }); // Assuming response contains the token
+        });
       }
     } catch (error) {
       console.error("Checkout failed:", error);
     }
   };
+
 
 
   const calculateTotalPrice = () => {
@@ -100,13 +133,18 @@ export default function Checkout() {
 
     const snapScript = 'https://app.sandbox.midtrans.com/snap/snap.js';
     const clientKey = process.env.NEXT_PUBLIC_CLIENT_KEY;
-    const script = document.createElement('script');
-    script.src = snapScript
-    script.setAttribute('data-client-key', clientKey);
-    script.async = true;
-    script.type = 'text/javascript';
 
-    document.head.appendChild(script);
+    const script = document.createElement('script');
+    if (clientKey) { 
+      script.src = snapScript;
+      script.setAttribute('data-client-key', clientKey); 
+      script.async = true;
+      script.type = 'text/javascript';
+
+      document.head.appendChild(script);
+    } else {
+      console.error("Client key is not defined");
+    }
 
 
     return () => {
@@ -115,7 +153,8 @@ export default function Checkout() {
   }, []);
 
   useEffect(() => {
-    
+    const totalPrice = calculateTotalPrice();
+    setTotal(totalPrice); // Update total when items change or the component mounts
   });
 
   const primaryAddress = dataAlamat?.find(alamat => alamat.isPrimary === 1);
@@ -251,7 +290,7 @@ export default function Checkout() {
                     className="bg-primary font-poppins font-semibold rounded-lg px-4 py-2 border-2 border-primary text-white text-center w-full hover:bg-white hover:text-primary"
                   >
                     Pilih Pembayaran
-                  </button>                  
+                  </button>
                 </div>
               </div>
             </div>

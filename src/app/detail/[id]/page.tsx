@@ -263,11 +263,12 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                                         <p className="font-semibold">{product.persentase_puas}% pembeli merasa puas</p>
                                         <p>{product.jumlah_rating} rating • {product.jumlah_ulasan} ulasan</p>
                                     </div>
-                                    <div className="flex flex-col">                                        
+                                    <div className="flex flex-col">
                                         {ratings.map((rating) => {
                                             // Get the data for the current rating
-                                            const jumlah = product.distribusi_rating[rating-1]?.jumlah || 0;
-                                            const persentase = product.distribusi_rating[rating-1]?.persentase || 0;
+                                            const jumlah = product.distribusi_rating?.[rating - 1]?.jumlah || 0;
+                                            const persentase = product.distribusi_rating?.[rating - 1]?.persentase || 0;
+
 
                                             return (
                                                 <div key={rating} className="flex items-center gap-2 w-full">
@@ -277,14 +278,14 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                                                     <p className="w-4 text-center">{jumlah}</p>
                                                 </div>
                                             );
-                                        })} 
+                                        })}
                                     </div>
                                 </div>
                                 <div className="flex flex-1 flex-col gap-3">
                                     <p className="text-2xl font-semibold">Ulasan</p>
                                     <div className="flex flex-col">
                                         {
-                                            product.rating.map((item, index) => (
+                                            product.rating?.map((item, index) => (
                                                 <div key={index} className="first:pt-0 pt-2 pb-2 border-b-2 last:border-b-0">
                                                     <div className="flex items-start gap-3">
                                                         <img

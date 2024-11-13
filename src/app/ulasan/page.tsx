@@ -6,92 +6,99 @@ import Cookies from 'js-cookie'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import { FaStar } from 'react-icons/fa'
+import Transaksi from '@/lib/interfaces/Transaksi'
+import Review from '@/lib/interfaces/Review'
 
-export default function HistoriTransaksi() {
-    const [transactions, setTransactions] = useState([]);
+export default function Ulasan() {
+    const [transactions, setTransactions] = useState<Transaksi[]>([]); // Define transactions as an array
     const [loading, setLoading] = useState(true);
 
-    const [reviews, setReviews] = useState({});
+    const [reviews, setReviews] = useState<Record<number, Review>>({});
 
-    // Fungsi untuk menangani rating
-    const handleRating = (productId, rating) => {
-        setReviews((prevReviews) => ({
-            ...prevReviews,
-            [productId]: { ...prevReviews[productId], rating },
-        }));
+    const handleRating = (transaksiItemId: number, rating: number) => {
+        setReviews((prevReviews) => {
+            const currentReview = prevReviews[transaksiItemId] || {}; // Fallback to empty object
+            return {
+                ...prevReviews,
+                [transaksiItemId]: { ...currentReview, rating },
+            };
+        });
     };
 
-    // Fungsi untuk menangani komentar
-    const handleComment = (productId, comment) => {
-        setReviews((prevReviews) => ({
-            ...prevReviews,
-            [productId]: { ...prevReviews[productId], comment },
-        }));
+    const handleComment = (transaksiItemId: number, comment: string) => {
+        setReviews((prevReviews) => {
+            const currentReview = prevReviews[transaksiItemId] || {}; // Fallback to empty object
+            return {
+                ...prevReviews,
+                [transaksiItemId]: { ...currentReview, comment },
+            };
+        });
     };
 
-    const handleImageUpload = (productId, file) => {
+    const handleImageUpload = (transaksiItemID: number, file: File) => {
         const reader = new FileReader();
         reader.onload = () => {
-            setReviews((prevReviews) => ({
-                ...prevReviews,
-                [productId]: {
-                    ...prevReviews[productId],
-                    image: file,  // Store the actual file for upload
-                    imagePreview: reader.result, // Store the preview for display
-                },
-            }));
+            setReviews((prevReviews) => {
+                const currentReview = prevReviews[transaksiItemID] || {}; // Fallback to empty object
+                return {
+                    ...prevReviews,
+                    [transaksiItemID]: {
+                        ...currentReview,
+                        image: file,  // Store the actual file for upload
+                        imagePreview: reader.result as string, // Store the preview for display
+                    },
+                };
+            });
         };
         if (file) {
             reader.readAsDataURL(file);
         }
     };
-    
 
-    const submitReviews = async (e) => {
-        e.preventDefault(); // Prevent the default form submission
+    const submitReview = async (e: React.FormEvent, transaksiItemId: number) => {
+        e.preventDefault();
+
+        const review = reviews[transaksiItemId];
+        if (!review || !review.rating || !review.comment) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Harap isi semua bagian ulasan!',
+                showConfirmButton: false,
+                timer: 1500,
+            });
+            return;
+        }
     
         try {
-            // Loop through each product review
-            for (const transaksiId in reviews) {
-                const review = reviews[transaksiId];
+            const formData = new FormData();
+            formData.append("rating", review.rating.toString());
+            formData.append("comment", review.comment);
     
-                if (review && (review.rating || review.comment || review.image)) {
-                    const formData = new FormData();
-    
-                    // Add review data to FormData
-                    formData.append("rating", review.rating);
-                    formData.append("comment", review.comment);
-    
-                    // If there is an image, add the file to FormData
-                    if (review.image) {
-                        formData.append("gambar", review.image);  // Add the actual image file
-                    }
-    
-                    // Send the review for each product
-                    await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/ulas/${transaksiId}`, formData, {
-                        headers: {
-                            "Content-Type": "multipart/form-data",
-                            "Authorization": `Bearer ${Cookies.get('token')}`,
-                        },
-                    });
-    
-                    // Success alert
-                    Swal.fire({
-                        icon: "success",
-                        title: "Ulasan berhasil dikirim!",
-                        showConfirmButton: false,
-                        timer: 1500,
-                    });
-                    fetchData();
-                }
+            if (review.image) {
+                formData.append("gambar", review.image);
             }
+    
+            // Send the review for the specific `transaksiItemId`
+            await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/ulas/${transaksiItemId}`, formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                    "Authorization": `Bearer ${Cookies.get('token')}`,
+                },
+            });
+    
+            Swal.fire({
+                icon: "success",
+                title: "Ulasan berhasil dikirim!",
+                showConfirmButton: false,
+                timer: 1500,
+            });
+    
+            // Refresh the data after submission
+            fetchData();
         } catch (error) {
-            handleAxiosError(error); // Handle any errors
+            handleAxiosError(error);
         }
     };
-    
-
-
 
     // Fetch Ulasan data
     const fetchData = async () => {
@@ -198,17 +205,22 @@ export default function HistoriTransaksi() {
                                         <div className="flex justify-end w-full gap-5">
                                             {/* <p>Pesanan diterima: {transaction.status}</p> */}
                                         </div>
-                                        {transaction.produk.map((product) => (
-                                            <form key={product.transaksi_item_id} onSubmit={submitReviews} className="flex w-full gap-5 first:pt-0 pt-2 pb-4 border-b-2 last:border-b-0">
-                                                <img className="w-20 h-20 rounded-lg" src={product.gambar} alt={product.produk_name} />
+                                        {transaction.transaksi_item.map((transaksi_item) => (
+                                            <form key={transaksi_item.transaksi_item_id} onSubmit={(e) => submitReview(e, transaksi_item.transaksi_item_id)} className="flex w-full gap-5 first:pt-0 pt-2 pb-4 border-b-2 last:border-b-0">
+                                                <img
+                                                    src={reviews[transaksi_item.transaksi_item_id]?.imagePreview ?? ''}
+                                                    alt="Preview"
+                                                    className="w-20 h-20 mt-2 rounded-md"
+                                                />
+
                                                 <div className="flex flex-col w-full">
-                                                    <div>{product.produk_name}</div>
+                                                    <div>{transaksi_item.nama_produk}</div>
                                                     <div className="flex justify-between">
-                                                        <div>x{product.quantity}</div>
-                                                        <div>Rp. {product.harga.toLocaleString()}</div>
+                                                        <div>x{transaksi_item.quantity}</div>
+                                                        <div>Rp. {transaksi_item.harga.toLocaleString()}</div>
                                                     </div>
                                                     {
-                                                        product.israted ? (
+                                                        transaksi_item.israted ? (
                                                             <div className="flex flex-col gap-2 mt-2">
                                                                 <div>Ulasan Anda:</div>
                                                                 <div className="flex">
@@ -216,7 +228,7 @@ export default function HistoriTransaksi() {
                                                                         <FaStar
                                                                             key={star}
                                                                             className={
-                                                                                star <= product.rating.rating_value
+                                                                                star <= transaksi_item.rating.rating_value
                                                                                     ? "text-yellow-400"
                                                                                     : "text-gray-300"
                                                                             }
@@ -224,10 +236,10 @@ export default function HistoriTransaksi() {
                                                                         />
                                                                     ))}
                                                                 </div>
-                                                                <div>{product.rating.comment}</div>
-                                                                {product.rating.gambar && (
+                                                                <div>{transaksi_item.rating.comment}</div>
+                                                                {transaksi_item.rating.gambar && (
                                                                     <img
-                                                                        src={product.rating.gambar}
+                                                                        src={transaksi_item.rating.gambar}
                                                                         alt="Review image"
                                                                         className="w-20 h-20 mt-2 rounded-md"
                                                                     />
@@ -241,14 +253,14 @@ export default function HistoriTransaksi() {
                                                                         <label key={star}>
                                                                             <input
                                                                                 type="radio"
-                                                                                name={`rating-${product.transaksi_item_id}`}
+                                                                                name={`rating-${transaksi_item.transaksi_item_id}`}
                                                                                 value={star}
                                                                                 className="hidden"
-                                                                                onChange={() => handleRating(product.transaksi_item_id, star)}
+                                                                                onChange={() => handleRating(transaksi_item.transaksi_item_id, star)}
                                                                             />
                                                                             <FaStar
                                                                                 className={
-                                                                                    star <= (reviews[product.transaksi_item_id]?.rating || 0)
+                                                                                    star <= (reviews[transaksi_item.transaksi_item_id]?.rating || 0)
                                                                                         ? "text-yellow-400"
                                                                                         : "text-gray-300"
                                                                                 }
@@ -261,20 +273,24 @@ export default function HistoriTransaksi() {
                                                                     name="comment"
                                                                     className="w-full p-2 rounded-md bg-gray-100"
                                                                     placeholder="Deskripsikan produk ini"
-                                                                    onChange={(e) => handleComment(product.transaksi_item_id, e.target.value)}
-                                                                    value={reviews[product.transaksi_item_id]?.comment || ""}
+                                                                    onChange={(e) => handleComment(transaksi_item.transaksi_item_id, e.target.value)}
+                                                                    value={reviews[transaksi_item.transaksi_item_id]?.comment || ""}
                                                                 ></textarea>
-                                                                <label htmlFor={`gambar-${product.transaksi_item_id}`}>Masukkan gambar</label>
+                                                                <label htmlFor={`gambar-${transaksi_item.transaksi_item_id}`}>Masukkan gambar</label>
                                                                 <input
                                                                     type="file"
-                                                                    id={`gambar-${product.transaksi_item_id}`}
+                                                                    id={`gambar-${transaksi_item.transaksi_item_id}`}
                                                                     name="gambar"
                                                                     className="w-32 rounded-md bg-gray-100 file:mr-5 file:py-1 file:px-3 file:border-none file:w-full file:bg-gray-100 file:text-stone-700 hover:file:cursor-pointer hover:file:bg-green-50 hover:file:text-primary focus:outline-none focus:ring focus:ring-primary"
-                                                                    onChange={(e) => handleImageUpload(product.transaksi_item_id, e.target.files[0])}
+                                                                    onChange={(e) => {
+                                                                        if (e.target.files && e.target.files[0]) {
+                                                                          handleImageUpload(transaksi_item.transaksi_item_id, e.target.files[0]);
+                                                                        }
+                                                                      }}
                                                                 />
-                                                                {reviews[product.transaksi_item_id]?.imagePreview && (
+                                                                {reviews[transaksi_item.transaksi_item_id]?.imagePreview && (
                                                                     <img
-                                                                        src={reviews[product.transaksi_item_id].imagePreview}
+                                                                        src={reviews[transaksi_item.transaksi_item_id]?.imagePreview ?? '/path/to/placeholder-image.jpg'}
                                                                         alt="Preview"
                                                                         className="w-20 h-20 mt-2 rounded-md"
                                                                     />

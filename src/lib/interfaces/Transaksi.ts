@@ -6,14 +6,18 @@ interface Transaksi {
   total_harga: number;
   pembeli: string;
   alamat: Alamat;
-  produk: Array<{
+  transaksi_item: Array<{
     transaksi_item_id: number;
-    produk_id: number;
     nama_produk: string;
-    israted: number;
-    harga: number;
     quantity: number;
-    gambar: string;    
+    harga: number
+    gambar: string;
+    israted: number;
+    rating: {
+      rating_value: number;
+      comment: string
+      gambar: string;
+    }
   }>;
 }
 

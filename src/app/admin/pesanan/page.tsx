@@ -105,14 +105,14 @@ export default function Pesanan() {
                                         </div>
                                         <div className="flex w-full gap-2">
                                             <div className="flex flex-col gap-2 w-1/3">
-                                                {transaction.produk.map((product) => (
-                                                    <div key={product.transaksi_item_id} className="flex w-full gap-5">
-                                                        <img className="w-20 rounded-lg" src={product.gambar} />
+                                                {transaction.transaksi_item.map((transaksi_item) => (
+                                                    <div key={transaksi_item.transaksi_item_id} className="flex w-full gap-5">
+                                                        <img className="w-20 rounded-lg" src={transaksi_item.gambar} />
                                                         <div className="flex flex-col w-full">
-                                                            <div>{product.nama_produk}</div>
+                                                            <div>{transaksi_item.nama_produk}</div>
                                                             <div className="flex justify-between">
-                                                                <div>x{product.quantity}</div>
-                                                                <div>Rp. {product.harga.toLocaleString()}</div>
+                                                                <div>x{transaksi_item.quantity}</div>
+                                                                <div>Rp. {transaksi_item.harga.toLocaleString()}</div>
                                                             </div>
                                                         </div>
                                                     </div>

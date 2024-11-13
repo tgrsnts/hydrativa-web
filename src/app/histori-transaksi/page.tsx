@@ -6,9 +6,10 @@ import Cookies from 'js-cookie'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import Link from 'next/link'
+import Transaksi from '@/lib/interfaces/Transaksi'
 
 export default function HistoriTransaksi() {
-    const [transactions, setTransactions] = useState([]);
+    const [transactions, setTransactions] = useState<Transaksi[]>([]);
     const [loading, setLoading] = useState(true);
 
     // Fetch transaction data
@@ -42,7 +43,7 @@ export default function HistoriTransaksi() {
         fetchData();
     }, []);
 
-    const handleMarkAsReceived = async (transactionId) => {
+    const handleMarkAsReceived = async (transactionId: number) => {
         // Tampilkan dialog konfirmasi dengan SweetAlert
         const result = await Swal.fire({
             title: 'Apakah Anda yakin?',
@@ -171,17 +172,17 @@ export default function HistoriTransaksi() {
                                                 )
                                             }
                                         </div>
-                                        {transaction.produk.map((product) => (
-                                            <div key={product.transaksi_item_id} className="flex w-full gap-5">
-                                                <img className="w-20 h-20 rounded-lg" src={product.gambar} />
+                                        {transaction.transaksi_item.map((transaksi_item) => (
+                                            <div key={transaksi_item.transaksi_item_id} className="flex w-full gap-5">
+                                                <img className="w-20 h-20 rounded-lg" src={transaksi_item.gambar} />
                                                 <div className="flex flex-col w-full">
-                                                    <div>{product.produk_name}</div>
+                                                    <div>{transaksi_item.nama_produk}</div>
                                                     <div className="flex justify-between">
-                                                        <div>x{product.quantity}</div>
-                                                        <div>Rp. {product.harga.toLocaleString()}</div>
+                                                        <div>x{transaksi_item.quantity}</div>
+                                                        <div>Rp. {transaksi_item.harga.toLocaleString()}</div>
                                                     </div>
                                                     {
-                                                        transaction.status === 'delivered' && product.israted == 0 ? (
+                                                        transaction.status === 'delivered' && transaksi_item.israted == 0 ? (
                                                             <div className='flex justify-end mt-2'>
                                                                 <Link
                                                                     href="/ulasan"

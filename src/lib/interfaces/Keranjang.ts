@@ -1,7 +1,7 @@
 export interface Keranjang {   
     id: number;
     nama_produk: string;
-    quantity: string;
-    harga: string;    
+    quantity: number;
+    harga: number;    
     gambar: string;
 }
