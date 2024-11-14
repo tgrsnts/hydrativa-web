@@ -54,6 +54,7 @@ export default function Alamat() {
 
     // Improved form state typing
     const [dataForm, setDataForm] = useState<Alamat>({
+        alamat_id: 0,
         label_alamat: '',
         nama_penerima: '',
         no_telepon: '',
@@ -110,6 +111,7 @@ export default function Alamat() {
 
             // Reset form fields
             setDataForm({
+                alamat_id: 0,
                 label_alamat: '',
                 nama_penerima: '',
                 no_telepon: '',
@@ -136,6 +138,96 @@ export default function Alamat() {
             handleAxiosError(error); // Handle error with a consistent approach
         }
     };
+
+    const handleSubmitEdit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        try {
+            // Make the PUT request to update the address
+            const response = await axios.put(
+                `${process.env.NEXT_PUBLIC_API_URL}/alamat/edit/${currentAlamat?.alamat_id}`,  // Assuming `currentAlamat` contains the address to edit
+                dataForm, 
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${Cookies.get('token')}`,
+                    },
+                }
+            );
+    
+            // Show success message
+            Swal.fire({
+                icon: 'success',
+                title: 'Alamat berhasil diupdate!',
+                showConfirmButton: false,
+                timer: 1500,
+            });
+    
+            // Reset form fields after successful submission (optional if needed)
+            setDataForm({
+                alamat_id: 0,
+                label_alamat: '',
+                nama_penerima: '',
+                no_telepon: '',
+                provinsi: '',
+                kabupaten: '',
+                kecamatan: '',
+                kelurahan: '',
+                kodepos: '',
+                detail: '',
+                catatan_kurir: '',
+                isPrimary: 0,
+            });
+    
+            // Close modal after form submission
+            const modal = document.getElementById('modalEditData') as HTMLDialogElement | null;
+            if (modal) {
+                modal.close(); // Close the modal if it exists
+            }
+    
+            // Optionally, refresh the address list after editing
+            await fetchDataAlamat();
+    
+        } catch (error) {
+            console.error("Error posting form data:", error);
+            handleAxiosError(error); // Handle error with a consistent approach
+        }
+    };    
+
+    const handleJadikanUtama = async (id: number) => {
+        // Show confirmation dialog
+        const result = await Swal.fire({
+            icon: 'question',
+            title: 'Apakah ingin menjadikan alamat ini sebagai alamat utama?',
+            showCancelButton: true,
+            confirmButtonText: 'Ya',
+            cancelButtonText: 'Tidak',
+        });
+
+        // If the user confirmed, proceed with the API request
+        if (result.isConfirmed) {
+            try {
+                // Make the POST request to update the primary address
+                await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/alamat/primary/${id}`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${Cookies.get('token')}`,
+                    },
+                });
+
+                // Show success alert after updating the address
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Alamat berhasil dijadikan utama!',
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
+            } catch (error) {
+                console.error("Error posting form data:", error);
+                handleAxiosError(error); // Handle error with a consistent approach
+            }
+        }
+    };
+
 
     const handleAxiosError = (error: unknown) => {
         if (axios.isAxiosError(error) && error.response) {
@@ -370,7 +462,7 @@ export default function Alamat() {
                                                 >
                                                     <option value="">Pilih Kabupaten</option>
                                                     {kabupaten.map((item, index) => (
-                                                        <option key={index} value={ item.name}>
+                                                        <option key={index} value={item.name}>
                                                             {item.name}
                                                         </option>
                                                     ))}
@@ -387,7 +479,7 @@ export default function Alamat() {
                                                 >
                                                     <option value="">Pilih Kecamatan</option>
                                                     {kecamatan.map((item, index) => (
-                                                        <option key={index} value={ item.name}>
+                                                        <option key={index} value={item.name}>
                                                             {item.name}
                                                         </option>
                                                     ))}
@@ -406,7 +498,7 @@ export default function Alamat() {
                                                 >
                                                     <option value="">Pilih Kelurahan</option>
                                                     {kelurahan.map((item, index) => (
-                                                        <option key={index} value={ item.name}>
+                                                        <option key={index} value={item.name}>
                                                             {item.name}
                                                         </option>
                                                     ))}
@@ -460,15 +552,17 @@ export default function Alamat() {
                             <dialog id="modalEditData" className="modal">
                                 <div className="modal-box">
                                     <h3 className="font-bold text-lg">Form Edit Data</h3>
-                                    <form className="flex flex-col mt-4 w-full gap-2 rounded-lg font-poppins">
+                                    <form className="flex flex-col mt-4 w-full gap-2 rounded-lg font-poppins" onSubmit={handleSubmitEdit}>
                                         <div className="flex flex-col">
                                             <label htmlFor="label_alamat">Label Alamat</label>
                                             <input
                                                 type="text"
                                                 id="label_alamat"
-                                                defaultValue={currentAlamat?.label_alamat}
+                                                name="label_alamat"
+                                                value={currentAlamat?.label_alamat || ""}
                                                 placeholder="Masukkan Label Alamat"
                                                 className="w-full p-2 rounded-md bg-gray-100"
+                                                onChange={handleChange}
                                             />
                                         </div>
                                         <div className="flex flex-col">
@@ -476,9 +570,11 @@ export default function Alamat() {
                                             <input
                                                 type="text"
                                                 id="nama_penerima"
-                                                defaultValue={currentAlamat?.nama_penerima}
+                                                name="nama_penerima"
+                                                value={currentAlamat?.nama_penerima || ""}
                                                 placeholder="Masukkan Nama Penerima"
                                                 className="w-full p-2 rounded-md bg-gray-100"
+                                                onChange={handleChange}
                                             />
                                         </div>
                                         <div className="flex flex-col">
@@ -486,18 +582,22 @@ export default function Alamat() {
                                             <input
                                                 type="text"
                                                 id="no_telepon"
-                                                defaultValue={currentAlamat?.no_telepon}
+                                                name="no_telepon"
+                                                value={currentAlamat?.no_telepon || ""}
                                                 placeholder="Masukkan No Telepon"
                                                 className="w-full p-2 rounded-md bg-gray-100"
+                                                onChange={handleChange}
                                             />
                                         </div>
                                         <div className="flex flex-col">
                                             <label htmlFor="detail">Detail Alamat</label>
                                             <textarea
                                                 id="detail"
-                                                defaultValue={currentAlamat?.detail}
+                                                name="detail"
+                                                value={currentAlamat?.detail || ""}
                                                 placeholder="Masukkan Detail Alamat"
                                                 className="w-full p-2 rounded-md bg-gray-100"
+                                                onChange={handleChange}
                                             />
                                         </div>
                                         <div className="flex flex-col">
@@ -505,9 +605,11 @@ export default function Alamat() {
                                             <input
                                                 type="text"
                                                 id="kelurahan"
-                                                defaultValue={currentAlamat?.kelurahan}
+                                                name="kelurahan"
+                                                value={currentAlamat?.kelurahan || ""}
                                                 placeholder="Masukkan Kelurahan"
                                                 className="w-full p-2 rounded-md bg-gray-100"
+                                                onChange={handleChange}
                                             />
                                         </div>
                                         <div className="flex flex-col">
@@ -515,9 +617,11 @@ export default function Alamat() {
                                             <input
                                                 type="text"
                                                 id="kecamatan"
-                                                defaultValue={currentAlamat?.kecamatan}
+                                                name="kecamatan"
+                                                value={currentAlamat?.kecamatan || ""}
                                                 placeholder="Masukkan Kecamatan"
                                                 className="w-full p-2 rounded-md bg-gray-100"
+                                                onChange={handleChange}
                                             />
                                         </div>
                                         <div className="flex flex-col">
@@ -525,9 +629,11 @@ export default function Alamat() {
                                             <input
                                                 type="text"
                                                 id="kabupaten"
-                                                defaultValue={currentAlamat?.kabupaten}
+                                                name="kabupaten"
+                                                value={currentAlamat?.kabupaten || ""}
                                                 placeholder="Masukkan Kabupaten"
                                                 className="w-full p-2 rounded-md bg-gray-100"
+                                                onChange={handleChange}
                                             />
                                         </div>
                                         <div className="flex flex-col">
@@ -535,9 +641,11 @@ export default function Alamat() {
                                             <input
                                                 type="text"
                                                 id="provinsi"
-                                                defaultValue={currentAlamat?.provinsi}
+                                                name="provinsi"
+                                                value={currentAlamat?.provinsi || ""}
                                                 placeholder="Masukkan Provinsi"
                                                 className="w-full p-2 rounded-md bg-gray-100"
+                                                onChange={handleChange}
                                             />
                                         </div>
                                         <div className="flex flex-col">
@@ -545,18 +653,22 @@ export default function Alamat() {
                                             <input
                                                 type="text"
                                                 id="kodepos"
-                                                defaultValue={currentAlamat?.kodepos}
+                                                name="kodepos"
+                                                value={currentAlamat?.kodepos || ""}
                                                 placeholder="Masukkan Kode Pos"
                                                 className="w-full p-2 rounded-md bg-gray-100"
+                                                onChange={handleChange}
                                             />
                                         </div>
                                         <div className="flex flex-col">
                                             <label htmlFor="catatan_kurir">Catatan Kurir</label>
                                             <textarea
                                                 id="catatan_kurir"
-                                                defaultValue={currentAlamat?.catatan_kurir}
+                                                name="catatan_kurir"
+                                                value={currentAlamat?.catatan_kurir || ""}
                                                 placeholder="Masukkan Catatan Kurir"
                                                 className="w-full p-2 rounded-md bg-gray-100"
+                                                onChange={handleChange}
                                             />
                                         </div>
                                         <div className="flex flex-col mt-2">
@@ -568,6 +680,7 @@ export default function Alamat() {
                                     <button>close</button>
                                 </form>
                             </dialog>
+
                             {/* <dialog id="modalHapusData" className="modal">
                                 <div className="modal-box">
                                     <h3 className="font-bold text-lg">Apakah Anda yakin ingin menghapus {currentAlamat?.label_alamat}?</h3>
@@ -628,7 +741,8 @@ export default function Alamat() {
                                                         Ubah
                                                     </a>
                                                     {!alamat.isPrimary && (
-                                                        <button className="p-2 border-2 rounded-lg bg-primary text-white">
+                                                        <button className="p-2 border-2 rounded-lg bg-primary text-white"
+                                                            onClick={() => handleJadikanUtama(alamat.alamat_id)}>
                                                             Atur sebagai Utama
                                                         </button>
                                                     )}

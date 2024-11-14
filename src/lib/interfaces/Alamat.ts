@@ -1,5 +1,5 @@
 export interface Alamat {   
-    id?: number;
+    alamat_id: number;
     id_user?: number;
     label_alamat: string;
     nama_penerima: string;
