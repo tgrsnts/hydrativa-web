@@ -91,6 +91,29 @@ export default function Alamat() {
         }
     };
 
+    const handleChangeEdit = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+        const { name, value } = e.target;
+        setDataForm({
+            ...dataForm,
+            [name]: value,
+        });
+
+        if (name === 'provinsi' && value) {
+            fetchKabupaten(value); // Fetch Kabupatens when a Provinsi is selected
+            setIsKabupatenDisabled(false); // Enable Kabupaten select
+        } else if (name === 'kabupaten' && value) {
+            setIsProvinsiDisabled(true);
+            fetchKecamatan(value); // Fetch Kecamatans when a Kabupaten is selected
+            setIsKecamatanDisabled(false); // Enable Kecamatan select
+        } else if (name === 'kecamatan' && value) {
+            setIsKabupatenDisabled(true);
+            fetchKelurahan(value); // Fetch Kelurahans when a Kecamatan is selected
+            setIsKelurahanDisabled(false); // Enable Kelurahan select
+        } else if (name === 'kelurahan' && value) {
+            setIsKecamatanDisabled(true);
+        }
+    };
+
     const handleSubmitAdd = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
@@ -102,6 +125,7 @@ export default function Alamat() {
                 },
             });
 
+            // Success alert
             Swal.fire({
                 icon: 'success',
                 title: 'Alamat berhasil ditambahkan!',
@@ -109,7 +133,21 @@ export default function Alamat() {
                 timer: 1500,
             });
 
-            // Reset form fields
+            // Disable/enable form fields after submission
+            setIsProvinsiDisabled(false);
+            setIsKabupatenDisabled(true);
+            setIsKecamatanDisabled(true);
+            setIsKelurahanDisabled(true);
+
+            // Close the modal if it exists
+            const modal = document.getElementById('modalTambahData') as HTMLDialogElement | null;
+            if (modal) {
+                modal.close();
+            }
+
+            setDataAlamat((prevDataAlamat) => [...prevDataAlamat, dataForm]);
+
+            // Reset form data
             setDataForm({
                 alamat_id: 0,
                 label_alamat: '',
@@ -125,14 +163,6 @@ export default function Alamat() {
                 isPrimary: 0,
             });
 
-            // Close the modal if it is open
-            const modal = document.getElementById('modalTambahData') as HTMLDialogElement | null;
-            if (modal) {
-                modal.close();
-            }
-
-            // Refresh address list after adding
-            await fetchDataAlamat();
         } catch (error) {
             console.error("Error posting form data:", error);
             handleAxiosError(error); // Handle error with a consistent approach
@@ -142,10 +172,10 @@ export default function Alamat() {
     const handleSubmitEdit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            // Make the PUT request to update the address
-            const response = await axios.put(
-                `${process.env.NEXT_PUBLIC_API_URL}/alamat/edit/${currentAlamat?.alamat_id}`,  // Assuming `currentAlamat` contains the address to edit
-                dataForm, 
+            // Make the POST request to update the address
+            await axios.post(
+                `${process.env.NEXT_PUBLIC_API_URL}/alamat/${currentAlamat?.alamat_id}`,  // Assuming `currentAlamat` contains the address to edit
+                currentAlamat,
                 {
                     headers: {
                         'Content-Type': 'application/json',
@@ -153,7 +183,7 @@ export default function Alamat() {
                     },
                 }
             );
-    
+
             // Show success message
             Swal.fire({
                 icon: 'success',
@@ -161,9 +191,9 @@ export default function Alamat() {
                 showConfirmButton: false,
                 timer: 1500,
             });
-    
+
             // Reset form fields after successful submission (optional if needed)
-            setDataForm({
+            setCurrentAlamat({
                 alamat_id: 0,
                 label_alamat: '',
                 nama_penerima: '',
@@ -177,21 +207,24 @@ export default function Alamat() {
                 catatan_kurir: '',
                 isPrimary: 0,
             });
-    
+
             // Close modal after form submission
             const modal = document.getElementById('modalEditData') as HTMLDialogElement | null;
             if (modal) {
                 modal.close(); // Close the modal if it exists
             }
-    
-            // Optionally, refresh the address list after editing
-            await fetchDataAlamat();
-    
+
+            setDataAlamat((prevDataAlamat) =>
+                prevDataAlamat.map((alamat) =>
+                    alamat.alamat_id === currentAlamat?.alamat_id ? currentAlamat : alamat
+                )
+            );
+
         } catch (error) {
             console.error("Error posting form data:", error);
             handleAxiosError(error); // Handle error with a consistent approach
         }
-    };    
+    };
 
     const handleJadikanUtama = async (id: number) => {
         // Show confirmation dialog
@@ -220,6 +253,27 @@ export default function Alamat() {
                     title: 'Alamat berhasil dijadikan utama!',
                     showConfirmButton: false,
                     timer: 1500,
+                });
+
+                // Update the state to move the selected address to the top
+                setDataAlamat((prevDataAlamat) => {
+                    const resetAlamat = prevDataAlamat.map((alamat) => ({
+                        ...alamat,
+                        isPrimary: 0, // Reset all addresses to non-primary
+                    }));
+
+                    // Now set the selected address as primary
+                    const updatedAlamat = resetAlamat.map((alamat) =>
+                        alamat.alamat_id === id ? { ...alamat, isPrimary: 1 } : alamat
+                    );
+
+                    // Sort addresses with primary address at the top
+                    const sortedAlamat = [
+                        ...updatedAlamat.filter((alamat) => alamat.isPrimary === 1),
+                        ...updatedAlamat.filter((alamat) => alamat.isPrimary === 0),
+                    ];
+
+                    return sortedAlamat;
                 });
             } catch (error) {
                 console.error("Error posting form data:", error);
@@ -550,126 +604,160 @@ export default function Alamat() {
                             </dialog>
 
                             <dialog id="modalEditData" className="modal">
-                                <div className="modal-box">
+                                <div className="modal-box max-w-3xl">
                                     <h3 className="font-bold text-lg">Form Edit Data</h3>
                                     <form className="flex flex-col mt-4 w-full gap-2 rounded-lg font-poppins" onSubmit={handleSubmitEdit}>
-                                        <div className="flex flex-col">
-                                            <label htmlFor="label_alamat">Label Alamat</label>
-                                            <input
-                                                type="text"
-                                                id="label_alamat"
-                                                name="label_alamat"
-                                                value={currentAlamat?.label_alamat || ""}
-                                                placeholder="Masukkan Label Alamat"
-                                                className="w-full p-2 rounded-md bg-gray-100"
-                                                onChange={handleChange}
-                                            />
+                                        <div className="flex gap-4">
+                                            <div className="flex flex-col w-1/2">
+                                                <label htmlFor="label_alamat">Label Alamat</label>
+                                                <input
+                                                    type="text"
+                                                    id="label_alamat"
+                                                    name="label_alamat"
+                                                    defaultValue={currentAlamat?.label_alamat || ""}
+                                                    placeholder="Masukkan Label Alamat"
+                                                    className="w-full p-2 rounded-md bg-gray-100"
+                                                    onChange={handleChangeEdit}
+                                                />
+                                            </div>
+                                            <div className="flex flex-col w-1/2">
+                                                <label htmlFor="nama_penerima">Nama Penerima</label>
+                                                <input
+                                                    type="text"
+                                                    id="nama_penerima"
+                                                    name="nama_penerima"
+                                                    defaultValue={currentAlamat?.nama_penerima || ""}
+                                                    placeholder="Masukkan Nama Penerima"
+                                                    className="w-full p-2 rounded-md bg-gray-100"
+                                                    onChange={handleChangeEdit}
+                                                />
+                                            </div>
                                         </div>
-                                        <div className="flex flex-col">
-                                            <label htmlFor="nama_penerima">Nama Penerima</label>
-                                            <input
-                                                type="text"
-                                                id="nama_penerima"
-                                                name="nama_penerima"
-                                                value={currentAlamat?.nama_penerima || ""}
-                                                placeholder="Masukkan Nama Penerima"
-                                                className="w-full p-2 rounded-md bg-gray-100"
-                                                onChange={handleChange}
-                                            />
+                                        <div className="flex gap-4">
+                                            <div className="flex flex-col w-1/2">
+                                                <label htmlFor="no_telepon">No Telepon</label>
+                                                <input
+                                                    type="text"
+                                                    id="no_telepon"
+                                                    name="no_telepon"
+                                                    defaultValue={currentAlamat?.no_telepon || ""}
+                                                    placeholder="Masukkan No Telepon"
+                                                    className="w-full p-2 rounded-md bg-gray-100"
+                                                    onChange={handleChangeEdit}
+                                                />
+                                            </div>
+                                            <div className="flex flex-col w-1/2">
+                                                <label htmlFor="provinsi">Provinsi</label>
+                                                <select
+                                                    id="provinsi"
+                                                    name="provinsi"
+                                                    defaultValue={currentAlamat?.provinsi || ""}
+                                                    className="w-full p-2 rounded-md bg-gray-100"
+                                                    onChange={handleChangeEdit}
+                                                    disabled={isProvinsiDisabled}
+                                                >
+                                                    <option value="">Pilih Provinsi</option>
+                                                    {provinsi.map((item, index) => (
+                                                        <option key={index} value={item.name}>
+                                                            {item.name}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </div>
                                         </div>
-                                        <div className="flex flex-col">
-                                            <label htmlFor="no_telepon">No Telepon</label>
-                                            <input
-                                                type="text"
-                                                id="no_telepon"
-                                                name="no_telepon"
-                                                value={currentAlamat?.no_telepon || ""}
-                                                placeholder="Masukkan No Telepon"
-                                                className="w-full p-2 rounded-md bg-gray-100"
-                                                onChange={handleChange}
-                                            />
+                                        <div className="flex gap-4">
+                                            <div className="flex flex-col w-1/2">
+                                                <label htmlFor="kabupaten">Kabupaten</label>
+                                                <select
+                                                    id="kabupaten"
+                                                    name="kabupaten"
+                                                    defaultValue={currentAlamat?.kabupaten || ""}
+                                                    className="w-full p-2 rounded-md bg-gray-100"
+                                                    onChange={handleChangeEdit}
+                                                    disabled={isKabupatenDisabled}
+                                                >
+                                                    <option value="">Pilih Kabupaten</option>
+                                                    {kabupaten.map((item, index) => (
+                                                        <option key={index} value={item.name}>
+                                                            {item.name}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                            <div className="flex flex-col w-1/2">
+                                                <label htmlFor="kecamatan">Kecamatan</label>
+                                                <select
+                                                    id="kecamatan"
+                                                    name="kecamatan"
+                                                    defaultValue={currentAlamat?.kecamatan || ""}
+                                                    className="w-full p-2 rounded-md bg-gray-100"
+                                                    onChange={handleChangeEdit}
+                                                    disabled={isKecamatanDisabled}
+                                                >
+                                                    <option value="">Pilih Kecamatan</option>
+                                                    {kecamatan.map((item, index) => (
+                                                        <option key={index} value={item.name}>
+                                                            {item.name}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </div>
                                         </div>
-                                        <div className="flex flex-col">
-                                            <label htmlFor="detail">Detail Alamat</label>
-                                            <textarea
-                                                id="detail"
-                                                name="detail"
-                                                value={currentAlamat?.detail || ""}
-                                                placeholder="Masukkan Detail Alamat"
-                                                className="w-full p-2 rounded-md bg-gray-100"
-                                                onChange={handleChange}
-                                            />
+                                        <div className="flex gap-4">
+                                            <div className="flex flex-col w-1/2">
+                                                <label htmlFor="kelurahan">Kelurahan</label>
+                                                <select
+                                                    id="kelurahan"
+                                                    name="kelurahan"
+                                                    defaultValue={currentAlamat?.kelurahan || ""}
+                                                    className="w-full p-2 rounded-md bg-gray-100"
+                                                    onChange={handleChangeEdit}
+                                                    disabled={isKelurahanDisabled}
+                                                >
+                                                    <option value="">Pilih Kelurahan</option>
+                                                    {kelurahan.map((item, index) => (
+                                                        <option key={index} value={item.name}>
+                                                            {item.name}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                            <div className="flex flex-col w-1/2">
+                                                <label htmlFor="kodepos">Kode Pos</label>
+                                                <input
+                                                    type="text"
+                                                    id="kodepos"
+                                                    name="kodepos"
+                                                    defaultValue={currentAlamat?.kodepos || ""}
+                                                    placeholder="Masukkan Kode Pos"
+                                                    className="w-full p-2 rounded-md bg-gray-100"
+                                                    onChange={handleChangeEdit}
+                                                />
+                                            </div>
                                         </div>
-                                        <div className="flex flex-col">
-                                            <label htmlFor="kelurahan">Kelurahan</label>
-                                            <input
-                                                type="text"
-                                                id="kelurahan"
-                                                name="kelurahan"
-                                                value={currentAlamat?.kelurahan || ""}
-                                                placeholder="Masukkan Kelurahan"
-                                                className="w-full p-2 rounded-md bg-gray-100"
-                                                onChange={handleChange}
-                                            />
-                                        </div>
-                                        <div className="flex flex-col">
-                                            <label htmlFor="kecamatan">Kecamatan</label>
-                                            <input
-                                                type="text"
-                                                id="kecamatan"
-                                                name="kecamatan"
-                                                value={currentAlamat?.kecamatan || ""}
-                                                placeholder="Masukkan Kecamatan"
-                                                className="w-full p-2 rounded-md bg-gray-100"
-                                                onChange={handleChange}
-                                            />
-                                        </div>
-                                        <div className="flex flex-col">
-                                            <label htmlFor="kabupaten">Kabupaten</label>
-                                            <input
-                                                type="text"
-                                                id="kabupaten"
-                                                name="kabupaten"
-                                                value={currentAlamat?.kabupaten || ""}
-                                                placeholder="Masukkan Kabupaten"
-                                                className="w-full p-2 rounded-md bg-gray-100"
-                                                onChange={handleChange}
-                                            />
-                                        </div>
-                                        <div className="flex flex-col">
-                                            <label htmlFor="provinsi">Provinsi</label>
-                                            <input
-                                                type="text"
-                                                id="provinsi"
-                                                name="provinsi"
-                                                value={currentAlamat?.provinsi || ""}
-                                                placeholder="Masukkan Provinsi"
-                                                className="w-full p-2 rounded-md bg-gray-100"
-                                                onChange={handleChange}
-                                            />
-                                        </div>
-                                        <div className="flex flex-col">
-                                            <label htmlFor="kodepos">Kode Pos</label>
-                                            <input
-                                                type="text"
-                                                id="kodepos"
-                                                name="kodepos"
-                                                value={currentAlamat?.kodepos || ""}
-                                                placeholder="Masukkan Kode Pos"
-                                                className="w-full p-2 rounded-md bg-gray-100"
-                                                onChange={handleChange}
-                                            />
-                                        </div>
-                                        <div className="flex flex-col">
-                                            <label htmlFor="catatan_kurir">Catatan Kurir</label>
-                                            <textarea
-                                                id="catatan_kurir"
-                                                name="catatan_kurir"
-                                                value={currentAlamat?.catatan_kurir || ""}
-                                                placeholder="Masukkan Catatan Kurir"
-                                                className="w-full p-2 rounded-md bg-gray-100"
-                                                onChange={handleChange}
-                                            />
+                                        <div className="flex gap-4">
+                                            <div className="flex flex-col w-1/2">
+                                                <label htmlFor="detail">Detail Alamat</label>
+                                                <textarea
+                                                    id="detail"
+                                                    name="detail"
+                                                    defaultValue={currentAlamat?.detail || ""}
+                                                    placeholder="Masukkan Detail Alamat"
+                                                    className="w-full p-2 rounded-md bg-gray-100"
+                                                    onChange={handleChangeEdit}
+                                                />
+                                            </div>
+                                            <div className="flex flex-col w-1/2">
+                                                <label htmlFor="catatan_kurir">Catatan Kurir</label>
+                                                <textarea
+                                                    id="catatan_kurir"
+                                                    name="catatan_kurir"
+                                                    defaultValue={currentAlamat?.catatan_kurir || ""}
+                                                    placeholder="Masukkan Catatan Kurir"
+                                                    className="w-full p-2 rounded-md bg-gray-100"
+                                                    onChange={handleChangeEdit}
+                                                />
+                                            </div>
                                         </div>
                                         <div className="flex flex-col mt-2">
                                             <button type="submit" className="p-2 rounded-md bg-primary text-white">Simpan</button>
@@ -733,13 +821,19 @@ export default function Alamat() {
                                                     </div>
                                                 </div>
                                                 <div className="flex flex-col gap-2 items-end">
-                                                    <a href="" className="text-primary" onClick={() => {
-                                                        setCurrentAlamat(alamat);
-                                                        const modal = document.getElementById('modalEditData') as HTMLDialogElement | null;
-                                                        modal?.showModal();
-                                                    }}>
+                                                    <button className="text-primary"
+                                                        onClick={() => {
+                                                            setCurrentAlamat(alamat)
+                                                            fetchKabupaten(alamat.provinsi)
+                                                            fetchKecamatan(alamat.kabupaten)
+                                                            fetchKelurahan(alamat.kecamatan)
+                                                            const modal = document.getElementById('modalEditData') as HTMLDialogElement | null;
+                                                            if (modal) {
+                                                                modal.showModal();
+                                                            }
+                                                        }}>
                                                         Ubah
-                                                    </a>
+                                                    </button>
                                                     {!alamat.isPrimary && (
                                                         <button className="p-2 border-2 rounded-lg bg-primary text-white"
                                                             onClick={() => handleJadikanUtama(alamat.alamat_id)}>
