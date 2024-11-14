@@ -7,6 +7,7 @@ import type { Keranjang } from "@/lib/interfaces/Keranjang";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import Swal from 'sweetalert2';
+import Link from "next/link";
 
 
 export default function Keranjang() {
@@ -143,12 +144,12 @@ export default function Keranjang() {
                     <p className="font-semibold text-2xl text-center">Keranjangmu masih kosong nih :(</p>
                     <p className="text-xl text-center">Yuk, isi dengan produk-produk stevia terbaik dari kami!</p>
                     <div className="flex justify-center">
-                      <a
-                        href="checkout.html"
+                      <Link
+                        href="/dashboard"
                         className="bg-primary font-poppins font-semibold rounded-lg px-12 py-2 border-2 border-primary text-white text-center w-fit hover:bg-white hover:text-primary"
                       >
                         Mulai Belanja
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 )

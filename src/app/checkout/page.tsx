@@ -59,7 +59,7 @@ export default function Checkout() {
 
       // Send the payment request
       const response = await axios.post(
-        'http://127.0.0.1:8000/api/bayar',
+        `${process.env.NEXT_PUBLIC_API_URL}/bayar`,
         requestData,  // Send the request data
         {
           headers: {
@@ -79,7 +79,7 @@ export default function Checkout() {
 
         console.log(response)
 
-        window.snap.pay(response.data, {
+        window.snap.pay(response.data.snaptoken, {
           onSuccess: (result) => {
             console.log('Payment successful:', result);
           },
@@ -115,7 +115,7 @@ export default function Checkout() {
 
     const fetchDataAlamat = async () => {
       try {
-        const response = await axios.get(`http://127.0.0.1:8000/api/alamat`, {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/alamat`, {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${Cookies.get('token')}`,
@@ -124,8 +124,8 @@ export default function Checkout() {
 
         console.log("API Response:", response.data); // Log to check response structure
 
-        if (response.data && Array.isArray(response.data.data)) {
-          setDataAlamat(response.data.data); // Set the fetched data directly
+        if (response.data && Array.isArray(response.data)) {
+          setDataAlamat(response.data); // Set the fetched data directly
         } else {
           setDataAlamat([]); // Set to empty array if data is not an array
         }
