@@ -226,6 +226,49 @@ export default function Alamat() {
         }
     };
 
+    const handleDeleteAlamat = async (id: number) => {
+        // Show confirmation dialog
+        const result = await Swal.fire({
+            icon: 'warning',
+            title: 'Apakah Anda yakin ingin menghapus alamat ini?',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Hapus!',
+            cancelButtonText: 'Batal',
+            customClass: {
+                confirmButton: 'bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-poppins', // Red color for delete
+                cancelButton: 'bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded-lg font-poppins', // Gray color for cancel
+            },
+        });
+
+        // If the user confirmed the deletion
+        if (result.isConfirmed) {
+            try {
+                // Send DELETE request to your API to delete the address
+                await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/alamat/${id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${Cookies.get('token')}`,
+                    },
+                });
+
+                // Show success alert
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Alamat berhasil dihapus!',
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
+
+                // Optionally, update your local state to remove the address
+                setDataAlamat((prevDataAlamat) =>
+                    prevDataAlamat.filter((alamat) => alamat.alamat_id !== id)
+                );
+            } catch (error) {
+                console.error("Error deleting address:", error);
+                handleAxiosError(error); // Handle error with a consistent approach
+            }
+        }
+    };
+
     const handleJadikanUtama = async (id: number) => {
         // Show confirmation dialog
         const result = await Swal.fire({
@@ -234,6 +277,11 @@ export default function Alamat() {
             showCancelButton: true,
             confirmButtonText: 'Ya',
             cancelButtonText: 'Tidak',
+            customClass: {
+                container: 'font-poppins', // Apply font to the entire dialog container
+                confirmButton: 'bg-primary hover:bg-background text-white px-4 rounded-lg font-poppins', // Apply font to the confirm button
+                cancelButton: 'bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded-lg font-poppins',
+            },
         });
 
         // If the user confirmed, proceed with the API request
@@ -835,10 +883,18 @@ export default function Alamat() {
                                                         Ubah
                                                     </button>
                                                     {!alamat.isPrimary && (
-                                                        <button className="p-2 border-2 rounded-lg bg-primary text-white"
-                                                            onClick={() => handleJadikanUtama(alamat.alamat_id)}>
-                                                            Atur sebagai Utama
-                                                        </button>
+                                                        <>
+                                                            <button className="p-2 rounded-lg bg-red-600 text-white"
+                                                                onClick={() => {
+                                                                    handleDeleteAlamat(alamat.alamat_id)
+                                                                }}>
+                                                                Hapus
+                                                            </button>
+                                                            <button className="p-2 rounded-lg bg-primary text-white"
+                                                                onClick={() => handleJadikanUtama(alamat.alamat_id)}>
+                                                                Atur sebagai Utama
+                                                            </button>
+                                                        </>
                                                     )}
                                                 </div>
                                             </div>
