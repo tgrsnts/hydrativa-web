@@ -7,10 +7,50 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
 
+interface Provinsi {
+    id: number;
+    name: string;
+}
+
+interface Kabupaten {
+    id: number
+    name: string
+}
+
+interface Kecamatan {
+    id: number
+    name: string
+}
+
+interface Kelurahan {
+    id: number
+    name: string
+}
+
 export default function Alamat() {
     const [dataAlamat, setDataAlamat] = useState<Alamat[]>([]);
     const [currentAlamat, setCurrentAlamat] = useState<Alamat | null>(null);
     const [loading, setLoading] = useState(true);
+    const [provinsi, setProvinsi] = useState<Provinsi[]>([{
+        id: 0,
+        name: ""
+    }]);
+    const [kabupaten, setKabupaten] = useState<Kabupaten[]>([{
+        id: 0,
+        name: ""
+    }]);
+    const [kecamatan, setKecamatan] = useState<Kecamatan[]>([{
+        id: 0,
+        name: ""
+    }]);
+    const [kelurahan, setKelurahan] = useState<Kelurahan[]>([{
+        id: 0,
+        name: ""
+    }]);
+    const [isProvinsiDisabled, setIsProvinsiDisabled] = useState(false);
+    const [isKabupatenDisabled, setIsKabupatenDisabled] = useState(true);
+    const [isKecamatanDisabled, setIsKecamatanDisabled] = useState(true);
+    const [isKelurahanDisabled, setIsKelurahanDisabled] = useState(true);
 
     // Improved form state typing
     const [dataForm, setDataForm] = useState<Alamat>({
@@ -27,14 +67,28 @@ export default function Alamat() {
         isPrimary: 0,
     });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setDataForm({
             ...dataForm,
             [name]: value,
         });
+
+        if (name === 'provinsi' && value) {
+            fetchKabupaten(value); // Fetch Kabupatens when a Provinsi is selected
+            setIsKabupatenDisabled(false); // Enable Kabupaten select
+        } else if (name === 'kabupaten' && value) {
+            setIsProvinsiDisabled(true);
+            fetchKecamatan(value); // Fetch Kecamatans when a Kabupaten is selected
+            setIsKecamatanDisabled(false); // Enable Kecamatan select
+        } else if (name === 'kecamatan' && value) {
+            setIsKabupatenDisabled(true);
+            fetchKelurahan(value); // Fetch Kelurahans when a Kecamatan is selected
+            setIsKelurahanDisabled(false); // Enable Kelurahan select
+        } else if (name === 'kelurahan' && value) {
+            setIsKecamatanDisabled(true);
+        }
     };
-    
 
     const handleSubmitAdd = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -129,7 +183,87 @@ export default function Alamat() {
         }
     };
 
+    const fetchProvinsi = async () => {
+        try {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_MONGODB_API_URL}/getProvinsi`);
+
+            console.log("API Response:", response.data); // Log to check response structure
+
+            // Check if the response data structure contains 'data' array
+            if (response.data && Array.isArray(response.data)) {
+
+                setProvinsi(response.data || []); // Set the fetched data directly
+            } else {
+                setDataAlamat([]); // Set to empty array if data is not an array
+            }
+        } catch (error) {
+            console.error("Failed to fetch data:", error);
+            handleAxiosError(error); // Pass error to consistent error handling
+            setProvinsi([]); // Set to empty array on error
+        }
+    };
+
+    const fetchKabupaten = async (name: string) => {
+        try {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_MONGODB_API_URL}/getKabupaten?nama_provinsi=${name}`);
+
+            console.log("API Response:", response.data); // Log to check response structure
+
+            // Check if the response data structure contains 'data' array
+            if (response.data && Array.isArray(response.data)) {
+
+                setKabupaten(response.data || []); // Set the fetched data directly
+            } else {
+                setDataAlamat([]); // Set to empty array if data is not an array
+            }
+        } catch (error) {
+            console.error("Failed to fetch data:", error);
+            handleAxiosError(error); // Pass error to consistent error handling
+            setKabupaten([]); // Set to empty array on error
+        }
+    };
+
+    const fetchKecamatan = async (name: string) => {
+        try {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_MONGODB_API_URL}/getKecamatan?nama_kabupaten=${name}`);
+
+            console.log("API Response:", response.data); // Log to check response structure
+
+            // Check if the response data structure contains 'data' array
+            if (response.data && Array.isArray(response.data)) {
+                setKecamatan(response.data || []); // Set the fetched data directly
+            } else {
+                setKecamatan([]); // Set to empty array if data is not an array
+            }
+        } catch (error) {
+            console.error("Failed to fetch data:", error);
+            handleAxiosError(error); // Pass error to consistent error handling
+            setKecamatan([]); // Set to empty array on error
+        }
+    };
+
+    const fetchKelurahan = async (name: string) => {
+        try {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_MONGODB_API_URL}/getKelurahan?nama_kecamatan=${name}`);
+
+            console.log("API Response:", response.data); // Log to check response structure
+
+            // Check if the response data structure contains 'data' array
+            if (response.data && Array.isArray(response.data)) {
+                setKelurahan(response.data || []); // Set the fetched data directly
+            } else {
+                setKelurahan([]); // Set to empty array if data is not an array
+            }
+        } catch (error) {
+            console.error("Failed to fetch data:", error);
+            handleAxiosError(error); // Pass error to consistent error handling
+            setKelurahan([]); // Set to empty array on error
+        }
+    };
+
+
     useEffect(() => {
+        fetchProvinsi();
         fetchDataAlamat(); // Call to fetch address data
     }, []);
 
@@ -208,51 +342,75 @@ export default function Alamat() {
                                             </div>
                                             <div className="flex flex-col w-1/2">
                                                 <label htmlFor="provinsi">Provinsi</label>
-                                                <input
-                                                    type="text"
+                                                <select
                                                     id="provinsi"
                                                     name="provinsi"
-                                                    placeholder="Masukkan Provinsi"
                                                     className="w-full p-2 rounded-md bg-gray-100"
                                                     onChange={handleChange}
-                                                />
+                                                    disabled={isProvinsiDisabled}
+                                                >
+                                                    <option value="">Pilih Provinsi</option>
+                                                    {provinsi.map((item, index) => (
+                                                        <option key={index} value={item.name}>
+                                                            {item.name}
+                                                        </option>
+                                                    ))}
+                                                </select>
                                             </div>
                                         </div>
                                         <div className="flex gap-4">
                                             <div className="flex flex-col w-1/2">
                                                 <label htmlFor="kabupaten">Kabupaten</label>
-                                                <input
-                                                    type="text"
+                                                <select
                                                     id="kabupaten"
                                                     name="kabupaten"
-                                                    placeholder="Masukkan Kabupaten"
                                                     className="w-full p-2 rounded-md bg-gray-100"
                                                     onChange={handleChange}
-                                                />
+                                                    disabled={isKabupatenDisabled}
+                                                >
+                                                    <option value="">Pilih Kabupaten</option>
+                                                    {kabupaten.map((item, index) => (
+                                                        <option key={index} value={ item.name}>
+                                                            {item.name}
+                                                        </option>
+                                                    ))}
+                                                </select>
                                             </div>
                                             <div className="flex flex-col w-1/2">
                                                 <label htmlFor="kecamatan">Kecamatan</label>
-                                                <input
-                                                    type="text"
+                                                <select
                                                     id="kecamatan"
                                                     name="kecamatan"
-                                                    placeholder="Masukkan Kecamatan"
                                                     className="w-full p-2 rounded-md bg-gray-100"
                                                     onChange={handleChange}
-                                                />
+                                                    disabled={isKecamatanDisabled} // Disabled until Kabupaten is selected
+                                                >
+                                                    <option value="">Pilih Kecamatan</option>
+                                                    {kecamatan.map((item, index) => (
+                                                        <option key={index} value={ item.name}>
+                                                            {item.name}
+                                                        </option>
+                                                    ))}
+                                                </select>
                                             </div>
                                         </div>
                                         <div className="flex gap-4">
                                             <div className="flex flex-col w-1/2">
                                                 <label htmlFor="kelurahan">Kelurahan</label>
-                                                <input
-                                                    type="text"
+                                                <select
                                                     id="kelurahan"
                                                     name="kelurahan"
-                                                    placeholder="Masukkan Kelurahan"
                                                     className="w-full p-2 rounded-md bg-gray-100"
                                                     onChange={handleChange}
-                                                />
+                                                    disabled={isKelurahanDisabled} // Disabled until Kabupaten is selected
+                                                >
+                                                    <option value="">Pilih Kelurahan</option>
+                                                    {kelurahan.map((item, index) => (
+                                                        <option key={index} value={ item.name}>
+                                                            {item.name}
+                                                        </option>
+                                                    ))}
+                                                </select>
                                             </div>
                                             <div className="flex flex-col w-1/2">
                                                 <label htmlFor="kodepos">Kode Pos</label>
@@ -287,7 +445,7 @@ export default function Alamat() {
                                                     onChange={handleChange}
                                                 ></textarea>
                                             </div>
-                                        </div>                                        
+                                        </div>
                                         <div className="flex flex-col mt-2">
                                             <button type="submit" className="p-2 rounded-md bg-primary text-white">Tambah</button>
                                         </div>
