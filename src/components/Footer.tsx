@@ -1,4 +1,9 @@
 import React from "react";
+import { FaEnvelope, FaPhone } from "react-icons/fa";
+import { FaLocationDot } from "react-icons/fa6";
+FaPhone
+FaEnvelope
+FaLocationDot
 
 export default function Footer() {
   return (
@@ -28,16 +33,16 @@ export default function Footer() {
         {/* Kolom Kedua */}
         <div className="w-full h-52 lg:h-auto lg:w-1/2 lg:pl-4">
           <h3 className="text-xl font-poppins font-bold mb-4">Hubungi Kami</h3>
-          <div className="flex gap-3 items-center mb-4">
-            <i className="fa-solid fa-phone w-4" />
+          <div className="flex gap-3 items-center mb-4">          
+            <FaPhone className="w-4"/>
             <span className="font-poppins">+62 89670522489</span>
           </div>
           <div className="flex gap-3 items-center mb-4">
-            <i className="fa-solid fa-envelope w-4" />
+            <FaEnvelope className="w-4"/>
             <span className="font-poppins">HydraTiva@gmail.com</span>
           </div>
           <div className="flex gap-3 items-center mb-4">
-            <i className="fa-solid fa-location-dot w-4" />
+            <FaLocationDot className="w-4"/>
             <span className="font-poppins">
               Jl. Lodaya No. 2, Kota Bogor, Indonesia
             </span>
