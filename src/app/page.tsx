@@ -60,7 +60,7 @@ export default function Home() {
         <section id="hero">
           <div
             className="bg-cover bg-center h-screen relative"
-            style={{ backgroundImage: 'url("image/IMG_2597.jpg")' }}
+            style={{ backgroundImage: 'url("/image/IMG_2597.jpg")' }}
           >
             <div className="absolute inset-0 bg-black opacity-50" />
             <div className="absolute inset-0 flex flex-col justify-center items-center text-center">

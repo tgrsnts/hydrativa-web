@@ -8,6 +8,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
 import { FaStar } from 'react-icons/fa';
+import { useRouter } from 'next/navigation';
 
 
 
@@ -16,6 +17,8 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
     const [product, setProduct] = useState<Produk | null>(null);
     const [quantity, setQuantity] = useState(1); // Initialize quantity to 1
     const ratings = [5, 4, 3, 2, 1];
+
+    const router = useRouter();
 
     const handleIncrement = () => {
         if (product && quantity < product.stok) {
@@ -64,12 +67,71 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
         }
     };
 
-
-
+    const handleBeliClick = async () => {
+        try {
+            // Replace with your API URL
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/keranjang/add`, {
+                id_produk: product?.id,
+                quantity: quantity,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${Cookies.get('token')}` // Assumes token is stored in cookies
+                }
+            });
+    
+            // Handle the response based on the API response structure
+            if (response.status === 200 || response.status === 201) {
+                // Check if the product was successfully added and handle the response data
+                const data = response.data.data;
+                const selectedItem = {
+                    id_transaksi_item: data.transaksi_item_id,
+                    id_produk: data.id_produk,
+                    quantity: data.quantity,
+                    gambar: product?.gambar, // Assuming the product has a gambar field
+                };
+    
+                // If there is no existing transaction ID, it could indicate a new cart, so store as a new item
+                if (data.id_transaksi === null) {
+                    // Create a new transaction array if no transaction exists
+                    const selectedItems = JSON.parse(sessionStorage.getItem('selectedItems') || '[]');
+    
+                    // Add the new item to the array
+                    selectedItems.push(selectedItem);
+    
+                    // Save the updated array back to sessionStorage
+                    sessionStorage.setItem('selectedItems', JSON.stringify(selectedItems));
+                } else {
+                    // Handle case when a transaction already exists
+                    sessionStorage.setItem('selectedItems', JSON.stringify([selectedItem]));
+                }
+    
+                // Redirect to the checkout page
+                router.push('/checkout');
+    
+                // Show a success message
+                Swal.fire({
+                    title: 'Produk berhasil ditambahkan ke keranjang!',
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                });
+            } else {
+                console.warn("Failed to add product to cart:", response.data);
+            }
+        } catch (error) {
+            console.error("Error adding product to cart:", error);
+            Swal.fire({
+                title: 'Error!',
+                text: 'An error occurred while adding the product to the cart.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
+    };
+        
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const response = await fetch(`http://127.0.0.1:8000/api/produk/${id}`);
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/produk/${id}`);
                 const result = await response.json();
                 console.log("API Response:", result); // Log to check response structure
                 setProduct(result); // Set product to the object in response
@@ -154,12 +216,12 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                                             >
                                                 + Keranjang
                                             </button>
-                                            <a
-                                                href="checkout.html"
+                                            <button
+                                                onClick={handleBeliClick}
                                                 className="font-poppins font-semibold rounded-lg px-4 py-2 border-2 text-center w-full bg-white text-primary border-primary hover:bg-primary hover:text-white hover:border-white"
                                             >
                                                 Beli
-                                            </a>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
