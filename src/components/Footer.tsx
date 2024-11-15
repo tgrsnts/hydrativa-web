@@ -1,9 +1,6 @@
 import React from "react";
 import { FaEnvelope, FaPhone } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
-FaPhone
-FaEnvelope
-FaLocationDot
 
 export default function Footer() {
   return (
