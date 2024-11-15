@@ -249,105 +249,118 @@ export default function HistoriTransaksi() {
                             </div>
                         </div>
                         <div className="flex flex-col gap-2">
-                            {loading ? (
-                                // Skeleton placeholders
-                                Array.from({ length: 3 }).map((_, index) => (
-                                    <div key={index} className="flex gap-4 flex-col bg-white w-full p-4 rounded-lg shadow-md animate-pulse">
-                                        <div className="flex justify-end w-full gap-5">
-                                            <div className="h-4 skeleton rounded w-24"></div>
-                                        </div>
-                                        <div className="flex w-full gap-5">
-                                            <div className="w-20 h-20 skeleton rounded-lg"></div>
-                                            <div className="flex flex-col w-full gap-2">
-                                                <div className="h-4 skeleton rounded w-1/2"></div>
-                                                <div className="h-4 skeleton rounded w-1/3"></div>
-                                            </div>
-                                        </div>
-                                        <div className="flex w-full gap-5">
-                                            <div className="w-20 h-20 skeleton rounded-lg"></div>
-                                            <div className="flex flex-col w-full gap-2">
-                                                <div className="h-4 skeleton rounded w-1/2"></div>
-                                                <div className="h-4 skeleton rounded w-1/3"></div>
-                                            </div>
-                                        </div>
-                                        <div className="flex justify-between">
-                                            <div className="h-8 skeleton rounded w-32"></div>
-                                            <div className="h-4 skeleton rounded w-20"></div>
-                                        </div>
-                                    </div>
-                                ))
-                            ) : (
-                                // Render transactions if not loading
-                                transactions.map((transaction) => (
-                                    <div key={transaction.transaksi_id} className="flex gap-4 flex-col bg-white w-full p-4 rounded-lg shadow-md">
-                                        <div className="flex justify-end w-full gap-5">
-                                            {
-                                                transaction.status === 'delivered' ? (
-                                                    <p>Status: Pesanan telah diterima</p>
-                                                ) : transaction.status === 'delivering' ? (
-                                                    <p>Status: Pesanan sedang dikirim</p>
-                                                ) : transaction.status === 'success' ? (
-                                                    <p>Status: Sudah dibayar</p>
-                                                ) : transaction.status === 'pending' ? (
-                                                    <p>Status: Belum dibayar</p>
-                                                ) : transaction.status === 'failed' ? (
-                                                    <p>Status: Gagal dibayar</p>
-                                                ) : (
-                                                    <p>Status: Tidak diketahui</p>
-                                                )
-                                            }
-                                        </div>
-                                        {transaction.transaksi_item.map((transaksi_item) => (
-                                            <div key={transaksi_item.transaksi_item_id} className="flex w-full gap-5">
-                                                <img className="w-20 h-20 rounded-lg" src={transaksi_item.gambar} />
-                                                <div className="flex flex-col w-full">
-                                                    <div>{transaksi_item.nama_produk}</div>
-                                                    <div className="flex justify-between">
-                                                        <div>x{transaksi_item.quantity}</div>
-                                                        <div>Rp. {transaksi_item.harga.toLocaleString()}</div>
+                            {loading ?
+                                (
+                                    // Skeleton placeholders
+                                    Array.from({ length: 3 }).map(
+                                        (_, index) => (
+                                            <div key={index} className="flex gap-4 flex-col bg-white w-full p-4 rounded-lg shadow-md animate-pulse">
+                                                <div className="flex justify-end w-full gap-5">
+                                                    <div className="h-4 skeleton rounded w-24"></div>
+                                                </div>
+                                                <div className="flex w-full gap-5">
+                                                    <div className="w-20 h-20 skeleton rounded-lg"></div>
+                                                    <div className="flex flex-col w-full gap-2">
+                                                        <div className="h-4 skeleton rounded w-1/2"></div>
+                                                        <div className="h-4 skeleton rounded w-1/3"></div>
                                                     </div>
-                                                    {
-                                                        transaction.status === 'delivered' && transaksi_item.israted == 0 ? (
-                                                            <div className='flex justify-end mt-2'>
-                                                                <Link
-                                                                    href="/ulasan"
-                                                                    className="text-sm bg-primary font-poppins rounded-lg px-4 py-2 border-2 border-primary text-white text-center hover:bg-white hover:text-primary"
-                                                                >
-                                                                    Beri ulasan
-                                                                </Link>
-                                                            </div>) : (null)
-                                                    }
+                                                </div>
+                                                <div className="flex w-full gap-5">
+                                                    <div className="w-20 h-20 skeleton rounded-lg"></div>
+                                                    <div className="flex flex-col w-full gap-2">
+                                                        <div className="h-4 skeleton rounded w-1/2"></div>
+                                                        <div className="h-4 skeleton rounded w-1/3"></div>
+                                                    </div>
+                                                </div>
+                                                <div className="flex justify-between">
+                                                    <div className="h-8 skeleton rounded w-32"></div>
+                                                    <div className="h-4 skeleton rounded w-20"></div>
                                                 </div>
                                             </div>
-                                        ))}
-                                        <div className="flex justify-between">
-                                            <div className="flex items-center gap-2">
-                                                {
-                                                    transaction.status === 'delivering' ? (
-                                                        <button
-                                                            onClick={() => handleMarkAsReceived(transaction.transaksi_id)}
-                                                            className="bg-primary font-poppins rounded-lg px-4 py-2 border-2 border-primary text-white text-center w-full hover:bg-white hover:text-primary"
-                                                        >
-                                                            Pesanan sudah diterima
-                                                        </button>
-                                                    ) : transaction.status === 'pending' ? (
-                                                        <button
-                                                            onClick={() => handleBayarUlang(transaction.transaksi_id)}
-                                                            className="bg-primary font-poppins rounded-lg px-4 py-2 border-2 border-primary text-white text-center w-full hover:bg-white hover:text-primary"
-                                                        >
-                                                            Bayar
-                                                        </button>
-                                                    ) : (null)
-                                                }
+                                        )
+                                    )
+                                )
+                                :
+                                (
+                                    transactions.length ?
+                                        (
+                                            transactions.map((transaction) => (
+                                                <div key={transaction.transaksi_id} className="flex gap-4 flex-col bg-white w-full p-4 rounded-lg shadow-md">
+                                                    <div className="flex justify-end w-full gap-5">
+                                                        {
+                                                            transaction.status === 'delivered' ? (
+                                                                <p>Status: Pesanan telah diterima</p>
+                                                            ) : transaction.status === 'delivering' ? (
+                                                                <p>Status: Pesanan sedang dikirim</p>
+                                                            ) : transaction.status === 'success' ? (
+                                                                <p>Status: Sudah dibayar</p>
+                                                            ) : transaction.status === 'pending' ? (
+                                                                <p>Status: Belum dibayar</p>
+                                                            ) : transaction.status === 'failed' ? (
+                                                                <p>Status: Gagal dibayar</p>
+                                                            ) : (
+                                                                <p>Status: Tidak diketahui</p>
+                                                            )
+                                                        }
+                                                    </div>
+                                                    {transaction.transaksi_item.map((transaksi_item) => (
+                                                        <div key={transaksi_item.transaksi_item_id} className="flex w-full gap-5">
+                                                            <img className="w-20 h-20 rounded-lg" src={transaksi_item.gambar} />
+                                                            <div className="flex flex-col w-full">
+                                                                <div>{transaksi_item.nama_produk}</div>
+                                                                <div className="flex justify-between">
+                                                                    <div>x{transaksi_item.quantity}</div>
+                                                                    <div>Rp. {transaksi_item.harga.toLocaleString()}</div>
+                                                                </div>
+                                                                {
+                                                                    transaction.status === 'delivered' && transaksi_item.israted == 0 ? (
+                                                                        <div className='flex justify-end mt-2'>
+                                                                            <Link
+                                                                                href="/ulasan"
+                                                                                className="text-sm bg-primary font-poppins rounded-lg px-4 py-2 border-2 border-primary text-white text-center hover:bg-white hover:text-primary"
+                                                                            >
+                                                                                Beri ulasan
+                                                                            </Link>
+                                                                        </div>) : (null)
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                    <div className="flex justify-between">
+                                                        <div className="flex items-center gap-2">
+                                                            {
+                                                                transaction.status === 'delivering' ? (
+                                                                    <button
+                                                                        onClick={() => handleMarkAsReceived(transaction.transaksi_id)}
+                                                                        className="bg-primary font-poppins rounded-lg px-4 py-2 border-2 border-primary text-white text-center w-full hover:bg-white hover:text-primary"
+                                                                    >
+                                                                        Pesanan sudah diterima
+                                                                    </button>
+                                                                ) : transaction.status === 'pending' ? (
+                                                                    <button
+                                                                        onClick={() => handleBayarUlang(transaction.transaksi_id)}
+                                                                        className="bg-primary font-poppins rounded-lg px-4 py-2 border-2 border-primary text-white text-center w-full hover:bg-white hover:text-primary"
+                                                                    >
+                                                                        Bayar
+                                                                    </button>
+                                                                ) : (null)
+                                                            }
+                                                        </div>
+                                                        <div className="flex justify-end gap-4">
+                                                            <div>Total Pesanan:</div>
+                                                            <div className="text-primary">Rp. {transaction.total_harga.toLocaleString()}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))
+                                        ) :
+                                        (
+                                            <div className="flex justify-center bg-white w-full p-4 rounded-lg shadow-md">
+                                                Tidak ada transaksi.
                                             </div>
-                                            <div className="flex justify-end gap-4">
-                                                <div>Total Pesanan:</div>
-                                                <div className="text-primary">Rp. {transaction.total_harga.toLocaleString()}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))
-                            )}
+                                        )
+                                )
+                            }
                         </div>
                     </section>
                 </div>
