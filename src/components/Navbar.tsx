@@ -76,6 +76,7 @@ export default function Navbar() {
         window.location.href = "/dashboard";
       }
     } catch (error) {
+      closeModal('modal_login')
       handleAxiosError(error);
     }
   };
@@ -93,6 +94,7 @@ export default function Navbar() {
         window.location.href = "/dashboard";
       }
     } catch (error) {
+      closeModal('modal_login')
       handleAxiosError(error);
     }
   };
