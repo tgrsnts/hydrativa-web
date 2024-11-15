@@ -69,16 +69,6 @@ export default function Checkout() {
       );
 
       if (response && response.data) {
-        // Extract the necessary fields from response.data
-        const paymentResponse: PaymentResponse = {
-          status: response.data.status,  // Assuming status is part of the response
-          transaction_id: response.data.transaction_id,  // Extract the transaction ID
-        };
-
-
-
-        console.log(response)
-
         window.snap.pay(response.data.snaptoken, {
           onSuccess: (result) => {
             console.log('Payment successful:', result);
