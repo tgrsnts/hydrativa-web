@@ -4,7 +4,7 @@ export interface User {
     username: string;
     name: string;
     email: string;
-    telepon: string;
+    no_telp: string;
     jenis_kelamin: string;
     gambar: string;
 }

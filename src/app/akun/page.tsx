@@ -199,14 +199,14 @@ export default function Akun() {
                                                 </tr>
                                                 <tr>
                                                     <td className="pr-4">
-                                                        <label htmlFor="telepon" className="block text-left">Telepon</label>
+                                                        <label htmlFor="no_telp" className="block text-left">Telepon</label>
                                                     </td>
                                                     <td className="pl-4 py-1">
                                                         <input
                                                             className="w-full p-2 border-2 rounded-lg"
                                                             type="text"
-                                                            name="telepon"
-                                                            value={userData?.telepon || ''}
+                                                            name="no_telp"
+                                                            value={userData?.no_telp || ''}
                                                             onChange={handleInputChange}
                                                         />
                                                     </td>
