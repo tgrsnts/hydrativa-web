@@ -132,7 +132,7 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                                         <div className="flex flex-col">
                                             <p className="text-2xl font-bold">{product.nama_produk}</p>
                                             <div className="flex flex-row lg:flex-col justify-between">
-                                                <p className="lg:text-3xl font-bold">Rp. {product.harga}</p>
+                                                <p className="lg:text-3xl font-bold">Rp. {product.harga.toLocaleString()}</p>
                                                 <div className="flex flex-row items-center gap-3">
                                                     <p>Terjual {product.jumlah_terjual}</p>
                                                     <p>•</p>
@@ -175,7 +175,7 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                                         </div>
                                         <div className="flex items-center justify-between">
                                             <p className="font-semibold">Subtotal</p>
-                                            <p className="text-xl font-bold">Rp. {product.harga * quantity}</p> {/* Calculate subtotal */}
+                                            <p className="text-xl font-bold">Rp. {(product.harga * quantity).toLocaleString()}</p> {/* Calculate subtotal */}
                                         </div>
                                     </div>
                                     <div className="pt-2">
@@ -237,7 +237,7 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                                         </div>
                                         <div className="mt-auto">
                                             <p className="font-bold text-md">{product.nama_produk}</p>
-                                            <p className="font-semibold text-md">Rp. {product.harga}</p>
+                                            <p className="font-semibold text-md">Rp. {product.harga.toLocaleString()}</p>
                                             <p>Stok total : {product.stok}</p>
                                         </div>
                                     </div>
@@ -261,7 +261,7 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                                 <div className="mt-2">
                                     <div className="flex items-center justify-between ">
                                         <p className="font-semibold">Subtotal</p>
-                                        <p className="text-md font-bold">Rp. {product.harga}</p>
+                                        <p className="text-md font-bold">Rp. {product.harga.toLocaleString()}</p>
                                     </div>
                                 </div>
                                 <div className="relative h-8" />

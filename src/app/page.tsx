@@ -154,7 +154,7 @@ export default function Home() {
                         </p>
                       </div>
                       <div className="h-4">
-                        <div className="font-poppins text-gray-700 text-sm">Rp {product.harga}</div>
+                        <div className="font-poppins text-gray-700 text-sm">Rp {product.harga.toLocaleString()}</div>
                       </div>
                       <div className="h-4">
                         <div className="flex items-center justify-start gap-1 h-4">
