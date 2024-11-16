@@ -7,6 +7,7 @@ import type { Keranjang } from "@/lib/interfaces/Keranjang";
 import type { Alamat } from "@/lib/interfaces/Alamat";
 import { FaLocationDot } from "react-icons/fa6";
 import Cookies from "js-cookie";
+import Swal from "sweetalert2";
 
 declare global {
   interface Window {
@@ -43,16 +44,37 @@ interface PaymentError {
 export default function Checkout() {
   const [dataAlamat, setDataAlamat] = useState<Alamat[] | null>(null);
   const [primaryAlamat, setPrimaryAlamat] = useState<Alamat | null>(null);
-  const [selectedAlamat, setSelectedAlamat] = useState(0);
+  const [selectedAlamatId, setSelectedAlamatId] = useState(0);
   const [selectedItems, setSelectedItems] = useState<Keranjang[]>([]);
   const [total, setTotal] = useState<number>(0);
+
+
+  const closeModal = (modalId: string) => {
+    const modal = document.getElementById(modalId) as HTMLDialogElement | null;
+    if (modal?.close) {
+      modal.close();
+    }
+  };
+
+  const handleGantiAlamat = async (alamatId: number) => {
+    // Update the selected address ID
+    setSelectedAlamatId(alamatId);
+
+    await closeModal('modalGantiAlamat')
+    await Swal.fire({
+      title: 'Berhasil!',
+      text: 'Berhasil mengganti alamat pengiriman!',
+      icon: 'success',
+      confirmButtonText: 'OK',
+    });
+  };
 
   const handlePayment = async () => {
     try {
       // Calculate the total price
       const totalPrice = calculateTotalPrice();
       let requestData;
-  
+
       // Check if it's a direct purchase
       if (sessionStorage.getItem('isBeliLangsung') === "1") {
         const response = await axios.post(
@@ -67,10 +89,10 @@ export default function Checkout() {
             },
           }
         );
-  
+
         if (response.status === 200 || response.status === 201) {
           requestData = {
-            id_alamat: 1,
+            id_alamat: selectedAlamatId,
             id_item: [response.data.data.transaksi_item_id],
             total: totalPrice,
           };
@@ -81,12 +103,12 @@ export default function Checkout() {
       } else {
         // Normal purchase flow
         requestData = {
-          id_alamat: 1,
+          id_alamat: selectedAlamatId,
           id_item: selectedItems.map(item => item.id),
           total: totalPrice,
         };
       }
-  
+
       // Send the payment request
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/bayar`,
@@ -97,7 +119,7 @@ export default function Checkout() {
           },
         }
       );
-  
+
       if (response && response.data) {
         // Initiate the payment process
         window.snap.pay(response.data.snaptoken, {
@@ -118,9 +140,7 @@ export default function Checkout() {
     } catch (error) {
       console.error("Checkout failed:", error);
     }
-  };  
-
-
+  };
 
   const calculateTotalPrice = () => {
     return selectedItems.reduce((total, item) => total + item.harga * item.quantity, 0);
@@ -187,6 +207,7 @@ export default function Checkout() {
 
       if (primary) {
         setPrimaryAlamat(primary);
+        setSelectedAlamatId(primary.alamat_id);
       } else {
         setPrimaryAlamat(null);
       }
@@ -201,34 +222,37 @@ export default function Checkout() {
         <div className="flex flex-col gap-4 modal-box w-11/12 max-w-3xl font-poppins">
           <h3 className="font-bold text-lg text-center">Daftar Alamat</h3>
           <a
-            href="alamat.html"
-            className="w-full p-2 border-2 border-primary text-primary text-center rounded-lg hover:bg-primary hover:text-white"
+            href="/alamat"
+            className="w-full p-2 bg-primary hover:bg-background text-white text-center rounded-lg"
           >
             Tambah Alamat
           </a>
           <div className="flex flex-col gap-4">
             {dataAlamat && dataAlamat.length > 0 ? (
               dataAlamat.map((alamat, index) => (
-                <div key={index} className="flex justify-between p-4 border-2 border-primary bg-green-50 rounded-lg">
+                <div
+                  key={index}
+                  className={`flex justify-between p-4 border-2 rounded-lg hover:cursor-pointer
+                     ${alamat.isPrimary ? 'border-second' : ''}`}
+                  onClick={() => {
+                    handleGantiAlamat(alamat.alamat_id)
+                  }}
+                >
                   <div className="flex flex-col">
                     <div className="flex items-center gap-4">
                       <div>{alamat.label_alamat}</div>
-                      {alamat.isPrimary && (
-                        <div className="p-1 border-2 text-sm text-primary border-primary">
+                      {alamat.isPrimary === 1 && ( // Only show "Utama" if isPrimary is 1
+                        <div className="px-2 py-1 border-2 text-sm text-primary border-primary rounded-md">
                           Utama
                         </div>
                       )}
                     </div>
-                    <div className="flex">
-                      <div>{alamat.nama_penerima}</div>
-                      <div className="divider divider-horizontal before:bg-black after:bg-black" />
+                    <div className="flex flex-col">
+                      <div className='text-xl font-semibold'>{alamat.nama_penerima}</div>
                       <div>{alamat.no_telepon}</div>
                     </div>
-                    <div>{alamat.detail}, {alamat.kelurahan}, {alamat.kecamatan}, {alamat.kabupaten}, {alamat.provinsi}, {alamat.kodepos}</div>
                     <div>
-                      <a href="alamat.html" className="text-primary">
-                        Ubah
-                      </a>
+                      {alamat.detail}, {alamat.kelurahan}, {alamat.kecamatan}, {alamat.kabupaten}, {alamat.provinsi}, {alamat.kodepos}
                     </div>
                   </div>
                 </div>
@@ -240,6 +264,9 @@ export default function Checkout() {
             )}
           </div>
         </div>
+        <form method="dialog" className="modal-backdrop">
+          <button type="button" onClick={() => closeModal('modalGantiAlamat')}>Tutup</button>
+        </form>
       </dialog>
 
       <main>
@@ -274,7 +301,7 @@ export default function Checkout() {
                         modal.showModal();
                       }
                     }}
-                    className="px-2 border-2 rounded-lg hover:cursor-pointer hover:border-primary hover:text-primary"
+                    className="px-4 py-2 bg-primary hover:bg-background text-white rounded-lg"
                   >
                     Ganti Alamat
                   </button>
@@ -321,8 +348,7 @@ export default function Checkout() {
                   </div>
                   <button
                     onClick={handlePayment}
-
-                    className="bg-primary font-poppins font-semibold rounded-lg px-4 py-2 border-2 border-primary text-white text-center w-full hover:bg-white hover:text-primary"
+                    className="bg-primary hover:bg-background text-white font-poppins rounded-lg px-4 py-2 text-center w-full"
                   >
                     Pilih Pembayaran
                   </button>
