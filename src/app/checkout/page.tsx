@@ -47,6 +47,8 @@ export default function Checkout() {
   const [selectedAlamatId, setSelectedAlamatId] = useState(0);
   const [selectedItems, setSelectedItems] = useState<Keranjang[]>([]);
   const [total, setTotal] = useState<number>(0);
+  const [ongkir, setOngkir] = useState<number>(12000);
+  const [totalBayar, setTotalBayar] = useState<number>(0);
 
 
   const closeModal = (modalId: string) => {
@@ -201,6 +203,7 @@ export default function Checkout() {
   useEffect(() => {
     const totalPrice = calculateTotalPrice();
     setTotal(totalPrice); // Update total when items change or the component mounts
+    setTotalBayar(total + ongkir)
 
     if (dataAlamat) {
       const primary = dataAlamat.find((alamat) => alamat.isPrimary === 1);
@@ -320,7 +323,7 @@ export default function Checkout() {
                       <div>{item.nama_produk}</div>
                       <div className="flex justify-between">
                         <div>x{item.quantity}</div>
-                        <div>Rp. {item.harga}</div>
+                        <div>Rp. {item.harga.toLocaleString()}</div>
                       </div>
                     </div>
                   </div>
@@ -334,16 +337,16 @@ export default function Checkout() {
                   <div className="text-md font-medium">
                     <div className="flex justify-between">
                       <div>Total Harga</div>
-                      <div>Rp {total}</div>
+                      <div>Rp {total.toLocaleString()}</div>
                     </div>
                     <div className="flex justify-between">
                       <div>Total Ongkos Kirim</div>
-                      <div>Rp 12.000</div> {/* Static shipping cost */}
+                      <div>Rp {ongkir.toLocaleString()}</div> {/* Static shipping cost */}
                     </div>
                     <div className="divider" />
                     <div className="flex justify-between">
                       <div>Total Belanja</div>
-                      <div>Rp 20.000</div> {/* Dynamic total */}
+                      <div>Rp {totalBayar.toLocaleString()}</div> {/* Dynamic total */}
                     </div>
                   </div>
                   <button
