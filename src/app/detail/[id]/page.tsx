@@ -68,66 +68,36 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
     };
 
     const handleBeliClick = async () => {
-        try {
-            // Replace with your API URL
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/keranjang/add`, {
-                id_produk: product?.id,
-                quantity: quantity,
-            }, {
-                headers: {
-                    Authorization: `Bearer ${Cookies.get('token')}` // Assumes token is stored in cookies
-                }
-            });
-    
-            // Handle the response based on the API response structure
-            if (response.status === 200 || response.status === 201) {
-                // Check if the product was successfully added and handle the response data
-                const data = response.data.data;
-                const selectedItem = {
-                    id_transaksi_item: data.transaksi_item_id,
-                    id_produk: data.id_produk,
-                    quantity: data.quantity,
-                    gambar: product?.gambar, // Assuming the product has a gambar field
-                };
-    
-                // If there is no existing transaction ID, it could indicate a new cart, so store as a new item
-                if (data.id_transaksi === null) {
-                    // Create a new transaction array if no transaction exists
-                    const selectedItems = JSON.parse(sessionStorage.getItem('selectedItems') || '[]');
-    
-                    // Add the new item to the array
-                    selectedItems.push(selectedItem);
-    
-                    // Save the updated array back to sessionStorage
-                    sessionStorage.setItem('selectedItems', JSON.stringify(selectedItems));
-                } else {
-                    // Handle case when a transaction already exists
-                    sessionStorage.setItem('selectedItems', JSON.stringify([selectedItem]));
-                }
-    
-                // Redirect to the checkout page
-                router.push('/checkout');
-    
-                // Show a success message
-                Swal.fire({
-                    title: 'Produk berhasil ditambahkan ke keranjang!',
-                    icon: 'success',
-                    confirmButtonText: 'OK',
-                });
-            } else {
-                console.warn("Failed to add product to cart:", response.data);
-            }
-        } catch (error) {
-            console.error("Error adding product to cart:", error);
-            Swal.fire({
-                title: 'Error!',
-                text: 'An error occurred while adding the product to the cart.',
-                icon: 'error',
-                confirmButtonText: 'OK'
-            });
+        const selectedItem = {
+            // id_transaksi_item: data.transaksi_item_id,
+            id_produk: product?.id,
+            nama_produk: product?.nama_produk,
+            quantity: quantity,
+            harga: product?.harga,
+            gambar: product?.gambar, 
+        };
+
+
+        if (sessionStorage.getItem('selectedItems')) {
+            sessionStorage.removeItem('selectedItems');
         }
+        // Create a new selected items array and add the new item
+        const selectedItems = [selectedItem];
+        sessionStorage.setItem('selectedItems', JSON.stringify(selectedItems));
+        sessionStorage.setItem('isBeliLangsung', "1");
+
+        // Redirect to the checkout page
+        router.push('/checkout');
+
+        // Show a success message
+        Swal.fire({
+            title: 'Produk berhasil ditambahkan ke keranjang!',
+            icon: 'success',
+            confirmButtonText: 'OK',
+        });
     };
-        
+
+
     useEffect(() => {
         const fetchProduct = async () => {
             try {

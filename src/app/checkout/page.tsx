@@ -42,33 +42,64 @@ interface PaymentError {
 
 export default function Checkout() {
   const [dataAlamat, setDataAlamat] = useState<Alamat[] | null>(null);
+  const [primaryAlamat, setPrimaryAlamat] = useState<Alamat | null>(null);
+  const [selectedAlamat, setSelectedAlamat] = useState(0);
   const [selectedItems, setSelectedItems] = useState<Keranjang[]>([]);
   const [total, setTotal] = useState<number>(0);
 
   const handlePayment = async () => {
     try {
-      // Calculate the total price based on selected items
+      // Calculate the total price
       const totalPrice = calculateTotalPrice();
-
-      // Prepare the data to send in the POST request
-      const requestData = {
-        id_alamat: 1,
-        id_item: selectedItems.map(item => item.id),  // Extracts the item IDs
-        total: totalPrice,  // Send the total price
-      };
-
+      let requestData;
+  
+      // Check if it's a direct purchase
+      if (sessionStorage.getItem('isBeliLangsung') === "1") {
+        const response = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_URL}/keranjang/add`,
+          {
+            id_produk: selectedItems[0].id_produk,
+            quantity: selectedItems[0].quantity,
+          },
+          {
+            headers: {
+              'Authorization': `Bearer ${Cookies.get('token')}`,
+            },
+          }
+        );
+  
+        if (response.status === 200 || response.status === 201) {
+          requestData = {
+            id_alamat: 1,
+            id_item: [response.data.data.transaksi_item_id],
+            total: totalPrice,
+          };
+        } else {
+          console.warn("Failed to add product to cart:", response.data);
+          return; // Exit if the cart addition fails
+        }
+      } else {
+        // Normal purchase flow
+        requestData = {
+          id_alamat: 1,
+          id_item: selectedItems.map(item => item.id),
+          total: totalPrice,
+        };
+      }
+  
       // Send the payment request
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/bayar`,
-        requestData,  // Send the request data
+        requestData,
         {
           headers: {
             'Authorization': `Bearer ${Cookies.get('token')}`,
           },
         }
       );
-
+  
       if (response && response.data) {
+        // Initiate the payment process
         window.snap.pay(response.data.snaptoken, {
           onSuccess: (result) => {
             console.log('Payment successful:', result);
@@ -87,9 +118,8 @@ export default function Checkout() {
     } catch (error) {
       console.error("Checkout failed:", error);
     }
-  };
+  };  
 
-  
 
 
   const calculateTotalPrice = () => {
@@ -131,9 +161,9 @@ export default function Checkout() {
     const clientKey = process.env.NEXT_PUBLIC_CLIENT_KEY;
 
     const script = document.createElement('script');
-    if (clientKey) { 
+    if (clientKey) {
       script.src = snapScript;
-      script.setAttribute('data-client-key', clientKey); 
+      script.setAttribute('data-client-key', clientKey);
       script.async = true;
       script.type = 'text/javascript';
 
@@ -151,9 +181,18 @@ export default function Checkout() {
   useEffect(() => {
     const totalPrice = calculateTotalPrice();
     setTotal(totalPrice); // Update total when items change or the component mounts
+
+    if (dataAlamat) {
+      const primary = dataAlamat.find((alamat) => alamat.isPrimary === 1);
+
+      if (primary) {
+        setPrimaryAlamat(primary);
+      } else {
+        setPrimaryAlamat(null);
+      }
+    }
   });
 
-  const primaryAddress = dataAlamat?.find(alamat => alamat.isPrimary === 1);
 
   return (
     <>
@@ -211,20 +250,20 @@ export default function Checkout() {
                 <div className="text-slate-700 font-semibold">ALAMAT PENGIRIMAN</div>
                 <div className="flex items-center gap-2">
                   <FaLocationDot />
-                  {primaryAddress && (
+                  {primaryAlamat && (
                     <div className="flex flex-col">
                       <div>
-                        {primaryAddress.label_alamat} • {primaryAddress.nama_penerima}
+                        {primaryAlamat.label_alamat} • {primaryAlamat.nama_penerima}
                       </div>
                       <div>
-                        {primaryAddress.no_telepon}
+                        {primaryAlamat.no_telepon}
                       </div>
                     </div>
                   )}
                 </div>
-                {primaryAddress && (
+                {primaryAlamat && (
                   <div>
-                    {primaryAddress.detail}, {primaryAddress.kelurahan}, {primaryAddress.kecamatan}, {primaryAddress.kabupaten}, {primaryAddress.provinsi}, {primaryAddress.kodepos}
+                    {primaryAlamat.detail}, {primaryAlamat.kelurahan}, {primaryAlamat.kecamatan}, {primaryAlamat.kabupaten}, {primaryAlamat.provinsi}, {primaryAlamat.kodepos}
                   </div>
                 )}
                 <div>
