@@ -31,6 +31,7 @@ export default function Keranjang() {
     // Proceed with the purchase
     const selectedItemsData = data.filter(item => selectedItems.includes(item.id));
     sessionStorage.setItem('selectedItems', JSON.stringify(selectedItemsData));
+    sessionStorage.setItem('isBeliLangsung', '0');
     router.push('/checkout');
   };
 
