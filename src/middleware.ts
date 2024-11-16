@@ -1,22 +1,30 @@
-// middleware.ts
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-export async function middleware(request: NextRequest) {
-    // Ambil token dari cookies
-    const token = request.cookies.get('token')?.value;
+export function middleware(req: NextRequest) {
+  // Ambil token atau data pengguna dari cookies atau header
+  const token = req.cookies.get('token'); // Misalnya token disimpan dalam cookies
 
-    // Rute yang dilindungi
-    const protectedRoutes = ['/dashboard', '/akun'];
+  if (!token) {
+    // Jika tidak ada token, redirect ke halaman login
+    return NextResponse.redirect(new URL('/', req.url));
+  }
 
-    // Jika mencoba mengakses rute yang dilindungi tanpa token
-    if (protectedRoutes.some((route) => request.nextUrl.pathname.startsWith(route)) && !token) {
-        return NextResponse.redirect(new URL('/', request.url));
-    }
+  // Misalnya, ambil role dari token atau data yang ada
+  const roleCookie = req.cookies.get('role'); // This will be of type RequestCookie | undefined
+  
+  // Check if the cookie exists and extract the role as a string
+  const role = roleCookie ? roleCookie.value : undefined;
 
-    return NextResponse.next(); // Melanjutkan jika semua kondisi terpenuhi
+  // Cek role pengguna dan tentukan akses
+  if (role == '1') {
+    return NextResponse.next(); // Izinkan akses ke halaman
+  } else {
+    // Jika role bukan admin, redirect ke halaman tertentu
+    return NextResponse.redirect(new URL('/dashboard', req.url));
+  }
 }
 
 export const config = {
-    matcher: ['/dashboard', '/akun'], // Rute yang dilindungi
+  matcher: ['/admin/:path*', '/akun', '/alamat', '/checkout', '/histori-transaksi', '/keranjang'], // Tentukan halaman yang akan dicek aksesnya (misal: /admin)
 };

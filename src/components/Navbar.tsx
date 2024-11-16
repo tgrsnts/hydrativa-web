@@ -72,6 +72,7 @@ export default function Navbar() {
         Cookies.set("token", res.data.token, { expires: 7, path: "/" });
         Cookies.set("name", res.data.user.name, { expires: 7, path: "/" });
         Cookies.set("gambar", res.data.gambar, { expires: 7, path: "/" });
+        Cookies.set("role", res.data.role, { expires: 7, path: "/" });
         closeModal('modal_login');
         window.location.href = "/dashboard";
       }
@@ -90,6 +91,7 @@ export default function Navbar() {
         Cookies.set("token", res.data.token, { expires: 7, path: "/" });
         Cookies.set("name", res.data.user.name, { expires: 7, path: "/" });
         Cookies.set("gambar", res.data.gambar, { expires: 7, path: "/" });
+        Cookies.set("role", res.data.role, { expires: 7, path: "/" });
         closeModal('modal_register');
         window.location.href = "/dashboard";
       }
