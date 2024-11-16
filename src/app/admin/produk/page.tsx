@@ -113,10 +113,10 @@ export default function Page() {
             const formData = new FormData();
             formData.append('nama_produk', newProduct.nama_produk);
             formData.append('kategori', newProduct.kategori);
-            formData.append('deskripsi', newProduct.deskripsi || '');  
-            formData.append('harga', newProduct.harga.toString());   
-            formData.append('stok', newProduct.stok.toString());  
-            
+            formData.append('deskripsi', newProduct.deskripsi || '');
+            formData.append('harga', newProduct.harga.toString());
+            formData.append('stok', newProduct.stok.toString());
+
 
             // Menambahkan gambar ke formData jika ada
             if (selectedImage) {
@@ -138,11 +138,11 @@ export default function Page() {
                 // Update state tanpa memanggil fetchProducts
                 setProducts((prevProducts) => {
                     if (Array.isArray(prevProducts)) {
-                      return [...prevProducts, newProduct]; // Spread the previous state and add new product
+                        return [...prevProducts, newProduct]; // Spread the previous state and add new product
                     }
                     console.error("prevProducts is not an array:", prevProducts);
-                    return  prevProducts;
-                  });// Tambahkan produk baru ke state
+                    return prevProducts;
+                });// Tambahkan produk baru ke state
                 Swal.fire({
                     icon: 'success',
                     title: 'Produk berhasil ditambahkan!',
@@ -219,7 +219,7 @@ export default function Page() {
 
     const deleteProduct = async (id: number | undefined) => {
         if (!id) return; // Early exit if there's no valid ID
-        
+
         // Show a confirmation dialog before deleting
         const result = await Swal.fire({
             title: 'Apakah Anda yakin?',
@@ -230,7 +230,7 @@ export default function Page() {
             cancelButtonText: 'Batal',
             reverseButtons: true
         });
-    
+
         if (result.isConfirmed) {
             try {
                 // Proceed with deletion if user confirms
@@ -240,10 +240,10 @@ export default function Page() {
                         'Authorization': `Bearer ${Cookies.get('token')}`,
                     }
                 });
-    
+
                 // Update the state by removing the deleted product from the list
                 setProducts((prevProducts) => prevProducts.filter(product => product.id !== id));
-    
+
                 // Show success message after successful deletion
                 Swal.fire({
                     icon: 'success',
@@ -251,10 +251,10 @@ export default function Page() {
                     showConfirmButton: false,
                     timer: 1500,
                 });
-    
+
                 // Close the delete confirmation modal
                 const modal = document.getElementById('modalHapusData') as HTMLDialogElement | null;
-                modal?.close(); 
+                modal?.close();
             } catch (error) {
                 if (axios.isAxiosError(error) && error.response && error.response.status === 401) {
                     Swal.fire({
@@ -275,7 +275,7 @@ export default function Page() {
             }
         }
     };
-    
+
 
 
     useEffect(() => {
@@ -382,26 +382,30 @@ export default function Page() {
                                         {/* Input File Gambar */}
                                         <div className="flex flex-col">
                                             <label htmlFor="gambar">Gambar</label>
-                                            <input
-                                                type="file"
-                                                id="gambar"
-                                                name="gambar"
-                                                accept="image/*"
-                                                onChange={handleImageChange}
-                                                className="w-full rounded-md bg-gray-100 file:mr-5 file:py-1 file:px-3 file:border-none file:w-full file:bg-gray-100 file:text-stone-700 hover:file:cursor-pointer hover:file:bg-green-50 hover:file:text-primary focus:outline-none focus:ring focus:ring-primary focus-border-primary"
-                                            />
-                                        </div>
-
-                                        {/* Preview Gambar */}
-                                        {imagePreview && (
-                                            <div className="mt-2">
-                                                <img
-                                                    src={imagePreview}
-                                                    alt="Preview Gambar"
-                                                    className="w-32 h-32 object-cover rounded-md"
+                                            {/* Preview Gambar */}
+                                            {imagePreview && (
+                                                <div className="mt-2">
+                                                    <img
+                                                        src={imagePreview}
+                                                        alt="Preview Gambar"
+                                                        className="w-32 h-32 object-cover rounded-md"
+                                                    />
+                                                </div>
+                                            )}
+                                            <label
+                                                htmlFor="gambar"
+                                                className="w-full flex items-center justify-center rounded-md bg-primary cursor-pointer py-2 px-4 text-white hover:bg-background focus:outline-none focus:ring focus:ring-primary"
+                                            >
+                                                Pilih Foto
+                                                <input
+                                                    type="file"
+                                                    id="gambar"
+                                                    name="gambar"
+                                                    onChange={handleImageChange}
+                                                    className="hidden"  // Hide the default file input button
                                                 />
-                                            </div>
-                                        )}
+                                            </label>
+                                        </div>
 
                                         <div className="flex flex-col mt-2">
                                             <button type="submit" className="p-2 rounded-md bg-primary text-white">
@@ -488,26 +492,32 @@ export default function Page() {
                                         {/* Input File Gambar */}
                                         <div className="flex flex-col">
                                             <label htmlFor="gambar">Gambar</label>
-                                            <input
-                                                type="file"
-                                                id="gambar"
-                                                name="gambar"
-                                                accept="image/*"
-                                                onChange={handleEditImageChange}
-                                                className="w-full rounded-md bg-gray-100 file:mr-5 file:py-1 file:px-3 file:border-none file:w-full file:bg-gray-100 file:text-stone-700 hover:file:cursor-pointer hover:file:bg-green-50 hover:file:text-primary focus:outline-none focus:ring focus:ring-primary focus-border-primary"
-                                            />
+                                            {/* Preview Gambar */}
+                                            {imagePreview && (
+                                                <div className="mt-2">
+                                                    <img
+                                                        src={imagePreview}
+                                                        alt="Preview Gambar"
+                                                        className="w-32 h-32 object-cover rounded-md"
+                                                    />
+                                                </div>
+                                            )}
+                                            <label
+                                                htmlFor="gambar"
+                                                className="w-full flex items-center justify-center rounded-md bg-primary cursor-pointer py-2 px-4 text-white hover:bg-background focus:outline-none focus:ring focus:ring-primary"
+                                            >
+                                                Ubah Foto
+                                                <input
+                                                    type="file"
+                                                    id="gambar"
+                                                    name="gambar"
+                                                    onChange={handleImageChange}
+                                                    className="hidden"  // Hide the default file input button
+                                                />
+                                            </label>
                                         </div>
 
-                                        {/* Preview Gambar */}
-                                        {imagePreview && (
-                                            <div className="mt-2">
-                                                <img
-                                                    src={imagePreview}
-                                                    alt="Preview Gambar"
-                                                    className="w-32 h-32 object-cover rounded-md"
-                                                />
-                                            </div>
-                                        )}
+
 
                                         <div className="flex flex-col mt-2">
                                             <button type="submit" className="p-2 rounded-md bg-primary text-white">

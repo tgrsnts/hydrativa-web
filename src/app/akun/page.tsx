@@ -10,7 +10,7 @@ import Swal from 'sweetalert2';
 
 export default function Akun() {
     const [userData, setUserData] = useState<User | null>(null);
-    const [loading, setLoading] = useState(true);    
+    const [loading, setLoading] = useState(true);
 
     const getUserInfo = async () => {
         try {
@@ -92,7 +92,7 @@ export default function Akun() {
                 updateUserPhoto(selectedFile);  // Directly upload when file is selected
             }
         }
-    };    
+    };
 
     const handleAxiosError = (error: unknown) => {
         if (axios.isAxiosError(error) && error.response) {
@@ -142,14 +142,24 @@ export default function Akun() {
                             ) : (
                                 <form onSubmit={updateUserInfo} className="flex w-full">
                                     <div className="w-1/4 flex flex-col items-center gap-4">
-                                        <img className="w-full" src={userData?.gambar} alt="Foto Profil" />
-                                        <input
-                                            type="file"
-                                            id="gambar"
-                                            name="gambar"
-                                            onChange={handleFileChange}
-                                            className="w-full rounded-md bg-gray-100 file:mr-5 file:py-1 file:px-3 file:border-none file:w-full file:bg-gray-100 file:text-stone-700 hover:file:cursor-pointer hover:file:bg-green-50 hover:file:text-primary focus:outline-none focus:ring focus:ring-primary focus-border-primary"
+                                        <img
+                                            className="w-full aspect-square"
+                                            src={userData?.gambar || '/default-avatar.jpg'}
+                                            alt="Foto Profil"
                                         />
+                                        <label
+                                            htmlFor="gambar"
+                                            className="w-full flex items-center justify-center rounded-md bg-primary cursor-pointer py-2 px-4 text-white hover:bg-background focus:outline-none focus:ring focus:ring-primary"
+                                        >
+                                            Ubah Foto
+                                            <input
+                                                type="file"
+                                                id="gambar"
+                                                name="gambar"
+                                                onChange={handleFileChange}
+                                                className="hidden"  // Hide the default file input button
+                                            />
+                                        </label>
                                     </div>
                                     <div className="flex w-3/4 pl-8">
                                         <table className="w-full">
