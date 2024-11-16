@@ -15,7 +15,7 @@ export default function Keranjang() {
   const [selectedItems, setSelectedItems] = useState<number[]>([]); // State for selected items
   const [loading, setLoading] = useState(true);
 
-  const router = useRouter() 
+  const router = useRouter()
 
   const handleBeliClick = () => {
     if (selectedItems.length === 0) {
@@ -35,6 +35,71 @@ export default function Keranjang() {
     router.push('/checkout');
   };
 
+  const handleDeleteKeranjang = async () => {
+    // Show confirmation dialog
+    const result = await Swal.fire({
+      icon: 'warning',
+      title: 'Apakah Anda yakin ingin menghapus barang ini?',
+      showCancelButton: true,
+      confirmButtonText: 'Ya, Hapus!',
+      cancelButtonText: 'Batal',
+      customClass: {
+        confirmButton: 'bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-poppins', // Red color for delete
+        cancelButton: 'bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded-lg font-poppins', // Gray color for cancel
+      },
+    });
+
+    // If the user confirmed the deletion
+    if (result.isConfirmed) {
+      try {
+        const response = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_URL}/keranjang/delete`,
+          {
+            id_item: selectedItems,
+          },
+          {
+            headers: {
+              'content-type': 'application/json',
+              'Authorization': `Bearer ${Cookies.get('token')}`,
+            },
+          }
+        );
+
+        // Check if the response status is 200
+        if (response.status === 200) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Barang berhasil dihapus!',
+            showConfirmButton: false,
+            timer: 1500,
+          });
+
+          // Remove the deleted items from the state
+          setData((prevData) =>
+            prevData.filter((item) => !selectedItems.includes(item.id))
+          );
+
+          // Clear selected items
+          setSelectedItems([]);
+        } else {
+          Swal.fire({
+            title: 'Oops!',
+            text: 'Barang gagal dihapus.',
+            icon: 'warning',
+            confirmButtonText: 'OK',
+          });
+        }
+      } catch (error) {
+        console.error("Error deleting items from cart:", error);
+        Swal.fire({
+          title: 'Oops!',
+          text: 'Terjadi kesalahan saat menghapus keranjang.',
+          icon: 'error',
+          confirmButtonText: 'OK',
+        });
+      }
+    }
+  };
 
 
   // Handle individual item checkbox change
@@ -95,17 +160,20 @@ export default function Keranjang() {
             <div className="flex flex-col gap-4 w-full lg:w-2/3 p-2">
               <div className="flex flex-col gap-4 bg-white p-6 rounded-lg font-poppins">
                 <div className="flex items-center gap-4">
-                  <input
-                    type="checkbox"
-                    id="checkAll"
-                    className="w-4 h-4 accent-primary"
-                    onChange={handleSelectAllChange}
-                    checked={data && selectedItems.length === data.length} // Check if all are selected
-                  />
-                  <div className="flex w-full justify-between">
-                    <div>Pilih Semua</div>
-                    <div>Hapus</div>
+                  <div className="flex w-full gap-4 items-center">
+                    <input
+                      type="checkbox"
+                      id="checkAll"
+                      className="w-4 h-4 accent-primary"
+                      onChange={handleSelectAllChange}
+                      checked={data && selectedItems.length === data.length}
+                    />
+                    <label htmlFor="checkAll">Pilih Semua</label>
                   </div>
+                  <button className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 focus:bg-red-800 text-white"
+                    onClick={handleDeleteKeranjang}>
+                    Hapus
+                  </button>
                 </div>
               </div>
               {loading ? (
@@ -134,7 +202,7 @@ export default function Keranjang() {
                           <div>{item.nama_produk}</div>
                           <div className="flex justify-between">
                             <div>x{item.quantity}</div>
-                            <div>Rp. {item.harga}</div>
+                            <div>Rp. {item.harga.toLocaleString()}</div>
                           </div>
                         </div>
                       </div>
