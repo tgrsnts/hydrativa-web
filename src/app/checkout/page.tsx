@@ -270,10 +270,10 @@ export default function Checkout() {
       </dialog>
 
       <main>
-        <section id="detail" className="py-16 lg:px-36 bg-background mt-16 mx-auto">
+        <section id="detail" className="py-16 lg:px-36 bg-slate-50 mt-16 mx-auto">
           <div className="flex flex-wrap gap justify-center">
             <div className="flex flex-col gap-4 w-full lg:w-2/3 p-2">
-              <div className="flex flex-col gap-4 bg-white p-6 rounded-lg font-poppins">
+              <div className="flex flex-col gap-4 bg-white shadow-md p-6 rounded-lg font-poppins">
                 <div className="text-slate-700 font-semibold">ALAMAT PENGIRIMAN</div>
                 <div className="flex items-center gap-2">
                   <FaLocationDot />
@@ -307,7 +307,7 @@ export default function Checkout() {
                   </button>
                 </div>
               </div>
-              <div className="flex flex-col gap-4 bg-white p-6 rounded-lg font-poppins">
+              <div className="flex flex-col gap-4 bg-white shadow-md p-6 rounded-lg font-poppins">
                 <div className="text-slate-700 font-semibold">PESANAN</div>
                 {selectedItems && selectedItems.length > 0 && selectedItems.map((item, index) => (
                   <div key={index} className="flex gap-4">
@@ -328,7 +328,7 @@ export default function Checkout() {
               </div>
             </div>
             <div className="w-full lg:w-1/3 p-2">
-              <div className="flex flex-col p-6 bg-white gap-2 rounded-lg font-poppins">
+              <div className="flex flex-col p-6 bg-white shadow-md gap-2 rounded-lg font-poppins">
                 <div className="flex flex-col gap-4">
                   <div className="text-2xl font-bold">Ringkasan Belanja</div>
                   <div className="text-md font-medium">
