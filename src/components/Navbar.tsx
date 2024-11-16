@@ -71,8 +71,10 @@ export default function Navbar() {
       if (res.data.token) {
         Cookies.set("token", res.data.token, { expires: 7, path: "/" });
         Cookies.set("name", res.data.user.name, { expires: 7, path: "/" });
-        Cookies.set("gambar", res.data.gambar, { expires: 7, path: "/" });
-        Cookies.set("role", res.data.role, { expires: 7, path: "/" });
+        if (res.data.user.gambar) {
+          Cookies.set("gambar", res.data.user.gambar, { expires: 7, path: "/" });
+        }
+        Cookies.set("role", res.data.user.role, { expires: 7, path: "/" });
         closeModal('modal_login');
         window.location.href = "/dashboard";
       }
@@ -88,12 +90,7 @@ export default function Navbar() {
       const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/register`, dataRegisterForm);
 
       if (res.data.token) {
-        Cookies.set("token", res.data.token, { expires: 7, path: "/" });
-        Cookies.set("name", res.data.user.name, { expires: 7, path: "/" });
-        Cookies.set("gambar", res.data.gambar, { expires: 7, path: "/" });
-        Cookies.set("role", res.data.role, { expires: 7, path: "/" });
         closeModal('modal_register');
-        window.location.href = "/dashboard";
       }
     } catch (error) {
       closeModal('modal_login')
@@ -142,7 +139,7 @@ export default function Navbar() {
                       href="/akun"
                       className="flex items-center gap-2 hover:bg-background py-1 px-2 rounded-md"
                     >
-                      <img className="w-10 rounded-full" src={Cookies.get("gambar")} alt="User Avatar" />
+                      { Cookies.get('gambar') ? (<img className="w-10 rounded-full" src={Cookies.get("gambar")} alt="User Avatar" />) : (null) }
                       <p className="font-semibold text-nowrap text-white">{Cookies.get('name')}</p>
                     </Link>
                   </div>
