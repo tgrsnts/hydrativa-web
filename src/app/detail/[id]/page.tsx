@@ -89,12 +89,12 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
         // Redirect to the checkout page
         router.push('/checkout');
 
-        // Show a success message
-        Swal.fire({
-            title: 'Produk berhasil ditambahkan ke keranjang!',
-            icon: 'success',
-            confirmButtonText: 'OK',
-        });
+        // // Show a success message
+        // Swal.fire({
+        //     title: 'Produk berhasil ditambahkan ke keranjang!',
+        //     icon: 'success',
+        //     confirmButtonText: 'OK',
+        // });
     };
 
 
