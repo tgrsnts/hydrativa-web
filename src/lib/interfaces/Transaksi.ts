@@ -6,6 +6,7 @@ interface Transaksi {
   total_harga: number;
   pembeli: string;
   alamat: Alamat;
+  resi: string;
   transaksi_item: Array<{
     transaksi_item_id: number;
     nama_produk: string;
