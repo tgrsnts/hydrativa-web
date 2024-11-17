@@ -7,6 +7,7 @@ interface Transaksi {
   pembeli: string;
   alamat: Alamat;
   resi: string;
+  created_at: Date;
   transaksi_item: Array<{
     transaksi_item_id: number;
     nama_produk: string;
