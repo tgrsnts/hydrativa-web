@@ -6,6 +6,8 @@ import Cookies from 'js-cookie'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import Transaksi from '@/lib/interfaces/Transaksi'
+import jsPDF from 'jspdf'
+
 
 export default function Pesanan() {
     const [transactions, setTransactions] = useState<Transaksi[]>([]);
@@ -21,6 +23,68 @@ export default function Pesanan() {
             )
         );
     };
+
+    const generatePDF = (transactions: Transaksi[]) => {
+        const doc = new jsPDF();
+    
+        // Set up fonts and starting position
+        doc.setFontSize(16);
+        doc.text('Label Pengiriman', 20, 20);
+        let yOffset = 30; // Starting Y position for text
+    
+        transactions.forEach((transaction) => {
+            // Transaction ID and status
+            doc.setFontSize(12);
+            doc.text(`Transaction ID: ${transaction.transaksi_id}`, 20, yOffset);
+            doc.text(`Status: ${transaction.status}`, 20, yOffset + 10);
+            yOffset += 20;
+    
+            // Shipping Address
+            doc.setFontSize(14);
+            doc.text('Alamat Pengiriman:', 20, yOffset);
+            yOffset += 10;
+    
+            doc.setFontSize(12);
+            doc.text(`Penerima: ${transaction.alamat.nama_penerima}`, 20, yOffset);
+            yOffset += 10;
+            doc.text(`Telepon: ${transaction.alamat.no_telepon}`, 20, yOffset);
+            yOffset += 10;
+            doc.text(`${transaction.alamat.detail}, ${transaction.alamat.kelurahan}, ${transaction.alamat.kecamatan}`, 20, yOffset);
+            yOffset += 10;
+            doc.text(`${transaction.alamat.kabupaten}, ${transaction.alamat.provinsi}, ${transaction.alamat.kodepos}`, 20, yOffset);
+            yOffset += 15;
+    
+            // Order items
+            doc.setFontSize(14);
+            doc.text('Pesanan:', 20, yOffset);
+            yOffset += 10;
+    
+            transaction.transaksi_item.forEach((item) => {
+                doc.setFontSize(12);
+                doc.text(`Item: ${item.nama_produk} x${item.quantity}`, 20, yOffset);
+                doc.text(`Harga: Rp. ${item.harga.toLocaleString()}`, 150, yOffset);
+                yOffset += 10;
+            });
+    
+            // Tracking number (resi)
+            doc.setFontSize(14);
+            doc.text('Nomor Resi Pengiriman:', 20, yOffset);
+            yOffset += 10;
+            if (transaction.status === 'delivering') {
+                doc.text(`Resi: ${transaction.resi}`, 20, yOffset);
+            } else {
+                doc.text('Resi: Belum tersedia', 20, yOffset);
+            }
+            yOffset += 15;
+    
+            // Add space between each transaction
+            yOffset += 10;
+        });
+    
+        // Save the document
+        doc.save('shipping-label.pdf');
+    };
+    
 
     const fetchData = async () => {
         try {
@@ -69,7 +133,7 @@ export default function Pesanan() {
                     text: 'Berhasil memasukan resi pengiriman!',
                     icon: 'success',
                     confirmButtonText: 'OK',
-                  });
+                });
                 setTransactions((prevTransactions) =>
                     prevTransactions.map((transaction) =>
                         transaction.transaksi_id === transaksiId
@@ -228,6 +292,12 @@ export default function Pesanan() {
                                                     </button>
                                                 )}
                                             </div>
+                                            <button
+                                                onClick={() => generatePDF(transactions)}
+                                                className="bg-primary font-poppins rounded-lg px-4 py-2 text-white"
+                                            >
+                                                Download PDF
+                                            </button>
                                             <div className="flex justify-end gap-4">
                                                 <div>Total Pesanan:</div>
                                                 <div className="text-primary">Rp. {transaction.total_harga.toLocaleString()}</div>
