@@ -71,6 +71,17 @@ export default function Checkout() {
     });
   };
 
+  const handlePaymentBerhasil = async (id: number) => {
+    await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/bayar/berhasil/${id}`,
+      {
+        headers: {
+          'Authorization': `Bearer ${Cookies.get('token')}`,
+        },
+      }
+    );
+  }
+
   const handlePayment = async () => {
     try {
       // Calculate the total price
@@ -126,6 +137,7 @@ export default function Checkout() {
         // Initiate the payment process
         window.snap.pay(response.data.snaptoken, {
           onSuccess: (result) => {
+            handlePaymentBerhasil(response.data.transaksi_id)
             console.log('Payment successful:', result);
           },
           onPending: (result) => {
