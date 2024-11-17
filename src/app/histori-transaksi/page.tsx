@@ -93,18 +93,18 @@ export default function HistoriTransaksi() {
                 console.log(response)
 
                 window.snap.pay(response.data.snaptoken, {
-                    onSuccess: (result) => {
+                    onSuccess: () => {
                         handleBayarBerhasil(response.data.transaksi_id)
-                        console.log('Payment successful:', result);
+                        // console.log('Payment successful:', result);
                     },
-                    onPending: (result) => {
-                        console.log('Payment pending:', result);
+                    onPending: () => {
+                        // console.log('Payment pending:', result);
                     },
-                    onError: (error) => {
-                        console.error('Payment error:', error);
+                    onError: () => {
+                        // console.error('Payment error:', error);
                     },
                     onClose: () => {
-                        console.log('Payment popup closed');
+                        // console.log('Payment popup closed');
                     },
                 });
             }
@@ -115,8 +115,6 @@ export default function HistoriTransaksi() {
 
     const handleBayarBerhasil = async (transactionId: number) => {
         try {
-
-
             // Send the payment request
             const response = await axios.get(
                 `${process.env.NEXT_PUBLIC_API_URL}/bayar/berhasil/${transactionId}`,
@@ -127,7 +125,7 @@ export default function HistoriTransaksi() {
                 }
             );
 
-            if (response && response.data) {
+            if (response.status==200) {
                 Swal.fire({
                     title: 'Sukses!',
                     text: 'Pesanan telah dibayar.',

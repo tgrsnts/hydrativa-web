@@ -8,6 +8,7 @@ import type { Alamat } from "@/lib/interfaces/Alamat";
 import { FaLocationDot } from "react-icons/fa6";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
+import { useRouter } from "next/navigation";
 
 declare global {
   interface Window {
@@ -50,6 +51,7 @@ export default function Checkout() {
   const [ongkir, setOngkir] = useState<number>(12000);
   const [totalBayar, setTotalBayar] = useState<number>(0);
 
+  const router = useRouter()
 
   const closeModal = (modalId: string) => {
     const modal = document.getElementById(modalId) as HTMLDialogElement | null;
@@ -71,16 +73,30 @@ export default function Checkout() {
     });
   };
 
-  const handlePaymentBerhasil = async (id: number) => {
-    await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/bayar/berhasil/${id}`,
-      {
-        headers: {
-          'Authorization': `Bearer ${Cookies.get('token')}`,
-        },
-      }
-    );
-  }
+  const handleBayarBerhasil = async (transactionId: number) => {
+    try {
+        // Send the payment request
+        const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_API_URL}/bayar/berhasil/${transactionId}`,
+            {
+                headers: {
+                    'Authorization': `Bearer ${Cookies.get('token')}`,
+                },
+            }
+        );
+
+        if (response.status=200) {
+            Swal.fire({
+                title: 'Sukses!',
+                text: 'Pesanan telah dibayar.',
+                icon: 'success',
+                confirmButtonText: 'OK',
+            });
+        }
+    } catch (error) {
+        console.error("Checkout failed:", error);
+    }
+};
 
   const handlePayment = async () => {
     try {
@@ -136,18 +152,18 @@ export default function Checkout() {
       if (response && response.data) {
         // Initiate the payment process
         window.snap.pay(response.data.snaptoken, {
-          onSuccess: (result) => {
-            handlePaymentBerhasil(response.data.transaksi_id)
-            console.log('Payment successful:', result);
+          onSuccess: () => {
+            handleBayarBerhasil(response.data.transaksi_id)
+            router.push('/histori-transaksi');
           },
-          onPending: (result) => {
-            console.log('Payment pending:', result);
+          onPending: () => {
+            router.push('/histori-transaksi');
           },
-          onError: (error) => {
-            console.error('Payment error:', error);
+          onError: () => {
+            router.push('/histori-transaksi');
           },
           onClose: () => {
-            console.log('Payment popup closed');
+            router.push('/histori-transaksi');
           },
         });
       }
