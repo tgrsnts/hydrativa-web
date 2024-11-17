@@ -154,16 +154,16 @@ export default function Checkout() {
         window.snap.pay(response.data.snaptoken, {
           onSuccess: () => {
             handleBayarBerhasil(response.data.transaksi_id)
-            router.push('/histori-transaksi');
+            window.location.assign('/histori-transaksi');
           },
           onPending: () => {
-            router.push('/histori-transaksi');
+            window.location.assign('/histori-transaksi');
           },
           onError: () => {
-            router.push('/histori-transaksi');
+            window.location.assign('/histori-transaksi');
           },
           onClose: () => {
-            router.push('/histori-transaksi');
+            window.location.assign('/histori-transaksi');
           },
         });
       }

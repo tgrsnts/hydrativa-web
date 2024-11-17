@@ -87,7 +87,7 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
         sessionStorage.setItem('isBeliLangsung', "1");
 
         // Redirect to the checkout page
-        router.push('/checkout');
+        window.location.assign('/checkout');
 
         // // Show a success message
         // Swal.fire({

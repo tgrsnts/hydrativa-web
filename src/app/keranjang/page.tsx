@@ -32,7 +32,7 @@ export default function Keranjang() {
     const selectedItemsData = data.filter(item => selectedItems.includes(item.id));
     sessionStorage.setItem('selectedItems', JSON.stringify(selectedItemsData));
     sessionStorage.setItem('isBeliLangsung', '0');
-    router.push('/checkout');
+    window.location.assign('/checkout');
   };
 
   const handleDeleteKeranjang = async () => {
