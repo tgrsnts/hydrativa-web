@@ -39,7 +39,7 @@ export default function Home() {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/produk`);
         const result = await response.json();
-        setProducts(result.data || []);
+        setProducts((result.data || []).slice(0, 4));
       } catch (error) {
         handleAxiosError(error);
       } finally {
