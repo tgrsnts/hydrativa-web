@@ -8,7 +8,6 @@ import type { Alamat } from "@/lib/interfaces/Alamat";
 import { FaLocationDot } from "react-icons/fa6";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
-import { useRouter } from "next/navigation";
 
 declare global {
   interface Window {
@@ -51,8 +50,6 @@ export default function Checkout() {
   // const [ongkir, setOngkir] = useState<number>(12000);
   const ongkir = 0
   const [totalBayar, setTotalBayar] = useState<number>(0);
-
-  const router = useRouter()
 
   const closeModal = (modalId: string) => {
     const modal = document.getElementById(modalId) as HTMLDialogElement | null;
