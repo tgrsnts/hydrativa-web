@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import Cookies from "js-cookie";
 import { useState, useEffect } from "react";
-import { FaEye, FaEyeSlash, FaShoppingCart } from "react-icons/fa";
+import { FaBars, FaEye, FaEyeSlash, FaShoppingCart } from "react-icons/fa";
 import axios from "axios";
 import Swal from "sweetalert2";
 
@@ -106,18 +106,52 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="shadow fixed top-0 w-full z-10 h-20 bg-primary">
-        <div className="bg-primary relative flex justify-between lg:justify-start flex-col lg:flex-row lg:h-20 overflow-hidden px-4 py-4 md:px-36 md:mx-auto md:flex-wrap md:items-center">
+      {/* <header class="shadow fixed top-0 w-full z-10 h-20 bg-primary">
+        <div class="bg-primary relative flex justify-between lg:justify-start flex-col lg:flex-row lg:h-20 overflow-hidden px-4 py-4 md:px-36 md:mx-auto md:flex-wrap md:items-center">
+            <a href="index.html" class="flex items-center whitespace-nowrap text-2xl">
+                <img class="h-8" src="image/logo-hydratriva-putih.png" alt="">
+            </a>
+
+            <!-- Hamburger Menu for Mobile -->
+            <input type="checkbox" class="peer hidden" id="navbar-open">
+            <label class="absolute top-7 right-8 cursor-pointer md:hidden" for="navbar-open">
+                <span class="sr-only">Toggle Navigation</span>
+                <i class="fa-solid fa-bars h-6 w-6 text-white" aria-hidden="true"></i>
+            </label>
+
+            <!-- Navigation Menu -->
+            <nav aria-label="Header Navigation" class="peer-checked:max-h-60 max-h-0 w-full lg:w-auto flex-col flex lg:flex-row lg:max-h-full overflow-hidden transition-all duration-300 lg:items-center lg:ml-auto">
+                <ul class="flex flex-col lg:flex-row lg:space-y-0 space-y-4 items-center lg:ml-auto font-poppins font-semibold">
+                    <li class="text-white border-b-2 border-primary md:mr-12 hover:border-white">
+                        <a href="#hero">Home</a>
+                    </li>
+                    <li class="text-white border-b-2 border-primary md:mr-12 hover:border-white">
+                        <a href="#tentang">Tentang Kami</a>
+                    </li>
+                    <li class="text-white border-b-2 border-primary md:mr-12 hover:border-white">
+                        <a href="#our-products">Produk</a>
+                    </li>
+                    <button class="text-white border-2 md:mr-12 px-4 py-2 border-white cursor-pointer hover:bg-[#035700] hover:border-primary focus:bg-[#035700] focus:border-primary" onclick="modal_login.showModal()">Masuk</button>
+                    <li class="text-white border-2 border-white md:mr-12 px-4 py-2 hover:bg-[#035700] hover:border-primary focus:bg-[#035700] focus:border-primary">
+                        <a href="dashboard.html">Dashboard</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header> */}
+      <header className="shadow fixed top-0 w-full z-10 h-20 lg:h-20 bg-primary">
+        <div className="bg-primary relative flex justify-between lg:justify-start flex-col lg:flex-row lg:h-20 overflow-hidden px-4 py-6 md:px-36 md:mx-auto md:flex-wrap md:items-center">
           <Link href="/" className="flex items-center whitespace-nowrap text-2xl">
             <img className="h-8" src="/image/logo-hydrativa-putih.png" alt="Logo" />
           </Link>
           <input type="checkbox" className="peer hidden" id="navbar-open" />
           <label className="absolute top-7 right-8 cursor-pointer md:hidden" htmlFor="navbar-open">
             <span className="sr-only">Toggle Navigation</span>
+            <FaBars className="h-6 w-6 text-white" />
             <i className="fa-solid fa-bars h-6 w-6 text-white" />
           </label>
           <nav aria-label="Header Navigation" className="peer-checked:max-h-60 max-h-0 w-full lg:w-auto flex-col flex lg:flex-row lg:max-h-full overflow-hidden transition-all duration-300 lg:items-center lg:ml-auto">
-            <ul className="flex flex-col lg:flex-row lg:space-y-0 space-y-4 items-center lg:ml-auto font-poppins font-semibold">
+            <ul className="mt-8 flex flex-col lg:flex-row lg:space-y-0 space-y-4 items-center lg:ml-auto font-poppins font-semibold">
               <li className="text-white border-b-2 border-primary md:mr-12 hover:border-white">
                 <Link href="/#hero">Beranda</Link>
               </li>
@@ -134,39 +168,45 @@ export default function Navbar() {
               </li>
               {
                 token ? (
-                  <div className="hidden lg:flex items-center ml-auto gap-3 h-full">
-                    <Link
-                      href="/akun"
-                      className="flex items-center gap-2 hover:bg-background py-1 px-2 rounded-md"
-                    >
-                      { Cookies.get('gambar') ? (<img className="w-10 rounded-full" src={Cookies.get("gambar")} alt="User Avatar" />) : (null) }
-                      <p className="font-semibold text-nowrap text-white">{Cookies.get('name')}</p>
-                    </Link>
-                  </div>
+                  <li className="md:mr-12">
+                    <div className="flex items-center ml-auto gap-3 h-full">
+                      <Link
+                        href="/akun"
+                        className="flex items-center gap-2 hover:bg-background py-1 px-2 rounded-md"
+                      >
+                        {Cookies.get('gambar') ? (<img className="w-10 rounded-full" src={Cookies.get("gambar")} alt="User Avatar" />) : (null)}
+                        <p className="font-semibold text-nowrap text-white">{Cookies.get('name')}</p>
+                      </Link>
+                    </div>
+                  </li>
                 ) : (
                   <>
-                    <button
-                      className="text-white border-2 md:mr-12 px-4 py-2 rounded-md border-white cursor-pointer hover:bg-primary hover:border-primary"
-                      onClick={() => {
-                        const modal = document.getElementById('modal_login') as HTMLDialogElement | null;
-                        if (modal) {
-                          modal.showModal();
-                        }
-                      }}
-                    >
-                      Masuk
-                    </button>
-                    <button
-                      className="text-primary border-2 md:mr-12 px-4 py-2 rounded-md bg-white cursor-pointer hover:text-white hover:bg-primary hover:border-white"
-                      onClick={() => {
-                        const modal = document.getElementById('modal_register') as HTMLDialogElement | null;
-                        if (modal) {
-                          modal.showModal();
-                        }
-                      }}
-                    >
-                      Daftar
-                    </button>
+                    <li className="md:mr-12">
+                      <button
+                        className="text-white border-2 md:mr-12 px-4 py-2 rounded-md border-white cursor-pointer hover:bg-primary hover:border-primary"
+                        onClick={() => {
+                          const modal = document.getElementById('modal_login') as HTMLDialogElement | null;
+                          if (modal) {
+                            modal.showModal();
+                          }
+                        }}
+                      >
+                        Masuk
+                      </button>
+                    </li>
+                    <li className="md:mr-12">
+                      <button
+                        className="text-primary border-2 md:mr-12 px-4 py-2 rounded-md bg-white cursor-pointer hover:text-white hover:bg-primary hover:border-white"
+                        onClick={() => {
+                          const modal = document.getElementById('modal_register') as HTMLDialogElement | null;
+                          if (modal) {
+                            modal.showModal();
+                          }
+                        }}
+                      >
+                        Daftar
+                      </button>
+                    </li>
                   </>
                 )
               }
