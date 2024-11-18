@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend,
+    ChartData
+} from 'chart.js';
 import Transaksi from '@/lib/interfaces/Transaksi'; // Adjust import if necessary
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
@@ -10,7 +19,10 @@ interface TransactionChartProps {
 }
 
 const TransactionChart: React.FC<TransactionChartProps> = ({ transactions }) => {
-    const [chartData, setChartData] = useState<any>({});  // Ensure chartData is always an object
+    const [chartData, setChartData] = useState<ChartData<'bar'>>({
+        labels: [],
+        datasets: [],
+      });
 
     useEffect(() => {
         if (!Array.isArray(transactions) || transactions.length === 0) return; // Guard clause to handle empty or invalid data
@@ -62,7 +74,7 @@ const TransactionChart: React.FC<TransactionChartProps> = ({ transactions }) => 
     if (!chartData.datasets) return null;
 
     return (
-        <Bar data={chartData} options={{ responsive: true }} />        
+        <Bar data={chartData} options={{ responsive: true }} />
     );
 };
 

@@ -48,7 +48,7 @@ export default function Checkout() {
   const [selectedItems, setSelectedItems] = useState<Keranjang[]>([]);
   const [total, setTotal] = useState<number>(0);
   // const [ongkir, setOngkir] = useState<number>(12000);
-  const ongkir = 0
+  const ongkir: number = 0
   const [totalBayar, setTotalBayar] = useState<number>(0);
 
   const closeModal = (modalId: string) => {
@@ -97,9 +97,7 @@ export default function Checkout() {
 };
 
   const handlePayment = async () => {
-    try {
-      // Calculate the total price
-      const totalPrice = calculateTotalPrice();
+    try {    
       let requestData;
 
       // Check if it's a direct purchase
@@ -229,7 +227,7 @@ export default function Checkout() {
   useEffect(() => {
     const totalPrice = calculateTotalPrice();
     setTotal(totalPrice); // Update total when items change or the component mounts
-    setTotalBayar(total + ongkir)
+    setTotalBayar(totalPrice + ongkir)
 
     if (dataAlamat) {
       const primary = dataAlamat.find((alamat) => alamat.isPrimary === 1);

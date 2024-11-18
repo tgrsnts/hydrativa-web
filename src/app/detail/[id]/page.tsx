@@ -8,17 +8,12 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
 import { FaStar } from 'react-icons/fa';
-import { useRouter } from 'next/navigation';
-
-
 
 const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
     const { id } = use(params); // Unwrap params with React.use()
     const [product, setProduct] = useState<Produk | null>(null);
     const [quantity, setQuantity] = useState(1); // Initialize quantity to 1
     const ratings = [5, 4, 3, 2, 1];
-
-    const router = useRouter();
 
     const handleIncrement = () => {
         if (product && quantity < product.stok) {

@@ -11,8 +11,7 @@ import Swal from 'sweetalert2';
 
 export default function Page() {
     const [products, setProducts] = useState<Produk[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [csv, setCsv] = useState<File | null>(null);  // Allows both File and null
+    const [loading, setLoading] = useState(true);    
     const [imagePreview, setImagePreview] = useState<string | null>(null); // State for image preview
     const [selectedImage, setSelectedImage] = useState<File | null>(null); // State for selected image file
     const [newProduct, setNewProduct] = useState<Produk>({
@@ -37,15 +36,12 @@ export default function Page() {
         const csv = e.target.files ? e.target.files[0] : null;
     
         if (csv && csv.type !== 'text/csv') {
-            Swal.fire('Error', 'Only CSV files are allowed!', 'error');
-            setCsv(null);
+            Swal.fire('Error', 'Only CSV files are allowed!', 'error');  
             return;
         }
     
         // Only proceed if the file is valid
-        if (csv) {
-            setCsv(csv); // Set file to state
-    
+        if (csv) {            
             const result = await Swal.fire({
                 icon: 'question',
                 title: 'Apakah ingin impor csv?',
@@ -81,8 +77,7 @@ export default function Page() {
                             title: 'Berhasil impor!',
                             showConfirmButton: false,
                             timer: 1500,
-                        });
-                        setCsv(null);  // Clear the file state after success
+                        });                        
                         fetchProducts();
                     }
                 } catch (error) {
@@ -92,10 +87,8 @@ export default function Page() {
                         title: 'Gagal impor CSV!',
                         text: 'Terjadi kesalahan saat mengimpor CSV. Silakan coba lagi.',
                     });
-                    setCsv(null);  // Reset the file state after error
+                    
                 }
-            } else {
-                setCsv(null);  // Reset if user cancels
             }
         }
     };    
@@ -594,7 +587,7 @@ export default function Page() {
                                                     type="file"
                                                     id="gambar"
                                                     name="gambar"
-                                                    onChange={handleImageChange}
+                                                    onChange={handleEditImageChange}
                                                     className="hidden"  // Hide the default file input button
                                                 />
                                             </label>

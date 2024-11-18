@@ -1,7 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
-import Transaksi from '@/lib/interfaces/Transaksi'; // Sesuaikan import jika perlu
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  ChartData
+} from 'chart.js';
+import Transaksi from '@/lib/interfaces/Transaksi';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -10,7 +19,10 @@ interface TransactionChartProps {
 }
 
 const RevenueChart: React.FC<TransactionChartProps> = ({ transactions }) => {
-  const [chartData, setChartData] = useState<any>({});
+  const [chartData, setChartData] = useState<ChartData<'bar'>>({
+    labels: [],
+    datasets: [],
+  });
 
   useEffect(() => {
     if (!Array.isArray(transactions) || transactions.length === 0) return;

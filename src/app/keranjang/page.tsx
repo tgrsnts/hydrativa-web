@@ -5,7 +5,6 @@ import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import type { Keranjang } from "@/lib/interfaces/Keranjang";
 import Cookies from "js-cookie";
-import { useRouter } from "next/navigation";
 import Swal from 'sweetalert2';
 import Link from "next/link";
 
@@ -14,8 +13,6 @@ export default function Keranjang() {
   const [data, setData] = useState<Keranjang[]>([]); // Set initial state to empty array
   const [selectedItems, setSelectedItems] = useState<number[]>([]); // State for selected items
   const [loading, setLoading] = useState(true);
-
-  const router = useRouter()
 
   const handleBeliClick = () => {
     if (selectedItems.length === 0) {
