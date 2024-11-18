@@ -48,7 +48,8 @@ export default function Checkout() {
   const [selectedAlamatId, setSelectedAlamatId] = useState(0);
   const [selectedItems, setSelectedItems] = useState<Keranjang[]>([]);
   const [total, setTotal] = useState<number>(0);
-  const [ongkir, setOngkir] = useState<number>(12000);
+  // const [ongkir, setOngkir] = useState<number>(12000);
+  const ongkir = 0
   const [totalBayar, setTotalBayar] = useState<number>(0);
 
   const router = useRouter()
@@ -123,7 +124,7 @@ export default function Checkout() {
           requestData = {
             id_alamat: selectedAlamatId,
             id_item: [response.data.data.transaksi_item_id],
-            total: totalPrice,
+            total: totalBayar,
           };
         } else {
           console.warn("Failed to add product to cart:", response.data);
@@ -134,7 +135,7 @@ export default function Checkout() {
         requestData = {
           id_alamat: selectedAlamatId,
           id_item: selectedItems.map(item => item.id),
-          total: totalPrice,
+          total: totalBayar,
         };
       }
 
@@ -369,7 +370,7 @@ export default function Checkout() {
                     </div>
                     <div className="flex justify-between">
                       <div>Total Ongkos Kirim</div>
-                      <div>Rp {ongkir.toLocaleString()}</div> {/* Static shipping cost */}
+                      <div>{ ongkir === 0 ? ("Gratis") : ("Rp "+ ongkir.toLocaleString())}</div> {/* Static shipping cost */}
                     </div>
                     <div className="divider" />
                     <div className="flex justify-between">
