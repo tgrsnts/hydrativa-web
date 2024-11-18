@@ -180,13 +180,13 @@ export default function Home() {
 
 
         <section id="kontak" className="px-4 py-32 bg-gray-100">
-          <div className="flex flex-row gap-10 justify-center items-center rounded-lg w-full mx-auto font-poppins">
-            <div className="w-1/2 flex justify-center items-center">
+          <div className="flex flex-col lg:flex-row gap-10 justify-center items-center rounded-lg w-full mx-auto font-poppins">
+            <div className="lg:w-1/2 flex justify-center items-center">
               <div className="relative bg-primary rounded-full w-64 h-64">
                 <img className="absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2" src="/image/mockup.png" alt="" />
               </div>
             </div>
-            <div className="w-1/2">
+            <div className="lg:w-1/2">
               <p className="text-4xl font-semibold text-primary">Unduh Aplikasi Kami</p>
               <p className="text-primary">
                 HydraTiva adalah aplikasi yang dirancang untuk meningkatkan produktivitas dan efisiensi di sektor perkebunan tanaman Stevia. Dengan menggabungkan teknologi IoT (Internet of Things),  HydraTiva memungkinkan petani untuk memantau kondisi lahan secara real-time dan membantu penyaluran hasil perkebunan stevia.
