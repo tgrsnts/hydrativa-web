@@ -140,7 +140,7 @@ export default function Navbar() {
         </div>
     </header> */}
       <header className="shadow fixed top-0 w-full z-10 h-20 lg:h-20 bg-primary">
-        <div className="bg-primary relative flex justify-between lg:justify-start flex-col lg:flex-row lg:h-20 overflow-hidden px-4 py-6 md:px-36 md:mx-auto md:flex-wrap md:items-center">
+        <div className="bg-primary relative flex justify-between lg:justify-start flex-col lg:flex-row lg:h-20 overflow-hidden px-4 py-6 lg:py-4 md:px-36 md:mx-auto md:flex-wrap md:items-center">
           <Link href="/" className="flex items-center whitespace-nowrap text-2xl">
             <img className="h-8" src="/image/logo-hydrativa-putih.png" alt="Logo" />
           </Link>
@@ -150,8 +150,8 @@ export default function Navbar() {
             <FaBars className="h-6 w-6 text-white" />
             <i className="fa-solid fa-bars h-6 w-6 text-white" />
           </label>
-          <nav aria-label="Header Navigation" className="peer-checked:max-h-60 max-h-0 w-full lg:w-auto flex-col flex lg:flex-row lg:max-h-full overflow-hidden transition-all duration-300 lg:items-center lg:ml-auto">
-            <ul className="mt-8 flex flex-col lg:flex-row lg:space-y-0 space-y-4 items-center lg:ml-auto font-poppins font-semibold">
+          <nav aria-label="Header Navigation" className="peer-checked:max-h-72 max-h-0 w-full lg:w-auto flex-col flex lg:flex-row lg:max-h-full overflow-hidden transition-all duration-300 lg:items-center lg:ml-auto">
+            <ul className="mt-8 lg:mt-0 flex flex-col lg:flex-row lg:space-y-0 space-y-4 items-center lg:ml-auto font-poppins font-semibold">
               <li className="text-white border-b-2 border-primary md:mr-12 hover:border-white">
                 <Link href="/#hero">Beranda</Link>
               </li>
@@ -167,8 +167,7 @@ export default function Navbar() {
                 </Link>
               </li>
               {
-                token ? (
-                  <li className="md:mr-12">
+                token ? (                
                     <div className="flex items-center ml-auto gap-3 h-full">
                       <Link
                         href="/akun"
@@ -177,36 +176,31 @@ export default function Navbar() {
                         {Cookies.get('gambar') ? (<img className="w-10 rounded-full" src={Cookies.get("gambar")} alt="User Avatar" />) : (null)}
                         <p className="font-semibold text-nowrap text-white">{Cookies.get('name')}</p>
                       </Link>
-                    </div>
-                  </li>
+                    </div>                  
                 ) : (
                   <>
-                    <li className="md:mr-12">
-                      <button
-                        className="text-white border-2 md:mr-12 px-4 py-2 rounded-md border-white cursor-pointer hover:bg-primary hover:border-primary"
-                        onClick={() => {
-                          const modal = document.getElementById('modal_login') as HTMLDialogElement | null;
-                          if (modal) {
-                            modal.showModal();
-                          }
-                        }}
-                      >
-                        Masuk
-                      </button>
-                    </li>
-                    <li className="md:mr-12">
-                      <button
-                        className="text-primary border-2 md:mr-12 px-4 py-2 rounded-md bg-white cursor-pointer hover:text-white hover:bg-primary hover:border-white"
-                        onClick={() => {
-                          const modal = document.getElementById('modal_register') as HTMLDialogElement | null;
-                          if (modal) {
-                            modal.showModal();
-                          }
-                        }}
-                      >
-                        Daftar
-                      </button>
-                    </li>
+                    <button
+                      className="text-white border-2 md:mr-12 px-4 py-2 rounded-md border-white cursor-pointer hover:bg-primary hover:border-primary"
+                      onClick={() => {
+                        const modal = document.getElementById('modal_login') as HTMLDialogElement | null;
+                        if (modal) {
+                          modal.showModal();
+                        }
+                      }}
+                    >
+                      Masuk
+                    </button>
+                    <button
+                      className="text-primary border-2 md:mr-12 px-4 py-2 rounded-md bg-white cursor-pointer hover:text-white hover:bg-primary hover:border-white"
+                      onClick={() => {
+                        const modal = document.getElementById('modal_register') as HTMLDialogElement | null;
+                        if (modal) {
+                          modal.showModal();
+                        }
+                      }}
+                    >
+                      Daftar
+                    </button>
                   </>
                 )
               }
