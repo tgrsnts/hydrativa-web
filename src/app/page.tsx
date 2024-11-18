@@ -170,7 +170,7 @@ export default function Home() {
             <div className="flex justify-end mt-4">
               <Link
                 href="/dashboard"
-                className="font-poppins text-primary border-2 px-4 py-2 rounded-md bg-white cursor-pointer hover:text-white hover:bg-primary hover:border-white"
+                className="font-poppins text-primary px-4 py-2 rounded-md bg-white border-2 border-primary cursor-pointer hover:text-white hover:bg-primary hover:border-white"
               >
                 Lihat Selengkapnya
               </Link>
