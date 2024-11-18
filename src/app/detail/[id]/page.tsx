@@ -226,9 +226,9 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                             id="my_modal"
                             className="modal modal-bottom mx-auto min-h-full max-w-screen-sm lg:hidden"
                         >
-                            <div className="font-poppins modal-box bg-white text-black px-4 pt-2 pb-8">
-                                <div className="flex flex-wrap">
-                                    <img src={`/storage/${product.gambar}`} className="h-45 rounded-lg" alt={product.nama_produk} />
+                            <div className="font-poppins modal-box bg-white text-black px-4 pt-4 pb-8">
+                                <div className="flex flex-wrap justify-between">
+                                    <img src={product.gambar} className="w-1/2 rounded-lg" alt={product.nama_produk} />
                                     <div className="flex flex-col w-1/2 pl-4">
                                         <div className="flex justify-end">
                                             <form method="dialog">
@@ -246,14 +246,14 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                                     <div className="text-md font-semibold">Atur jumlah</div>
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center justify-center">
-                                            <button className="text-primary text-sm px-3 py-1 border-2 border-primary rounded-l-lg hover:text-white hover:bg-primary w-full">
-                                                <i className="fa-solid fa-minus" />
+                                            <button onClick={handleDecrement} className="text-primary text-sm px-3 py-1 border-2 border-primary rounded-l-lg hover:text-white hover:bg-primary w-full">
+                                                -
                                             </button>
                                             <div className="px-4 py-1 border-y-2 border-primary">
-                                                <p className="text-sm text-center">1</p>
+                                                <p className="text-sm text-center">{quantity}</p>
                                             </div>
-                                            <button className="text-primary text-sm px-3 py-1 border-2 border-primary rounded-r-lg hover:text-white hover:bg-primary w-full">
-                                                <i className="fa-solid fa-plus" />
+                                            <button onClick={handleIncrement} className="text-primary text-sm px-3 py-1 border-2 border-primary rounded-r-lg hover:text-white hover:bg-primary w-full">
+                                                +
                                             </button>
                                         </div>
                                     </div>
@@ -266,18 +266,18 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                                 </div>
                                 <div className="relative h-8" />
                                 <div className="absolute bottom-0 left-0 p-2 w-full flex flex-row lg:flex-col gap-2 items-center justify-center">
-                                    <a
-                                        href="keranjang.html"
+                                    <button
+                                        onClick={handleAddToCart}
                                         className="bg-primary font-poppins font-semibold rounded-lg px-4 py-2 border-2 border-primary text-white text-center w-full hover:bg-white hover:text-primary"
                                     >
                                         + Keranjang
-                                    </a>
-                                    <a
-                                        href="checkout.html"
+                                    </button>
+                                    <button
+                                        onClick={handleBeliClick}
                                         className="font-poppins font-semibold rounded-lg px-4 py-2 border-2 text-center w-full bg-white text-primary border-primary hover:bg-primary hover:text-white hover:border-white"
                                     >
                                         Beli
-                                    </a>
+                                    </button>
                                 </div>
                             </div>
                         </dialog>
