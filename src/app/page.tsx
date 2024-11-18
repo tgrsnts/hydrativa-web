@@ -179,12 +179,13 @@ export default function Home() {
         </section>
 
 
-        <section id="kontak" className="px-4 py-20 bg-gray-100">
+        <section id="kontak" className="px-4 py-32 bg-gray-100">
           <div className="flex flex-row gap-10 justify-center items-center rounded-lg w-full mx-auto font-poppins">
             <div className="w-1/2 flex justify-center items-center">
-              <div className="bg-primary rounded-full w-60 h-60">
-                <img src="/image/mockup.png" alt="" />
-              </div></div>
+              <div className="relative bg-primary rounded-full w-64 h-64">
+                <img className="absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2" src="/image/mockup.png" alt="" />
+              </div>
+            </div>
             <div className="w-1/2">
               <p className="text-4xl font-semibold text-primary">Unduh Aplikasi Kami</p>
               <p className="text-primary">
