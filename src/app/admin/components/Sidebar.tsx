@@ -86,7 +86,7 @@ export default function Sidebar() {
                 <div className="grid mr-4 place-items-center">
                     <i className="fa-solid fa-bag-shopping" />
                 </div>
-                Dashboard
+                Beranda
             </Link>
             <Link
                 href="/admin/produk"

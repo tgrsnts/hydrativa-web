@@ -87,7 +87,7 @@ export default function Pesanan() {
                     >
                         <div className="flex flex-col gap-2 rounded-lg bg-white w-full py-4 shadow-md">
                             <div className="px-4 py-2">
-                                <p className='font-semibold'>Dashboard</p>
+                                <p className='font-semibold'>Beranda</p>
                             </div>
                         </div>
 
