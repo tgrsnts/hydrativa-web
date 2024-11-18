@@ -12,6 +12,7 @@ import Swal from 'sweetalert2';
 export default function Page() {
     const [products, setProducts] = useState<Produk[]>([]);
     const [loading, setLoading] = useState(true);
+    const [csv, setCsv] = useState<File | null>(null);  // Allows both File and null
     const [imagePreview, setImagePreview] = useState<string | null>(null); // State for image preview
     const [selectedImage, setSelectedImage] = useState<File | null>(null); // State for selected image file
     const [newProduct, setNewProduct] = useState<Produk>({
@@ -31,6 +32,73 @@ export default function Page() {
         stok: 0,
         gambar: '',
     });
+
+    const handleCsvChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const csv = e.target.files ? e.target.files[0] : null;
+    
+        if (csv && csv.type !== 'text/csv') {
+            Swal.fire('Error', 'Only CSV files are allowed!', 'error');
+            setCsv(null);
+            return;
+        }
+    
+        // Only proceed if the file is valid
+        if (csv) {
+            setCsv(csv); // Set file to state
+    
+            const result = await Swal.fire({
+                icon: 'question',
+                title: 'Apakah ingin impor csv?',
+                showCancelButton: true,
+                confirmButtonText: 'Ya',
+                cancelButtonText: 'Tidak',
+                customClass: {
+                    container: 'font-poppins',
+                    confirmButton: 'bg-primary hover:bg-background text-white px-4 rounded-lg font-poppins',
+                    cancelButton: 'bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded-lg font-poppins',
+                },
+            });
+    
+            if (result.isConfirmed) {
+                const formData = new FormData();
+                formData.append('csv', csv);  // Append the file directly
+    
+                try {
+                    const response = await axios.post(
+                        `${process.env.NEXT_PUBLIC_API_URL}/produk`,
+                        formData,
+                        {
+                            headers: {
+                                'Content-Type': 'multipart/form-data',
+                                'Authorization': `Bearer ${Cookies.get('token')}`,
+                            },
+                        }
+                    );
+    
+                    if (response.status === 200) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil impor!',
+                            showConfirmButton: false,
+                            timer: 1500,
+                        });
+                        setCsv(null);  // Clear the file state after success
+                        fetchProducts();
+                    }
+                } catch (error) {
+                    console.error('CSV Import Error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal impor CSV!',
+                        text: 'Terjadi kesalahan saat mengimpor CSV. Silakan coba lagi.',
+                    });
+                    setCsv(null);  // Reset the file state after error
+                }
+            } else {
+                setCsv(null);  // Reset if user cancels
+            }
+        }
+    };    
 
     const fetchProducts = async () => {
         try {
@@ -300,18 +368,33 @@ export default function Page() {
                         <div className="flex flex-col gap-4 bg-white p-4 w-full rounded-lg shadow-md">
                             <div className="flex justify-between items-center">
                                 <div className="font-semibold">Data Produk</div>
-                                <button
-                                    type="button"
-                                    className="bg-primary hover:bg-background text-white px-4 py-2 rounded-md"
-                                    onClick={() => {
-                                        const modal = document.getElementById('modalTambahData') as HTMLDialogElement | null;
-                                        if (modal) {
-                                            modal.showModal();
-                                        }
-                                    }}
-                                >
-                                    Tambah Data
-                                </button>
+                                <div className="flex gap-2">
+                                    <label
+                                        htmlFor="csv_file"
+                                        className="flex items-center justify-center rounded-md bg-primary cursor-pointer py-2 px-4 text-white hover:bg-background focus:outline-none focus:ring focus:ring-primary"
+                                    >
+                                        Import
+                                        <input
+                                            type="file"
+                                            id="csv_file"
+                                            name="csv_file"
+                                            onChange={handleCsvChange}
+                                            className="hidden"  // Hide the default file input button
+                                        />
+                                    </label>
+                                    <button
+                                        type="button"
+                                        className="bg-primary hover:bg-background text-white px-4 py-2 rounded-md"
+                                        onClick={() => {
+                                            const modal = document.getElementById('modalTambahData') as HTMLDialogElement | null;
+                                            if (modal) {
+                                                modal.showModal();
+                                            }
+                                        }}
+                                    >
+                                        Tambah Data
+                                    </button>
+                                </div>
                             </div>
                             {/* Tambah Data Modal */}
                             <dialog id="modalTambahData" className="modal">
@@ -380,7 +463,7 @@ export default function Page() {
                                         </div>
 
                                         {/* Input File Gambar */}
-                                        <div className="flex flex-col">
+                                        <div className="flex flex-col gap-2">
                                             <label htmlFor="gambar">Gambar</label>
                                             {/* Preview Gambar */}
                                             {imagePreview && (
@@ -394,7 +477,7 @@ export default function Page() {
                                             )}
                                             <label
                                                 htmlFor="gambar"
-                                                className="w-full flex items-center justify-center rounded-md bg-primary cursor-pointer py-2 px-4 text-white hover:bg-background focus:outline-none focus:ring focus:ring-primary"
+                                                className="w-32 flex items-center justify-center rounded-md bg-primary cursor-pointer py-2 px-4 text-white hover:bg-background focus:outline-none focus:ring focus:ring-primary"
                                             >
                                                 Pilih Foto
                                                 <input
@@ -490,7 +573,7 @@ export default function Page() {
                                         </div>
 
                                         {/* Input File Gambar */}
-                                        <div className="flex flex-col">
+                                        <div className="flex flex-col gap-2">
                                             <label htmlFor="gambar">Gambar</label>
                                             {/* Preview Gambar */}
                                             {imagePreview && (
@@ -504,7 +587,7 @@ export default function Page() {
                                             )}
                                             <label
                                                 htmlFor="gambar"
-                                                className="w-full flex items-center justify-center rounded-md bg-primary cursor-pointer py-2 px-4 text-white hover:bg-background focus:outline-none focus:ring focus:ring-primary"
+                                                className="w-32 flex items-center justify-center rounded-md bg-primary cursor-pointer py-2 px-4 text-white hover:bg-background focus:outline-none focus:ring focus:ring-primary"
                                             >
                                                 Ubah Foto
                                                 <input
