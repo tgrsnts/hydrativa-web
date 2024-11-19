@@ -261,7 +261,7 @@ export default function Navbar() {
                   />
                 </div>
                 <Link
-                  href=""
+                  href="/forgot-password"
                   className="mt-1 text-sm text-primary hover:text-additional2 hover:underline hover:underline-offset-4"
                 >
                   Lupa password?
