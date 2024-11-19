@@ -30,6 +30,25 @@ export default function Akun() {
         }
     };
 
+    const handleEmailVerification = async () => {
+        try {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/verify-email`, {
+                headers: {
+                    'Authorization': `Bearer ${Cookies.get('token')}`,
+                }
+            });
+            Swal.fire({
+                icon: 'success',
+                title: 'Verifikasi email berhasil dikirim!',
+                text: response.data.message,
+                showConfirmButton: false,
+                timer: 1500,
+            });
+        } catch (error) {
+            handleAxiosError(error);
+        }
+    };
+
     const updateUserPhoto = async (file: File) => {
         const formData = new FormData();
         formData.append('gambar', file);
@@ -196,15 +215,42 @@ export default function Akun() {
                                                     <td className="pr-4">
                                                         <label htmlFor="email" className="block text-left">Email</label>
                                                     </td>
-                                                    <td className="pl-4 py-1">
+                                                    {/* <td className="pl-4 py-1 flex items-center gap-4">
                                                         <input
                                                             disabled
-                                                            className="w-full p-2 border-2 rounded-lg"
+                                                            className="w-2/3 p-2 border-2 rounded-lg"
                                                             type="email"
                                                             name="email"
                                                             value={userData?.email || ''}
                                                             onChange={handleInputChange}
                                                         />
+                                                        <button
+                                                            type="button"
+                                                            className="w-1/3 bg-primary hover:bg-background text-white px-3 py-2 rounded-md"
+                                                            onClick={handleEmailVerification}
+                                                        >
+                                                            Verifikasi Email
+                                                        </button>
+                                                    </td> */}
+                                                    <td className="pl-4 py-1">
+                                                        <div className="relative">
+                                                            <input
+                                                                disabled
+                                                                className="w-full p-2 border-2 rounded-lg pr-24"
+                                                                type="email"
+                                                                name="email"
+                                                                value={userData?.email || ''}
+                                                                onChange={handleInputChange}
+                                                            />
+                                                            <button
+                                                                type="button"
+                                                                className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-primary text-white text-sm px-3 py-1 rounded-md hover:bg-background"
+                                                                onClick={handleEmailVerification}
+                                                                disabled={userData?.verification_email}
+                                                            >
+                                                                {userData?.verification_email ? ('Sudah Terverifikasi') : ('Verifikasi Email')}
+                                                            </button>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                                 <tr>
