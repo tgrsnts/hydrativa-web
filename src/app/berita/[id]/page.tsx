@@ -3,8 +3,6 @@
 import { use, useState, useEffect } from 'react';
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
-
-import { FaStar } from 'react-icons/fa';
 import { Materi } from '@/lib/interfaces/Materi';
 import Swal from 'sweetalert2';
 import axios from 'axios';
