@@ -156,6 +156,9 @@ export default function Navbar() {
                 <Link href="/#hero">Beranda</Link>
               </li>
               <li className="text-white border-b-2 border-primary md:mr-12 hover:border-white">
+                <Link href="/#news">Berita</Link>
+              </li>
+              <li className="text-white border-b-2 border-primary md:mr-12 hover:border-white">
                 <Link href="/#our-products">Produk</Link>
               </li>
               <li className="md:mr-12">
