@@ -9,10 +9,12 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { Materi } from "@/lib/interfaces/Materi";
 
 
 export default function Home() {
   const [products, setProducts] = useState<Produk[]>([]);
+  const [materis, setMateris] = useState<Materi[]>([]);
   const [loading, setLoading] = useState(true);
 
   const handleAxiosError = (error: unknown) => {
@@ -47,7 +49,20 @@ export default function Home() {
       }
     };
 
+    const fetchBerita = async () => {
+      try {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/materi`);
+          const result = await response.json();
+          setMateris((result || []).slice(0, 4));
+      } catch (error) {
+          handleAxiosError(error);
+      } finally {
+          setLoading(false);
+      }
+  };
+
     fetchProducts();
+    fetchBerita();
   }, []);
 
   return (
@@ -72,26 +87,70 @@ export default function Home() {
         </section>
 
         {/* Know About Us */}
-        <section className="px-4 lg:px-40 py-20 bg-gray-100">
-          <div className="container mx-auto flex flex-col lg:flex-row gap-5 items-start justify-center">
-            <img className="w-full lg:w-72" src="image/tentang.png" alt="" />
-            <div>
-              <h2 className="text-xl lg:text-5xl font-poppins font-bold mb-2 lg:mb-6">
-                HydraTiva.
-              </h2>
-              <p className="text-sm lg:text-lg text-justify font-poppins text-gray-700">
-                HydraTiva adalah aplikasi yang dirancang untuk meningkatkan
-                produktivitas dan efisiensi di sektor perkebunan tanaman Stevia.
-                Dengan menggabungkan teknologi IoT (Internet of Things) dan analisis
-                data yang canggih, HydraTiva memungkinkan petani untuk memantau
-                kondisi lahan secara real-time, mengatur penyiraman secara otomatis
-                maupun manual, dan membantu penyaluran hasil perkebunan stevia.
-                Aplikasi ini memberikan informasi kadar tanah kebun stevia, histori
-                penyiraman lahan stevia, dan rekomendasi tindakan berdasarkan data
-                yang terkumpul dari sensor yang tersebar di seluruh lahan stevia.
-              </p>
+        <section id="news" className="px-4 lg:px-40 py-20 bg-gray-100">
+          <div className="container mx-auto text-center">
+            <h2 className="text-xl lg:text-5xl text-center font-poppins font-bold mb-8 text-primary">
+              Berita
+            </h2>
+            <div className="grid grid-cols-2 lg:grid-cols-2 gap-4">
+            {loading ? (
+                // Show skeleton loader when loading is true
+                Array(2).fill(0).map((_, index) => (
+                  <div
+                    // Adjusted path as needed
+                    className="hover:cursor-pointer flex flex-col w-full lg:w-full bg-white rounded-lg shadow-md transition-transform duration-300 transform hover:bg-gray-100 hover:scale-105"
+                    key={`skeleton-${index}`} // Unique key for each skeleton
+                  >
+
+                    <div className="skeleton h-72 mb-2 w-full rounded-t-lg rounded-b-none"></div>
+                    <div className="h-20 flex flex-col items-start p-4 pt-0 gap-2">
+                      <div className="skeleton h-4 w-28"></div>
+                      <div className="skeleton h-4 w-20"></div>
+                      <div className="skeleton h-4 w-16"></div>
+                    </div>
+
+                  </div>
+                ))
+              ) : (
+                // Once loading is false, render the actual products
+                Array.isArray(materis) && materis.map((materi) => (
+                  <Link
+                    href={`/berita/${materi.id}`} // Adjusted path with dynamic product ID
+                    className="flex flex-col w-full lg:w-full bg-white rounded-lg shadow-md transition-transform duration-300 transform hover:bg-gray-100 hover:scale-105"
+                    key={materi.id} // Ensure unique keys
+                  >
+                    <img
+                      src={materi.gambar} // Path gambar sesuai dengan data produk
+                      alt={materi.judul} // Menggunakan nama produk sebagai alt
+                      className="h-72 object-cover mb-2 rounded-t-lg"
+                    />
+                    <div className="h-20 flex flex-col items-start p-4 pt-0 gap-2">
+                      <div className="h-4">
+                        <p className="text-sm lg:text-lg font-poppins font-semibold">
+                          {materi.judul} {/* Menggunakan properti yang benar */}
+                        </p>
+                      </div>
+                      <div className="h-4">
+                        <div className="font-poppins text-gray-700 text-sm">Sumber: {materi.sumber}</div>
+                      </div>
+                      <div className="h-4">
+                        <div className="font-poppins text-gray-600 text-sm">{materi.waktu}</div>
+                      </div>
+                    </div>
+                  </Link>
+                ))
+              )}
+
             </div>
           </div>
+          <div className="flex justify-end mt-4">
+              <Link
+                href="/dashboard"
+                className="font-poppins text-white px-4 py-2 rounded-md bg-primary border-2 border-white cursor-pointer hover:text-primary hover:bg-white hover:border-primary"
+              >
+                Lihat Selengkapnya
+              </Link>
+            </div>
         </section>
 
 
