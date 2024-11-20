@@ -664,7 +664,7 @@ export default function Page() {
                                                                 const modal = document.getElementById('modalEditData') as HTMLDialogElement | null;
                                                                 modal?.showModal();
                                                             }}
-                                                            className="w-8 h-8 rounded-md text-white place-items-center bg-green-600 hover:bg-green-700"
+                                                            className="flex justify-center w-8 h-8 rounded-md text-white place-items-center bg-green-600 hover:bg-green-700"
                                                         >
                                                             <FaPencil />
                                                         </button>
@@ -676,7 +676,7 @@ export default function Page() {
                                                                 // modal?.showModal();
                                                                 deleteProduct(product.id)
                                                             }}
-                                                            className="w-8 h-8 rounded-md text-white place-items-center bg-red-600 hover:bg-red-700"
+                                                            className="flex justify-center w-8 h-8 rounded-md text-white place-items-center bg-red-600 hover:bg-red-700"
                                                         >
                                                             <FaTrash />
                                                         </button>
