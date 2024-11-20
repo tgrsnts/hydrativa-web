@@ -37,7 +37,7 @@ export default function ResetPassword() {
 
             setSuccess('Password berhasil diperbarui!');
             setError('');
-        } catch (error) {
+        } catch {
             setError('Gagal memperbarui password. Pastikan token masih berlaku.');
             setSuccess('');
         }
