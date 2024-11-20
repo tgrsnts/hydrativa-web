@@ -89,6 +89,15 @@ export default function Sidebar() {
                 Beranda
             </Link>
             <Link
+                href="/admin/materi"
+                className={`${pathname == '/admin/materi' ? 'text-primary bg-white' : 'text-white'} font-poppins font-semibold flex items-center w-full py-4 pl-16 leading-tight transition-all rounded-r-lg outline-none text-start hover:bg-white hover:text-primary focus:bg-white focus:text-primary active:bg-white active:text-primary`}
+            >
+                <div className="grid mr-4 place-items-center">
+                    <i className="fa-solid fa-bag-shopping" />
+                </div>
+                Materi
+            </Link>
+            <Link
                 href="/admin/produk"
                 className={`${pathname == '/admin/produk' ? 'text-primary bg-white' : 'text-white'} font-poppins font-semibold flex items-center w-full py-4 pl-16 leading-tight transition-all rounded-r-lg outline-none text-start hover:bg-white hover:text-primary focus:bg-white focus:text-primary active:bg-white active:text-primary`}
             >
