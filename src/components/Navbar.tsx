@@ -384,6 +384,21 @@ export default function Navbar() {
                 </button>
               </div>
             </form>
+            <div className="mt-2 text-center">
+              Sudah punya akun?{" "}
+              <button
+                className="text-primary hover:text-additional2 hover:underline hover:underline-offset-4"
+                onClick={() => {
+                  closeModal('modal_register');
+                  const modal = document.getElementById('modal_login') as HTMLDialogElement | null;
+                  if (modal) {
+                    modal.showModal();
+                  }
+                }}
+              >
+                Login!
+              </button>
+            </div>
 
           </div>
         </div>
