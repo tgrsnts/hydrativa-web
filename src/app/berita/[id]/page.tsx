@@ -56,12 +56,12 @@ const Berita = ({ params }: { params: Promise<{ id: string }> }) => {
                 <main>
                     <section id="detail" className="py-16 lg:px-36 bg-slate-50 mt-16 mx-auto">
                         <div className="flex flex-wrap justify-center">
-                            <div className="flex w-full lg:w-2/3 p-2">
+                            <div className="flex w-full p-2">
                                 <div className="flex flex-col lg:flex-row w-full bg-white rounded-lg p-4 shadow-md">
-                                    <div className="flex w-full lg:w-1/3 rounded-lg justify-center">
+                                    <div className="flex rounded-lg justify-start">
                                         <div className="skeleton w-64 h-64"></div>
                                     </div>
-                                    <div className="flex flex-col w-full lg:w-2/3 px-0 lg:px-4 mt-4 lg:mt-0 gap-2 rounded-lg transition duration-300 font-poppins">
+                                    <div className="flex flex-col w-full px-0 lg:px-4 mt-4 lg:mt-0 gap-2 rounded-lg transition duration-300 font-poppins">
                                         <div className="flex flex-col">
                                             <div className="flex flex-col items-start pt-2 gap-2">
                                                 <div className='skeleton h-6 w-32'></div>

@@ -59,7 +59,7 @@ export default function Home() {
       } finally {
           setLoading(false);
       }
-  };
+    };
 
     fetchProducts();
     fetchBerita();
@@ -145,7 +145,7 @@ export default function Home() {
           </div>
           <div className="flex justify-end mt-4">
               <Link
-                href="/dashboard"
+                href="/berita"
                 className="font-poppins text-white px-4 py-2 rounded-md bg-primary border-2 border-white cursor-pointer hover:text-primary hover:bg-white hover:border-primary"
               >
                 Lihat Selengkapnya
