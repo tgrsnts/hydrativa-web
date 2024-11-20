@@ -10,6 +10,7 @@ import Swal from 'sweetalert2';
 import { FaStar } from 'react-icons/fa';
 
 const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
+    const [loading, setLoading] = useState(true);
     const { id } = use(params); // Unwrap params with React.use()
     const [product, setProduct] = useState<Produk | null>(null);
     const [quantity, setQuantity] = useState(1); // Initialize quantity to 1
@@ -103,6 +104,8 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
             } catch (error) {
                 console.error("Failed to fetch product:", error);
                 setProduct(null); // Set to null on error
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -111,8 +114,185 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
     return (
         <>
             <Navbar />
-            {product ? (
+            {loading ? (
 
+                <main>
+                <section id="detail" className="py-16 lg:px-36 bg-slate-50 mt-16 mx-auto">
+                    <div className="flex flex-wrap justify-center">
+                        <div className="flex w-full lg:w-2/3 p-2">
+                            <div className="flex flex-col lg:flex-row w-full bg-white rounded-lg p-4 shadow-md">
+                                <div className="flex w-full lg:w-1/3 rounded-lg justify-center">
+                                    <div className="skeleton w-64 h-64"></div>
+                                </div>
+                                <div className="flex flex-col w-full lg:w-2/3 px-0 lg:px-4 mt-4 lg:mt-0 gap-2 rounded-lg transition duration-300 font-poppins">
+                                    <div className="flex flex-col">
+                                        <div className="flex flex-col items-start pt-2 gap-2">
+                                            <div className='skeleton h-6 w-32'></div>
+                                            <div className='skeleton h-10 w-40'></div>
+                                            <div className="skeleton h-4 w-44"></div>
+                                        </div>
+                                        
+                                    </div>
+                                    <div className='pt-2'></div>
+                                    <div className='skeleton h-4 w-full'></div>
+                                    <div className='skeleton h-4 w-full'></div>
+                                    <div className='skeleton h-4 w-24'></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex w-full lg:w-1/3 rounded-lg p-2">
+                            <div className="flex-col w-full gap-2 rounded-lg p-4 font-poppins bg-white hidden lg:flex shadow-md">
+                                {/* Large Screen */}
+                                <div>
+                                    <div className="text-2xl font-bold">Atur jumlah</div>
+                                    <div className="mt-2 flex items-center justify-between">
+                                        <div className="flex items-center justify-center">
+                                            <button
+                                                onClick={handleDecrement}
+                                                className="text-primary px-3 py-2 border-2 border-primary rounded-l-lg hover:text-white hover:bg-primary w-full"
+                                            >
+                                                -
+                                            </button>
+                                            <div className="px-4 py-2 border-y-2 border-primary">
+                                                <p className="text-center">{quantity}</p> {/* Display the dynamic quantity */}
+                                            </div>
+                                            <button
+                                                onClick={handleIncrement}
+                                                className="text-primary px-3 py-2 border-2 border-primary rounded-r-lg hover:text-white hover:bg-primary w-full"
+                                            >
+                                                +
+                                            </button>
+                                        </div>
+                                        <div className='skeleton h-4 w-28'></div>
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                        <p className="font-semibold">Subtotal</p>
+                                        <div className='skeleton h-6 w-32'></div>
+                                    </div>
+                                </div>
+                                <div className="pt-2">
+                                    <div className="hidden lg:flex flex-row lg:flex-col gap-3 items-center justify-center">
+                                        <button
+                                            onClick={handleAddToCart}
+                                            className="bg-primary font-poppins font-semibold rounded-lg px-4 py-2 border-2 border-primary text-white text-center w-full hover:bg-white hover:text-primary"
+                                        >
+                                            + Keranjang
+                                        </button>
+                                        <button
+                                            onClick={handleBeliClick}
+                                            className="font-poppins font-semibold rounded-lg px-4 py-2 border-2 text-center w-full bg-white text-primary border-primary hover:bg-primary hover:text-white hover:border-white"
+                                        >
+                                            Beli
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="lg:hidden drop-shadow-2xl fixed bottom-0 lg:static w-full bg-white shadow-md p-2 flex flex-row lg:flex-col gap-2 items-center justify-center">
+                        <button
+                            className="bg-primary font-poppins font-semibold rounded-lg px-4 py-2 border-2 border-primary text-white text-center w-full hover:bg-white hover:text-primary"
+                        >
+                            + Keranjang
+                        </button>
+                        <button
+                            className="font-poppins font-semibold rounded-lg px-4 py-2 border-2 text-center w-full bg-white text-primary border-primary hover:bg-primary hover:text-white hover:border-white"
+                        >
+                            Beli
+                        </button>
+                    </div>
+                    {/* Modal  */}
+                    <dialog
+                        id="my_modal"
+                        className="modal modal-bottom mx-auto min-h-full max-w-screen-sm lg:hidden"
+                    >
+                        <div className="font-poppins modal-box bg-white text-black px-4 pt-4 pb-8">
+                            <div className="flex flex-wrap justify-between">
+                                <div className='skeleton w-1/2 h-1/2 rounded-lg'></div>
+                                <div className="flex flex-col w-1/2 pl-4">
+                                    <div className="flex justify-end">
+                                        <form method="dialog">
+                                            <button className="btn btn-sm btn-circle btn-ghost">✕</button>
+                                        </form>
+                                    </div>
+                                    <div className="mt-auto">
+                                        <div className='skeleton h-4 w-20'></div>
+                                        <div className='skeleton h-4 w-20'></div>
+                                        <div className='skeleton h-4 w-20'></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="mt-2 flex items-center justify-between">
+                                <div className="text-md font-semibold">Atur jumlah</div>
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center justify-center">
+                                        <button className="text-primary text-sm px-3 py-1 border-2 border-primary rounded-l-lg hover:text-white hover:bg-primary w-full">
+                                            -
+                                        </button>
+                                        <div className="px-4 py-1 border-y-2 border-primary">
+                                            <p className="text-sm text-center">{quantity}</p>
+                                        </div>
+                                        <button className="text-primary text-sm px-3 py-1 border-2 border-primary rounded-r-lg hover:text-white hover:bg-primary w-full">
+                                            +
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="mt-2">
+                                <div className="flex items-center justify-between ">
+                                    <div className='skeleton h-4 w-20'></div>
+                                </div>
+                            </div>
+                            <div className="relative h-8" />
+                            <div className="absolute bottom-0 left-0 p-2 w-full flex flex-row lg:flex-col gap-2 items-center justify-center">
+                                <button
+                                
+                                    className="bg-primary font-poppins font-semibold rounded-lg px-4 py-2 border-2 border-primary text-white text-center w-full hover:bg-white hover:text-primary"
+                                >
+                                    + Keranjang
+                                </button>
+                                <button
+                                    
+                                    className="font-poppins font-semibold rounded-lg px-4 py-2 border-2 text-center w-full bg-white text-primary border-primary hover:bg-primary hover:text-white hover:border-white"
+                                >
+                                    Beli
+                                </button>
+                            </div>
+                        </div>
+                    </dialog>
+                    <div className="mt-0 p-2 flex flex-col lg:flex-row w-full">
+                            <div className="flex flex-col lg:flex-row justify-start gap-5 px-4 bg-white shadow-md rounded-lg p-4 w-full font-poppins">
+                                <div className="flex flex-col gap-3">
+                                    <p className="text-2xl font-semibold">Rating</p>
+                                    <div className='skeleton h-52 w-52'></div>
+                                </div>
+                                <div className="flex flex-1 flex-col gap-3">
+                                    <p className="text-2xl font-semibold">Ulasan</p>
+                                    {Array(2).fill(0).map((_, index) => (
+                                        <div
+                                            // Adjusted path as needed
+                                            className="flex flex-col w-full lg:w-full"
+                                            key={`skeleton-${index}`} // Unique key for each skeleton
+                                        >
+
+                                            <div className="flex items-center gap-4">
+                                                <div className="skeleton h-16 w-16 shrink-0 rounded-full"></div>
+                                                <div className="flex flex-col gap-4">
+                                                <div className="skeleton h-4 w-20"></div>
+                                                <div className="skeleton h-4 w-72"></div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                </section>
+                </main>
+               
+                
+            ) : (
                 <main>
                     <section id="detail" className="py-16 lg:px-36 bg-slate-50 mt-16 mx-auto">
                         <div className="flex flex-wrap justify-center">
@@ -345,8 +525,6 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                         </div>
                     </section>
                 </main>
-            ) : (
-                <p>Product not found</p>
             )}
             <Footer />
         </>
