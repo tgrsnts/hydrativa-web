@@ -51,13 +51,13 @@ export default function Home() {
 
     const fetchBerita = async () => {
       try {
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/materi`);
-          const result = await response.json();
-          setMateris((result || []).slice(0, 4));
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/materi`);
+        const result = await response.json();
+        setMateris((result || []).slice(0, 4));
       } catch (error) {
-          handleAxiosError(error);
+        handleAxiosError(error);
       } finally {
-          setLoading(false);
+        setLoading(false);
       }
     };
 
@@ -86,6 +86,66 @@ export default function Home() {
           </div>
         </section>
 
+        <section id="carousel" className="px-4 lg:px-40 py-20 bg-gray-100">
+          <div className="carousel w-full">
+            <div id="slide1" className="carousel-item relative w-full">
+              <img
+                src="/image/iklan-stevia.png"
+                className="w-full" />
+              <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
+                <a href="#slide4" className="btn btn-circle">❮</a>
+                <a href="#slide2" className="btn btn-circle">❯</a>
+              </div>
+            </div>
+            <div id="slide2" className="carousel-item relative w-full">
+              <img
+                src="/image/iklan-buku.png"
+                className="w-full" />
+              <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
+                <a href="#slide1" className="btn btn-circle">❮</a>
+                <a href="#slide3" className="btn btn-circle">❯</a>
+              </div>
+            </div>
+            <div id="slide3" className="carousel-item relative w-full">
+              <img
+                src="/image/iklan-aplikasi.png"
+                className="w-full" />
+              <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
+                <a href="#slide2" className="btn btn-circle">❮</a>
+                <a href="#slide4" className="btn btn-circle">❯</a>
+              </div>
+            </div>            
+          </div>
+        </section>
+
+        {/* <section id="news">
+          <div
+            className="bg-cover bg-center h-screen relative"
+            style={{ backgroundImage: 'url("/image/background-buku.png")' }}
+          >
+            
+            <img
+              src="/image/buku.png"
+              className="absolute left-1/4 lg:left-40 top-1/2 transform -translate-y-1/2"
+              alt="Buku"
+            />
+
+            
+            <img
+              src="/image/logo-buku.png"
+              className="absolute right-0 top-12 p-4"
+              alt="Logo"
+            />
+
+            
+            <div className="absolute flex flex-col items-center gap-4 text-4xl lg:text-6xl font-semibold right-1/4 lg:right-40 top-1/2 transform -translate-y-1/2">
+              <p className="text-white">CARA PEMAKAIAN</p>
+              <p className="bg-primary text-white w-fit px-6 py-4">ALAT HYDRATIVA</p>
+            </div>
+          </div>
+        </section> */}
+
+
         {/* Know About Us */}
         <section id="news" className="px-4 lg:px-40 py-20 bg-gray-100">
           <div className="container mx-auto text-center">
@@ -93,7 +153,7 @@ export default function Home() {
               Berita
             </h2>
             <div className="grid grid-cols-2 lg:grid-cols-2 gap-4">
-            {loading ? (
+              {loading ? (
                 // Show skeleton loader when loading is true
                 Array(2).fill(0).map((_, index) => (
                   <div
@@ -144,13 +204,13 @@ export default function Home() {
             </div>
           </div>
           <div className="flex justify-end mt-4">
-              <Link
-                href="/berita"
-                className="font-poppins text-white px-4 py-2 rounded-md bg-primary border-2 border-white cursor-pointer hover:text-primary hover:bg-white hover:border-primary"
-              >
-                Lihat Selengkapnya
-              </Link>
-            </div>
+            <Link
+              href="/berita"
+              className="font-poppins text-white px-4 py-2 rounded-md bg-primary border-2 border-white cursor-pointer hover:text-primary hover:bg-white hover:border-primary"
+            >
+              Lihat Selengkapnya
+            </Link>
+          </div>
         </section>
 
 
