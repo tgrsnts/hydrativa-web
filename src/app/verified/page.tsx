@@ -1,11 +1,11 @@
 'use client'
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import Link from 'next/link';
 import axios from 'axios';
 import { useSearchParams } from 'next/navigation';
 
-export default function Verified() {
+function VerifiedContent() {
     const [isVerified, setIsVerified] = useState<boolean | null>(null);
     const [error, setError] = useState<string | null>(null);
     const searchParams = useSearchParams();
@@ -41,10 +41,8 @@ export default function Verified() {
         }
     }, []);
 
-    return (
-        <main>
-            <section className="flex justify-center px-4 lg:px-40 py-20 bg-gray-100 min-h-screen">
-                <div className="modal-box font-poppins p-0 w-76 lg:w-96 h-fit flex flex-col">
+    return(
+        <div className="modal-box font-poppins p-0 w-76 lg:w-96 h-fit flex flex-col">
                     <div className="flex items-center bg-primary rounded-t-lg h-24 lg:h-40 p-16">
                         <img src="/image/logo-hydrativa-putih.png" alt="HydraTiva Logo" />
                     </div>
@@ -74,7 +72,17 @@ export default function Verified() {
                         </Link>
                     </div>
                 </div>
-            </section>
-        </main>
+    );
+}
+
+export default function Verified() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <main>
+                <section className="flex justify-center px-4 lg:px-40 py-20 bg-gray-100 min-h-screen">
+                    <VerifiedContent />
+                </section>
+            </main>
+        </Suspense>
     );
 }
