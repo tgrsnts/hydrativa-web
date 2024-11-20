@@ -4,4 +4,5 @@ export interface Materi{
     deskripsi: string;
     sumber: string;
     gambar: string;
+    waktu: string;
 }
