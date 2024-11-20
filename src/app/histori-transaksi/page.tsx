@@ -95,16 +95,15 @@ export default function HistoriTransaksi() {
                 window.snap.pay(response.data.snaptoken, {
                     onSuccess: () => {
                         handleBayarBerhasil(response.data.transaksi_id)
-                        // console.log('Payment successful:', result);
                     },
                     onPending: () => {
-                        // console.log('Payment pending:', result);
+                        window.location.assign('/histori-transaksi')
                     },
                     onError: () => {
-                        // console.error('Payment error:', error);
+                        window.location.assign('/histori-transaksi')
                     },
                     onClose: () => {
-                        // console.log('Payment popup closed');
+                        window.location.assign('/histori-transaksi')
                     },
                 });
             }
@@ -131,6 +130,8 @@ export default function HistoriTransaksi() {
                     text: 'Pesanan telah dibayar.',
                     icon: 'success',
                     confirmButtonText: 'OK',
+                }).then(() => {
+                    window.location.assign('/histori-transaksi');
                 });
             }
         } catch (error) {

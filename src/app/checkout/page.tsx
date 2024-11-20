@@ -89,7 +89,9 @@ export default function Checkout() {
                 text: 'Pesanan telah dibayar.',
                 icon: 'success',
                 confirmButtonText: 'OK',
-            });
+            }).then(() => {
+              window.location.assign('/histori-transaksi');
+          });
         }
     } catch (error) {
         console.error("Checkout failed:", error);
@@ -150,7 +152,6 @@ export default function Checkout() {
         window.snap.pay(response.data.snaptoken, {
           onSuccess: () => {
             handleBayarBerhasil(response.data.transaksi_id)
-            window.location.assign('/histori-transaksi');
           },
           onPending: () => {
             window.location.assign('/histori-transaksi');
