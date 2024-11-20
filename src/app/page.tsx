@@ -246,11 +246,11 @@ export default function Home() {
               </div>
             </div>
             <div className="lg:w-1/2">
-              <p className="text-4xl font-semibold text-primary">Unduh Aplikasi Kami</p>
-              <p className="text-primary">
+              <p className="text-4xl font-semibold text-primary my-3">Unduh Aplikasi Kami</p>
+              <p className="text-primary text-justify me-10">
                 HydraTiva adalah aplikasi yang dirancang untuk meningkatkan produktivitas dan efisiensi di sektor perkebunan tanaman Stevia. Dengan menggabungkan teknologi IoT (Internet of Things),  HydraTiva memungkinkan petani untuk memantau kondisi lahan secara real-time dan membantu penyaluran hasil perkebunan stevia.
               </p>
-              <button type="button" className="font-poppins flex items-center justify-center w-48 mt-3 text-white bg-black rounded-lg h-14">
+              <button type="button" className="font-poppins flex items-center justify-center w-48 mt-6 text-white bg-black rounded-lg h-14">
                 <div className="mr-3">
                   <svg viewBox="30 336.7 120.9 129.2" width="30">
                     <path fill="#FFD400" d="M119.2,421.2c15.3-8.4,27-14.8,28-15.3c3.2-1.7,6.5-6.2,0-9.7  c-2.1-1.1-13.4-7.3-28-15.3l-20.1,20.2L119.2,421.2z">
