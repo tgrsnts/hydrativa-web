@@ -293,7 +293,7 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                
                 
             ) : (
-                <main>
+                product ? (<main>
                     <section id="detail" className="py-16 lg:px-36 bg-slate-50 mt-16 mx-auto">
                         <div className="flex flex-wrap justify-center">
                             <div className="flex w-full lg:w-2/3 p-2">
@@ -524,7 +524,9 @@ const Detail = ({ params }: { params: Promise<{ id: string }> }) => {
                             </div>
                         </div>
                     </section>
-                </main>
+                </main>) : (
+                    <p>Produk tidak ada.</p>
+                )
             )}
             <Footer />
         </>
