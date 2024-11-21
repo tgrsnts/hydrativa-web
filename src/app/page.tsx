@@ -53,7 +53,7 @@ export default function Home() {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/materi`);
         const result = await response.json();
-        setMateris((result || []).slice(0, 4));
+        setMateris((result || []).slice(0, 2));
       } catch (error) {
         handleAxiosError(error);
       } finally {
@@ -182,7 +182,7 @@ export default function Home() {
                     <img
                       src={materi.gambar} // Path gambar sesuai dengan data produk
                       alt={materi.judul} // Menggunakan nama produk sebagai alt
-                      className="h-72 object-cover mb-2 rounded-t-lg"
+                      className="h-40 lg:h-72 object-cover mb-2 rounded-t-lg"
                     />
                     <div className="h-20 flex flex-col items-start p-4 pt-0 gap-2">
                       <div className="h-4">
@@ -264,7 +264,7 @@ export default function Home() {
                     <img
                       src={product.gambar} // Path gambar sesuai dengan data produk
                       alt={product.nama_produk} // Menggunakan nama produk sebagai alt
-                      className="h-72 object-cover mb-2 rounded-t-lg"
+                      className="h-40 lg:h-72 object-cover mb-2 rounded-t-lg"
                     />
                     <div className="h-20 flex flex-col items-start p-4 pt-0 gap-2">
                       <div className="h-4">
