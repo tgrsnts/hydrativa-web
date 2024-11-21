@@ -11,6 +11,7 @@ interface Transaksi {
   transaksi_item: Array<{
     transaksi_item_id: number;
     nama_produk: string;
+    produk_name: string;
     quantity: number;
     harga: number
     gambar: string;

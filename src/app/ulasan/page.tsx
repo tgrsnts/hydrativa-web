@@ -209,13 +209,13 @@ export default function Ulasan() {
                                             {transaction.transaksi_item.map((transaksi_item) => (
                                                 <form key={transaksi_item.transaksi_item_id} onSubmit={(e) => submitReview(e, transaksi_item.transaksi_item_id)} className="flex w-full gap-5 first:pt-0 pt-2 pb-4 border-b-2 last:border-b-0">
                                                     <img
-                                                        src={reviews[transaksi_item.transaksi_item_id]?.imagePreview ?? ''}
+                                                        src={transaksi_item.gambar}
                                                         alt="Preview"
                                                         className="w-20 h-20 mt-2 rounded-md"
                                                     />
 
                                                     <div className="flex flex-col w-full">
-                                                        <div>{transaksi_item.nama_produk}</div>
+                                                        <div>{transaksi_item.produk_name}</div>
                                                         <div className="flex justify-between">
                                                             <div>x{transaksi_item.quantity}</div>
                                                             <div>Rp. {transaksi_item.harga.toLocaleString()}</div>
