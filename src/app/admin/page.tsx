@@ -6,8 +6,8 @@ import Cookies from 'js-cookie'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import Transaksi from '@/lib/interfaces/Transaksi'
-import Transaction4MonthsChart from '../components/Transaction4MonthsChart'
-import RevenueChart from '../components/RevenueChart'
+import Transaction4MonthsChart from './components/Transaction4MonthsChart'
+import RevenueChart from './components/RevenueChart'
 
 export default function Pesanan() {
     const [transactions, setTransactions] = useState<Transaksi[]>([]);

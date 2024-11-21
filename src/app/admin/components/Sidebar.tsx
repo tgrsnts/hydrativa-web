@@ -71,23 +71,15 @@ export default function Sidebar() {
     return (
         <nav className="mt-12 flex flex-col gap-1 pr-12 font-sans text-base font-normal text-blue-gray-700">
             <Link
-                href="/akun"
-                className={`mt-8 ${pathname == '/akun' ? 'text-primary bg-white' : 'text-white'} font-poppins font-semibold flex items-center w-full py-4 pl-16 leading-tight transition-all rounded-r-lg outline-none text-start hover:bg-white hover:text-primary focus:bg-white focus:text-primary active:bg-white active:text-primary`}
+                href="/admin"
+                className={`mt-8 ${pathname == '/admin' ? 'text-primary bg-white' : 'text-white'} font-poppins font-semibold flex items-center w-full py-4 pl-16 leading-tight transition-all rounded-r-lg outline-none text-start hover:bg-white hover:text-primary focus:bg-white focus:text-primary active:bg-white active:text-primary`}
             >
                 <div className="grid mr-4 place-items-center">
                     <i className="fa-solid fa-user" />
                 </div>
-                Profil
-            </Link>
-            <Link
-                href="/admin/dashboard"
-                className={`${pathname == '/admin/dashboard' ? 'text-primary bg-white' : 'text-white'} font-poppins font-semibold flex items-center w-full py-4 pl-16 leading-tight transition-all rounded-r-lg outline-none text-start hover:bg-white hover:text-primary focus:bg-white focus:text-primary active:bg-white active:text-primary`}
-            >
-                <div className="grid mr-4 place-items-center">
-                    <i className="fa-solid fa-bag-shopping" />
-                </div>
                 Beranda
             </Link>
+            
             <Link
                 href="/admin/materi"
                 className={`${pathname == '/admin/materi' ? 'text-primary bg-white' : 'text-white'} font-poppins font-semibold flex items-center w-full py-4 pl-16 leading-tight transition-all rounded-r-lg outline-none text-start hover:bg-white hover:text-primary focus:bg-white focus:text-primary active:bg-white active:text-primary`}

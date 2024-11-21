@@ -72,7 +72,7 @@ export default function Home() {
 
       <main>
         {/* Hero */}
-        <section id="hero">
+        {/* <section id="hero">
           <div
             className="bg-cover bg-center h-screen relative"
             style={{ backgroundImage: 'url("/image/foto-kebun.jpg")' }}
@@ -84,9 +84,9 @@ export default function Home() {
               </h1>
             </div>
           </div>
-        </section>
+        </section> */}
 
-        <section id="carousel" className="px-4 lg:px-40 py-20 bg-gray-100">
+        <section id="carousel" className="">
           <div className="carousel w-full">
             <div id="slide1" className="carousel-item relative w-full">
               <img
