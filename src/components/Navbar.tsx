@@ -76,6 +76,12 @@ export default function Navbar() {
         }
         Cookies.set("role", res.data.user.role, { expires: 7, path: "/" });
         closeModal('modal_login');
+        Swal.fire({
+          icon: 'success',
+          title: 'Login berhasil!',
+          showConfirmButton: false,
+          timer: 1500,
+      });
         window.location.href = "/dashboard";
       }
     } catch (error) {
@@ -89,8 +95,14 @@ export default function Navbar() {
     try {
       const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/register`, dataRegisterForm);
 
-      if (res.data.token) {
+      if (res.status==200) {
         closeModal('modal_register');
+        Swal.fire({
+          icon: 'success',
+          title: 'Daftar berhasil!',
+          showConfirmButton: false,
+          timer: 1500,
+      });
       }
     } catch (error) {
       closeModal('modal_login')
