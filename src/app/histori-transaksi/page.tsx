@@ -517,7 +517,7 @@ export default function HistoriTransaksi() {
                                                                         }} className='flex justify-center items-center gap-2 text-primary hover:underline'><FaTruck /> Cek Status Pengiriman</a>
                                                                         <button
                                                                             onClick={() => handleMarkAsReceived(transaction.transaksi_id)}
-                                                                            className="w-60 bg-primary font-poppins rounded-lg px-4 py-2 border-2 border-primary text-white text-center w-full hover:bg-white hover:text-primary"
+                                                                            className="w-60 bg-primary font-poppins rounded-lg px-4 py-2 border-2 border-primary text-white text-center hover:bg-white hover:text-primary"
                                                                         >
                                                                             Pesanan sudah diterima
                                                                         </button>
@@ -525,7 +525,7 @@ export default function HistoriTransaksi() {
                                                                 ) : transaction.status === 'pending' ? (
                                                                     <button
                                                                         onClick={() => handleBayarUlang(transaction.transaksi_id)}
-                                                                        className="w-60 bg-primary font-poppins rounded-lg px-4 py-2 border-2 border-primary text-white text-center w-full hover:bg-white hover:text-primary"
+                                                                        className="w-60 bg-primary font-poppins rounded-lg px-4 py-2 border-2 border-primary text-white text-center hover:bg-white hover:text-primary"
                                                                     >
                                                                         Bayar
                                                                     </button>
