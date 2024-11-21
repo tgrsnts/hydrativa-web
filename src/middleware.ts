@@ -33,8 +33,8 @@ export function middleware(req: NextRequest) {
     urlPath.startsWith('/histori-transaksi') ||
     urlPath.startsWith('/keranjang')
   ) {
-    // Hanya role 2 yang dapat mengakses rute ini
-    if (role !== '2') {
+    // Hanya role 1 & 2 yang dapat mengakses rute ini
+    if (role !== '1' && role !== '2') {
       return NextResponse.redirect(new URL('/dashboard', req.url));
     }
   }
