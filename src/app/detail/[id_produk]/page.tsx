@@ -26,7 +26,7 @@ const Detail = ({ params }: { params: Promise<{ id_produk: string }> }) => {
             // Tambahkan 'Z' untuk memastikan waktu dianggap dalam UTC
             const isoDate = new Date(formattedDate).toISOString();
             return isoDate;
-        } catch (error) {
+        } catch {
             console.error('Invalid date format:', dateString);
             return null;
         }
