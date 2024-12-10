@@ -151,11 +151,11 @@ export default function Keranjang() {
   return (
     <>
       <Navbar />
-      <main>
-        <section id="detail" className="py-16 lg:px-36 bg-background mt-16 mx-auto">
+      <main className="min-h-screen flex flex-col">
+        <section id="detail" className="py-16 lg:px-36 bg-slate-50 mt-16  flex-grow">
           <div className="flex flex-wrap gap justify-center">
             <div className="flex flex-col gap-4 w-full lg:w-2/3 p-2">
-              <div className="flex flex-col gap-4 bg-white p-6 rounded-lg font-poppins">
+              <div className="flex flex-col gap-4 bg-white shadow-md p-6 rounded-lg font-poppins">
                 <div className="flex items-center gap-4">
                   <div className="flex w-full gap-4 items-center">
                     <input
@@ -174,7 +174,7 @@ export default function Keranjang() {
                 </div>
               </div>
               {loading ? (
-                <div className="flex flex-col gap-4 bg-white p-6 rounded-lg font-poppins">
+                <div className="flex flex-col gap-4 bg-white shadow-md p-6 rounded-lg font-poppins">
                   <div className='flex justify-center'>
                     <span className="loading loading-spinner loading-md"></span>
                   </div>
@@ -182,7 +182,7 @@ export default function Keranjang() {
               ) : (
                 data.length > 0 ? (
                   data.map((item) => (
-                    <div key={item.id} className="flex flex-col gap-4 bg-white p-6 rounded-lg font-poppins">
+                    <div key={item.id} className="flex flex-col gap-4 bg-white shadow-md p-6 rounded-lg font-poppins">
                       <div className="flex gap-4">
                         <input
                           type="checkbox"
@@ -206,7 +206,7 @@ export default function Keranjang() {
                     </div>
                   ))
                 ) : (
-                  <div className="flex flex-col gap-4 bg-white p-6 rounded-lg font-poppins">
+                  <div className="flex flex-col gap-4 bg-white shadow-md p-6 rounded-lg font-poppins">
                     <p className="font-semibold text-2xl text-center">Keranjangmu masih kosong nih :(</p>
                     <p className="text-xl text-center">Yuk, isi dengan produk-produk stevia terbaik dari kami!</p>
                     <div className="flex justify-center">
@@ -222,7 +222,7 @@ export default function Keranjang() {
               )}
             </div>
             <div className="w-full lg:w-1/3 p-2">
-              <div className="flex flex-col p-6 bg-white gap-2 rounded-lg font-poppins">
+              <div className="flex flex-col p-6 bg-white shadow-md gap-2 rounded-lg font-poppins">
                 <div className="flex flex-col gap-4">
                   <div className="text-2xl font-bold">Ringkasan Belanja</div>
                   <div className="text-md font-medium">
