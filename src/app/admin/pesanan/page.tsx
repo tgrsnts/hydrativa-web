@@ -245,7 +245,7 @@ export default function Pesanan() {
                                     ))
                                 ) : (
                                     // Render transactions if not loading
-                                    transactions.map((transaction) => (
+                                    filteredTransactions.map((transaction) => (
                                         <div key={transaction.transaksi_id} className="flex gap-4 flex-col bg-white w-full p-4 rounded-lg shadow-md">
                                             <div className="flex justify-between w-full gap-5">
                                                 {/* <div className='flex gap-2'>
