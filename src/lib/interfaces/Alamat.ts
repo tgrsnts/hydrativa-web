@@ -11,5 +11,7 @@ export interface Alamat {
     provinsi: string;
     kodepos: string;  
     catatan_kurir?: string;
+    longitude?: number;
+    latitude?: number;
     isPrimary: number;    
 }
