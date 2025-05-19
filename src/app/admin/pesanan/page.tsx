@@ -10,6 +10,7 @@ import jsPDF from 'jspdf'
 import 'leaflet/dist/leaflet.css';
 import dynamic from 'next/dynamic';
 import OrderMap from '@/app/admin/components/OrderMap';
+import { FaCalendar } from "react-icons/fa";
 
 
 export default function Pesanan() {
@@ -17,6 +18,10 @@ export default function Pesanan() {
     const [loading, setLoading] = useState(true);
     const [radius, setRadius] = useState(10000); // meter
     const defaultCenter: [number, number] = [-6.595038, 106.816635]; // Bogor
+    const [selectedStatus, setSelectedStatus] = useState('');
+    const [selectedMonth, setSelectedMonth] = useState('');
+    const [selectedYear, setSelectedYear] = useState('');
+
 
     // Filter berdasarkan radius
     const filteredTransactions = transactions.filter((transaction) => {
@@ -26,8 +31,19 @@ export default function Pesanan() {
         if (!lat || !lng) return false;
 
         const distance = L.latLng(lat, lng).distanceTo(defaultCenter);
-        return distance <= radius;
+        const isInRadius = distance <= radius;
+
+        // Filter berdasarkan status jika dipilih
+        const matchStatus = selectedStatus === '' || transaction.status === selectedStatus;
+
+        // Filter berdasarkan bulan dan tahun jika dipilih
+        const createdAt = new Date(transaction.created_at); // Pastikan `created_at` ada di objek transaksi
+        const matchMonth = selectedMonth === '' || createdAt.getMonth() + 1 === Number(selectedMonth);
+        const matchYear = selectedYear === '' || createdAt.getFullYear() === Number(selectedYear);
+
+        return isInRadius && matchStatus && matchMonth && matchYear;
     });
+
 
     const handleResi = (transaksiId: number, resi: string) => {
         // Update the transactions array to set the resi
@@ -180,37 +196,79 @@ export default function Pesanan() {
             <Navbar />
             <div className="flex">
                 <div className="flex">
-                    <div className="flex min-h-screen w-80 flex-col bg-primary py-4 text-gray-700">
+                    <div className="flex flex-col bg-primary py-4 w-80 min-h-screen text-gray-700">
                         <Sidebar />
                     </div>
                 </div>
-                <div className="mt-12 flex flex-col w-full">
+                <div className="flex flex-col mt-12 w-full">
                     <section
                         id="dashboard"
-                        className="min-h-screen font-poppins w-full flex gap-2 flex-col mt-2 pt-10 px-4 pb-20 bg-slate-50"
+                        className="flex flex-col gap-2 bg-slate-50 mt-2 px-4 pt-10 pb-20 w-full min-h-screen font-poppins"
                     >
-                        <div className="flex flex-col gap-2 rounded-lg bg-white w-full py-4 shadow-md">
+                        <div className="flex flex-col gap-2 bg-white shadow-md py-4 rounded-lg w-full">
                             <div className="px-4 py-2">
                                 <p className='font-semibold'>Pesanan</p>
                                 <p>Melihat daftar pesanan yang anda terima.</p>
                             </div>
                         </div>
-                        <div className="mb-2">
-                            <label htmlFor="radius" className="block mb-1 text-sm font-medium">Radius (meter): {radius}</label>
-                            <input
-                                type="range"
-                                id="radius"
-                                min={1000}
-                                max={50000}
-                                step={1000}
-                                value={radius}
-                                onChange={(e) => setRadius(Number(e.target.value))}
-                                className="w-full"
-                            />
+                        <div className="gap-2 grid grid-cols-3">
+                            <div className="flex items-center space-x-2 bg-white drop-shadow px-3 py-2 rounded-lg">
+                                <label htmlFor="radius" className="block w-full font-medium text-sm">Radius : {radius / 1000} km</label>
+                                <input
+                                    type="range"
+                                    id="radius"
+                                    min={1000}
+                                    max={50000}
+                                    step={1000}
+                                    value={radius}
+                                    onChange={(e) => setRadius(Number(e.target.value))}
+                                    className="w-full"
+                                />
+                            </div>
+                            <div className="flex items-center space-x-2 bg-white drop-shadow px-3 py-2 rounded-lg">
+                                <label htmlFor="">Status :</label>
+                                <select name="" id="" value={selectedStatus}
+                                    onChange={(e) => setSelectedStatus(e.target.value)}>
+                                    <option value="">Semua Status</option>
+                                    <option value="success">Sudah Dibayar</option>
+                                    <option value="delivering">Sedang Dikirim</option>
+                                    <option value="delivered">Terkirim</option>
+                                </select>
+                            </div>
+                            <div className="flex items-center space-x-2 bg-white drop-shadow px-3 py-2 rounded-lg">
+                                <FaCalendar className="text-gray-400" />
+                                <select className="bg-transparent focus:outline-none text-gray-800" value={selectedMonth}
+                                    onChange={(e) => setSelectedMonth(e.target.value)}>
+                                    <option value="">Bulan</option>
+                                    <option value="01">Januari</option>
+                                    <option value="02">Februari</option>
+                                    <option value="03">Maret</option>
+                                    <option value="04">April</option>
+                                    <option value="05">Mei</option>
+                                    <option value="06">Juni</option>
+                                    <option value="07">Juli</option>
+                                    <option value="08">Agustus</option>
+                                    <option value="09">September</option>
+                                    <option value="10">Oktober</option>
+                                    <option value="11">November</option>
+                                    <option value="12">Desember</option>
+                                </select>
+                                <select
+                                    className="bg-transparent focus:outline-none text-gray-800"
+                                    value={selectedYear}
+                                    onChange={(e) => setSelectedYear(e.target.value)}
+                                >
+                                    <option value="">Tahun</option>
+                                    {Array.from({ length: 10 }, (_, i) => {
+                                        const year = 2025 - i;
+                                        return <option key={year} value={year}>{year}</option>;
+                                    })}
+                                </select>
+                            </div>
                         </div>
                         <div className="flex gap-2">
                             <OrderMap
-                                className='w-1/2 h-[500px] rounded overflow-hidden'
+                                className='rounded w-1/2 h-[500px] overflow-hidden'
                                 transactions={filteredTransactions}
                                 defaultCenter={defaultCenter}
                                 radius={radius}
@@ -219,35 +277,35 @@ export default function Pesanan() {
                                 {loading ? (
                                     // Skeleton placeholders
                                     Array.from({ length: 3 }).map((_, index) => (
-                                        <div key={index} className="flex gap-4 flex-col bg-white w-full p-4 rounded-lg shadow-md animate-pulse">
-                                            <div className="flex justify-end w-full gap-5">
-                                                <div className="h-4 skeleton rounded w-24"></div>
+                                        <div key={index} className="flex flex-col gap-4 bg-white shadow-md p-4 rounded-lg w-full animate-pulse">
+                                            <div className="flex justify-end gap-5 w-full">
+                                                <div className="rounded w-24 h-4 skeleton"></div>
                                             </div>
-                                            <div className="flex w-full gap-5">
-                                                <div className="w-20 h-20 skeleton rounded-lg"></div>
-                                                <div className="flex flex-col w-full gap-2">
-                                                    <div className="h-4 skeleton rounded w-1/2"></div>
-                                                    <div className="h-4 skeleton rounded w-1/3"></div>
+                                            <div className="flex gap-5 w-full">
+                                                <div className="rounded-lg w-20 h-20 skeleton"></div>
+                                                <div className="flex flex-col gap-2 w-full">
+                                                    <div className="rounded w-1/2 h-4 skeleton"></div>
+                                                    <div className="rounded w-1/3 h-4 skeleton"></div>
                                                 </div>
                                             </div>
-                                            <div className="flex w-full gap-5">
-                                                <div className="w-20 h-20 skeleton rounded-lg"></div>
-                                                <div className="flex flex-col w-full gap-2">
-                                                    <div className="h-4 skeleton rounded w-1/2"></div>
-                                                    <div className="h-4 skeleton rounded w-1/3"></div>
+                                            <div className="flex gap-5 w-full">
+                                                <div className="rounded-lg w-20 h-20 skeleton"></div>
+                                                <div className="flex flex-col gap-2 w-full">
+                                                    <div className="rounded w-1/2 h-4 skeleton"></div>
+                                                    <div className="rounded w-1/3 h-4 skeleton"></div>
                                                 </div>
                                             </div>
                                             <div className="flex justify-between">
-                                                <div className="h-8 skeleton rounded w-32"></div>
-                                                <div className="h-4 skeleton rounded w-20"></div>
+                                                <div className="rounded w-32 h-8 skeleton"></div>
+                                                <div className="rounded w-20 h-4 skeleton"></div>
                                             </div>
                                         </div>
                                     ))
                                 ) : (
                                     // Render transactions if not loading
                                     filteredTransactions.map((transaction) => (
-                                        <div key={transaction.transaksi_id} className="flex gap-4 flex-col bg-white w-full p-4 rounded-lg shadow-md">
-                                            <div className="flex justify-between w-full gap-5">
+                                        <div key={transaction.transaksi_id} className="flex flex-col gap-4 bg-white shadow-md p-4 rounded-lg w-full">
+                                            <div className="flex justify-between gap-5 w-full">
                                                 {/* <div className='flex gap-2'>
                                                 <input type="checkbox" id='siap-kirim' />
                                                 <label htmlFor="siap-kirim">Siap Dikirim</label>
@@ -267,11 +325,11 @@ export default function Pesanan() {
                                                     )
                                                 }
                                             </div>
-                                            <div className="flex flex-col w-full gap-2">
+                                            <div className="flex flex-col gap-2 w-full">
                                                 <div className="flex flex-col gap-2 w-full">
                                                     {transaction.transaksi_item.map((transaksi_item) => (
-                                                        <div key={transaksi_item.transaksi_item_id} className="flex w-full gap-5">
-                                                            <img className="w-20 rounded-lg" src={transaksi_item.gambar} />
+                                                        <div key={transaksi_item.transaksi_item_id} className="flex gap-5 w-full">
+                                                            <img className="rounded-lg w-20" src={transaksi_item.gambar} />
                                                             <div className="flex flex-col w-full">
                                                                 <div className='font-semibold'>{transaksi_item.nama_produk}</div>
                                                                 <div className="flex justify-between">
@@ -307,7 +365,7 @@ export default function Pesanan() {
                                                             onChange={(e) => {
                                                                 handleResi(transaction.transaksi_id, e.target.value);
                                                             }}
-                                                            className="w-full p-2 border-2 rounded-lg"
+                                                            className="p-2 border-2 rounded-lg w-full"
                                                             type="text"
                                                             name="resi"
                                                             placeholder="Masukkan no resi"
@@ -322,7 +380,7 @@ export default function Pesanan() {
                                                     ) : (
                                                         <button
                                                             onClick={() => handleUpdateResi(transaction.transaksi_id)}
-                                                            className="bg-primary font-poppins rounded-lg px-4 py-2 border-2 border-primary text-white text-center w-full hover:bg-white hover:text-primary"
+                                                            className="bg-primary hover:bg-white px-4 py-2 border-2 border-primary rounded-lg w-full font-poppins text-white hover:text-primary text-center"
                                                         >
                                                             Konfirmasi
                                                         </button>
@@ -330,7 +388,7 @@ export default function Pesanan() {
                                                 </div>
                                                 <button
                                                     onClick={() => generatePDF(transactions)}
-                                                    className="bg-primary font-poppins rounded-lg px-4 py-2 text-white"
+                                                    className="bg-primary px-4 py-2 rounded-lg font-poppins text-white"
                                                 >
                                                     Download PDF
                                                 </button>
