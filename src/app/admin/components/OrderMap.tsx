@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup, Circle, useMap } from 'react-le
 import { useEffect } from 'react';
 import L from 'leaflet';
 import Transaksi from '@/lib/interfaces/Transaksi';
+import LeafletRoutingMachine from '@/app/admin/components/LeafletRoutingMachine';
 
 const customIcon = new L.Icon({
   iconUrl: '/image/marker-icon.png',
@@ -25,9 +26,9 @@ interface OrderMapProps {
   defaultCenter: [number, number];
   radius: number;
   className?: string;
+  targetCoordinatesForRoute?: [number, number] | null;
 }
 
-// ✅ Komponen untuk legenda Leaflet
 const Legend = () => {
   const map = useMap();
 
@@ -86,11 +87,98 @@ const Legend = () => {
   return null;
 };
 
+const MapUpdater: React.FC<{
+  defaultCenter: [number, number];
+  radius: number;
+  transactions: Transaksi[];
+  targetCoordinatesForRoute?: [number, number] | null;
+  // We will get circleInstance via prop if possible, or try to find it
+  // For simplicity, let's assume the <Circle> is always rendered by the parent
+  // and we try to get its bounds without needing an explicit ref pass for now.
+  // The key is to avoid the failing L.circle().getBounds() if possible.
+}> = ({ defaultCenter, radius, transactions, targetCoordinatesForRoute }) => {
+  const map = useMap();
+
+  useEffect(() => {
+    if (!map || !(map as any)._loaded) {
+      // console.log("MapUpdater: Map not loaded yet.");
+      return;
+    }
+
+    const bounds = L.latLngBounds([]);
+    let circleBoundsCalculated = false;
+
+    // Attempt to find the main <Circle> layer if possible - this is more robust
+    // This is a bit of a hack, relying on the fact that we have one main radius circle
+    let mainCircleLayer: L.Circle | null = null;
+    map.eachLayer(layer => {
+      if (layer instanceof L.Circle && (layer as L.Circle).getRadius() === radius && layer.getLatLng().equals(L.latLng(defaultCenter))) {
+        // This condition might be too specific or not always true if multiple circles exist
+        // A more reliable way would be to pass a ref or an ID.
+        // For now, let's assume it's the one representing our radius.
+        if (!mainCircleLayer) mainCircleLayer = layer as L.Circle; // Take the first match
+      }
+    });
+
+    if (mainCircleLayer) {
+      try {
+        const currentCircleBounds = mainCircleLayer.getBounds();
+        if (currentCircleBounds && currentCircleBounds.isValid()) {
+          bounds.extend(currentCircleBounds);
+          circleBoundsCalculated = true;
+          // console.log("MapUpdater: Extended bounds with existing map circle.");
+        } else {
+          // console.warn("MapUpdater: Bounds from existing map Circle are invalid.");
+        }
+      } catch (error) {
+        console.error("MapUpdater: Error getting bounds from existing map Circle:", error);
+      }
+    }
+
+    // If we couldn't get bounds from an existing circle on the map,
+    // and as a last resort, we might try the temporary circle IF AND ONLY IF absolutely necessary
+    // and we acknowledge it's the source of the error.
+    // For now, to AVOID THE ERROR, we will NOT use the temporary L.circle().getBounds()
+    // if ( !circleBoundsCalculated && defaultCenter && /* ... */ radius > 0 ) {
+    //   console.warn("MapUpdater: Could not find existing circle, avoiding temp circle creation due to known error.");
+    //   // The problematic code would go here:
+    //   // const tempCircle = L.circle(L.latLng(defaultCenter), { radius });
+    //   // const tempCircleBounds = tempCircle.getBounds(); // THIS IS LINE 107
+    //   // ...
+    // }
+
+
+    transactions.forEach(transaction => {
+      const lat = transaction.alamat.latitude;
+      const lng = transaction.alamat.longitude;
+      if (typeof lat === 'number' && typeof lng === 'number' && !isNaN(lat) && !isNaN(lng)) {
+        bounds.extend(L.latLng(lat, lng));
+      }
+    });
+
+
+    if (bounds.isValid()) { // Only fit if bounds are valid
+      if (!targetCoordinatesForRoute) { // Don't interfere if routing machine is active
+        map.fitBounds(bounds, { padding: [50, 50] });
+      }
+    } else if (defaultCenter && !targetCoordinatesForRoute) {
+      // Fallback if no valid bounds (e.g. no transactions, and circle bounds failed/skipped)
+      // map.setView(defaultCenter, 11); // Adjust zoom as needed
+    }
+
+  }, [map, defaultCenter, radius, transactions, targetCoordinatesForRoute, (map as any)?._loaded]);
+  // Note: Iterating map.eachLayer inside useEffect can be tricky if layers change frequently,
+  // but for a stable radius circle, it might be okay.
+
+  return null;
+};
+
 export default function OrderMap({
   transactions,
   radius,
   defaultCenter,
   className = '',
+  targetCoordinatesForRoute = null
 }: OrderMapProps) {
   return (
     <div className={`${className}`}>
@@ -133,6 +221,16 @@ export default function OrderMap({
 
         {/* ✅ Tambahkan komponen legenda di sini */}
         <Legend />
+        <MapUpdater defaultCenter={defaultCenter} radius={radius} transactions={transactions} targetCoordinatesForRoute={targetCoordinatesForRoute} />
+
+        {targetCoordinatesForRoute && (
+          <LeafletRoutingMachine
+            startWaypoint={defaultCenter}
+            endWaypoint={targetCoordinatesForRoute} // This should be [lat, lng]
+            lineColor="#FF6347"
+          />
+        )}
+
       </MapContainer>
     </div>
   );

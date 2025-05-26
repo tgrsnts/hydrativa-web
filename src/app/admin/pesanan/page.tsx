@@ -10,7 +10,7 @@ import jsPDF from 'jspdf'
 import 'leaflet/dist/leaflet.css';
 import dynamic from 'next/dynamic';
 import OrderMap from '@/app/admin/components/OrderMap';
-import { FaCalendar } from "react-icons/fa";
+import { FaCalendar, FaRoute } from "react-icons/fa";
 
 
 export default function Pesanan() {
@@ -21,6 +21,8 @@ export default function Pesanan() {
     const [selectedStatus, setSelectedStatus] = useState('');
     const [selectedMonth, setSelectedMonth] = useState('');
     const [selectedYear, setSelectedYear] = useState('');
+    const [trackRouteTarget, setTrackRouteTarget] = useState<[number, number] | null>(null)
+
 
 
     // Filter berdasarkan radius
@@ -187,6 +189,33 @@ export default function Pesanan() {
         }
     };
 
+    const handleTrackRoute = (transaction: Transaksi) => {
+        // **UPDATED HERE for transaction coordinates**
+        const latStr = String(transaction.alamat.latitude); // Ensure it's a string before parsing
+        const lngStr = String(transaction.alamat.longitude);
+
+        const lat = parseFloat(latStr);
+        const lng = parseFloat(lngStr);
+
+        if (isNaN(lat) || isNaN(lng)) {
+            console.warn(`Could not parse coordinates for transaction ID: <span class="math-inline">\{transaction\.transaksi\_id\}\. Original values\: '</span>{latStr}', '${lngStr}'`);
+            // Handle this case
+            return false;
+        }
+        // Now lat and lng are floating-point numbers
+
+        if (typeof lat === 'number' && typeof lng === 'number' && !isNaN(lat) && !isNaN(lng)) {
+            const target: [number, number] = [lat, lng];
+            if (trackRouteTarget && trackRouteTarget[0] === target[0] && trackRouteTarget[1] === target[1]) {
+                setTrackRouteTarget(null);
+            } else {
+                setTrackRouteTarget(target);
+            }
+        } else {
+            Swal.fire('Error', 'Koordinat alamat transaksi tidak tersedia atau formatnya salah.', 'error');
+        }
+    };
+
     useEffect(() => {
         fetchData();
     }, []);
@@ -272,6 +301,7 @@ export default function Pesanan() {
                                 transactions={filteredTransactions}
                                 defaultCenter={defaultCenter}
                                 radius={radius}
+                                targetCoordinatesForRoute={trackRouteTarget}
                             />
                             <div className="flex flex-col gap-2 w-1/2 overflow-scroll">
                                 {loading ? (
@@ -353,6 +383,20 @@ export default function Pesanan() {
                                                         <div>
                                                             {transaction.alamat.detail}, {transaction.alamat.kelurahan}, {transaction.alamat.kecamatan}, {transaction.alamat.kabupaten}, {transaction.alamat.provinsi}, {transaction.alamat.kodepos}
                                                         </div>
+                                                        <button
+                                                            onClick={() => handleTrackRoute(transaction)}
+                                                            className={`... ${trackRouteTarget
+                                                                ? 'bg-red-500 hover:bg-red-600 px-4 py-2 w-fit rounded-lg text-white'
+                                                                : 'bg-primary hover:bg-white px-4 py-2 rounded-lg text-white w-fit hover:border-primary hover:text-primary border-2' // Default class
+                                                                }`}
+                                                            title='Route'
+                                                        >
+                                                            {
+                                                                trackRouteTarget
+                                                                    ? "Hapus Petunjuk"
+                                                                    : "Petunjuk"
+                                                            }
+                                                        </button>
                                                     </div>
                                                 </div>
                                                 <div className="divider divider-horizontal"></div>
